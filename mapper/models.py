@@ -50,16 +50,18 @@ class Report(models.Model):
 
     def clean(self):
         """
-        Ensure that any selected reasons belong to the same classification as this report.
-        This extra layer of validation helps keep the data consistent.
+        Enforce that reasons can only be provided for red or orange classifications.
+        For green or blue, no reasons should be selected (comments can be added).
         """
-        for reason in self.reasons.all():
-            if reason.classification != self.classification:
-                raise ValidationError("One or more selected reasons do not match the report's classification.")
         super().clean()
-        
+
+        if self.classification not in ['red', 'orange']:
+            if self.reasons.exists():
+                raise ValidationError("Reasons can only be provided for red or orange classifications.")
+ 
     def __str__(self):
         return f"{self.get_classification_display()} report by {self.user}"
+
 
 
 # A single report can have multiple photos attached
