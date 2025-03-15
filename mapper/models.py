@@ -1,5 +1,5 @@
 from django.db import models
-from django.conf import settings
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
 # Each instance represents an option (checkbox) that explains why a particular 
@@ -46,7 +46,7 @@ class Report(models.Model):
     
     # A foreign key to associate the report with the authenticated user who submitted it.
     # on_delete the report is retained, but its user field will be set to null.
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="reports")
 
     def clean(self):
         """
