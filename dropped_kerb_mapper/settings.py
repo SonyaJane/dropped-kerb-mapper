@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-m2f#3ejg+62k0n1rp6=)&wj=0j6&=sj=v%gx(y+vtz5cg&+-4q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['.azurewebsites.net', '127.0.0.1']
+ALLOWED_HOSTS = ['.azurewebsites.net','.herokuapp.com','127.0.0.1']
 
 # Application definition
 
