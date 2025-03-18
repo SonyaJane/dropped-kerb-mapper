@@ -90,6 +90,7 @@ DATABASES = {
 
 CSRF_TRUSTED_ORIGINS = [
     "https://*.azurewebsites.net",
+    "https://*.herokuapp.com",
     "http://127.0.0.1:8000"
 ]
 
