@@ -1,6 +1,8 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.views import generic
+from .models import Report
 
 # Create your views here.
-def my_mapper(request):
-   return HttpResponse("Hello, mappers!")
+class ReportList(generic.ListView):
+   queryset = Report.objects.all()
+   template_name = "report_list.html"

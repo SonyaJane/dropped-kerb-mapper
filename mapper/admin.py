@@ -1,7 +1,15 @@
 from django.contrib import admin
-from .models import ClassificationReason, Report, Photo
+from .models import Report, Photo
 # Register your models here.
 
-admin.site.register(ClassificationReason)
+# class ReportAdmin(admin.ModelAdmin):
+#     list_display = ('classification', 'user', 'created_at')
+    
+#     class Media:
+#         js = ('js/report_admin.js',)
+
+#admin.site.register(Report, ReportAdmin)
+
 admin.site.register(Report)
 admin.site.register(Photo)
+
