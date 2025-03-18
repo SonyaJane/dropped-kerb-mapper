@@ -9,7 +9,7 @@
 <body>
     <h1>Reports list</h1>
     {% for report in object_list %}
-    <h2>{{report.classification}}</h2>
+    <h2>{{report.id}} {{report.classification}}</h2>
     <p>Latitude: {{report.latitude}}, Longitude: {{report.longitude}}</p>
     <p>Reported by: {{report.user}}</p>
     {% endfor %}
