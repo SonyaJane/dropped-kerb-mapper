@@ -12,17 +12,19 @@ class Report(models.Model):
     ]
     
     ALLOWED_REASONS = [
-        ('too_steep', 'Too steep'),
+        ('steep_gradient', 'Steep gradient'),
         ('lip_too_high', 'Lip too high'),
         ('cobbles', 'Cobblestones'),
         ('obstacle', 'Obstacle'),
-        ('no-visual_indication', 'No visual indication'),
+        ('no_visual_marking', 'No visual marking'),
+        ('no_tactile_paving', 'No tactile paving'),
         ('narrow_pavement', 'Narrow pavement'),
-        ('uneven_ground', 'Uneven ground'),
-        ('turning_circle_too_tight', 'Turning circle too tight'),
+        ('uneven_road_surface', 'Uneven road surface'),
+        ('uneven_pavement_surface', 'Uneven pavement surface'),
+        ('tight_turning_circle', 'Tight turning circle'),
         ('incorrectly_angled', 'Incorrectly angled'),
         ('broken_road_surface', 'Broken road surface'),
-        ('broken_pavement surface', 'Broken pavement surface'),
+        ('broken_pavement_surface', 'Broken pavement surface'),
         ('accessibility_barrier', 'Accessibility barrier'),
     ]
     
