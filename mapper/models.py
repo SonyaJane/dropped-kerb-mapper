@@ -5,10 +5,10 @@ from multiselectfield import MultiSelectField
 
 class Report(models.Model):
     TRAFFIC_LIGHT_CHOICES = [
-        ('green', 'Green: Usable and in good condition'),
-        ('orange', 'Orange: Usable but needs improvement'),
-        ('red', 'Red: Dangerous or unusable'),
-        ('blue', 'Blue: Dropped kerb missing or preventing access'),
+        ('green', 'Green'),   # Usable and in good condition
+        ('orange', 'Orange'), # Usable but needs improvement
+        ('red', 'Red'),       # Dangerous or unusable
+        ('blue', 'Blue'),     # Dropped kerb missing or preventing access
     ]
     
     ALLOWED_REASONS = [

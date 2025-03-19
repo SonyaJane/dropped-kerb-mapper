@@ -7,10 +7,13 @@ from django_summernote.admin import SummernoteModelAdmin
 # Use a decorator to register a class, compared to just registering the standard model
 @admin.register(Report)
 class ReportAdmin(SummernoteModelAdmin):
-    list_display = ('id', 'classification', 'reasons', 'user')
-    search_fields = ['classification', 'reasons', 'user']
-    list_filter = ('classification', 'reasons', 'user')
-    #prepopulated_fields = {'slug': ('classification',)}
+    # Fields to be displayed in the admin dashboard
+    list_display = ('id', 'classification', 'reasons', 'user', 'created_at')
+    # Which fields to search using the search bar
+    search_fields = ['reasons', 'comments']
+    # Filter options to be displayed on the right side of the dashboard
+    list_filter = ('classification', 'reasons', 'user', 'created_at')
+    # Create WYSIWYG editor for the comments field
     summernote_fields = ('comments',)
     
 admin.site.register(Photo)
