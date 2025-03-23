@@ -20,5 +20,6 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('summernote/', include('django_summernote.urls')),
-    path('mapper', include('mapper.urls'), name='mapper-urls'),
+    # mapper app urls
+    path('', include('mapper.urls'), name='mapper-urls'),
 ]
