@@ -1,0 +1,69 @@
+{% extends 'base.html' %} 
+{% block content %}
+{% load static %}
+
+<h2>Report Details</h2>
+<table>
+  <tr>
+    <th>Report ID</th>
+    <td>{{ report.id }}</td>
+  </tr>
+  <tr>
+    <th>Latitude</th>
+    <td>{{ report.latitude }}</td>
+  </tr>
+  <tr>
+    <th>Longitude</th>
+    <td>{{ report.longitude }}</td>
+  </tr>
+  <tr>
+    <th>Classification</th>
+    <td>{{ report.get_classification_display }}</td>
+  </tr>
+  <tr>
+    <th>Reasons</th>
+    <td>
+      {% if report.reasons %}
+        {{ report.get_reasons_display }}
+      {% else %}
+        N/A
+      {% endif %}
+    </td>
+  </tr>
+  <tr>
+    <th>Comments</th>
+    <td>{{ report.comments }}</td>
+  </tr>
+  <tr>
+    <th>Created on</th>
+    <td>{{ report.created_at|date:"Y-m-d H:i" }}</td>
+  </tr>
+  <tr>
+    <th>Updated on</th>
+    <td>{{ report.updated_at|date:"Y-m-d H:i" }}</td>
+  </tr>
+  <tr>
+    <th>Created by user</th>
+    <td>
+      {% if report.user %}
+        {{ report.user.username }}
+      {% else %}
+        Anonymous
+      {% endif %}
+    </td>
+  </tr>
+</table>
+
+<h2>Photos</h2>
+{% if report.photos.all %}
+  {% for photo in report.photos.all %}
+    <div style="margin-bottom: 20px;">
+      <img src="{{ photo.photo.url }}" alt="Photo for Report {{ report.id }}" style="max-width: 100%; height: auto;">
+      <p>Uploaded on: {{ photo.created_at|date:"Y-m-d H:i" }}</p>
+    </div>
+  {% endfor %}
+{% else %}
+  <p>No photos available for this report.</p>
+{% endif %}
+
+{% endblock content %}

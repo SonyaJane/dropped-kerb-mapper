@@ -21,7 +21,11 @@
     <tbody>
         {% for report in report_list %}
         <tr>
-        <td>{{ report.id }}</td>
+        <td>
+            <a href="{% url 'report_detail' report.id %}" class="report-link">
+                {{ report.id }}
+            </a>
+        </td>
         <td>{{ report.latitude }}</td>
         <td>{{ report.longitude }}</td>
         <td>{{ report.get_classification_display }}</td>
