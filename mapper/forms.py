@@ -17,12 +17,15 @@ class ReportForm(forms.ModelForm):
         model = Report
         fields = ['latitude', 'longitude', 'classification', 'reasons', 'comments']# , 'photos']
         widgets = {
-            'classification': forms.RadioSelect,      # Use radio buttons for classification
-            'reasons': forms.CheckboxSelectMultiple,  # Use checkboxes for reasons
+            'classification': forms.RadioSelect,      
+            'reasons': forms.CheckboxSelectMultiple(attrs={'id': 'reasons'}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['classification'].empty_label = None  # Remove the default '-------' option
+        self.fields['classification'].choices = [choice for choice in self.fields['classification'].choices if choice[0]]  # Remove empty choice        
+        self.fields['classification'].initial = 'green'  # Set the default value to "green"        
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.add_input(Submit('submit', 'Submit Report'))

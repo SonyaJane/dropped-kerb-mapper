@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% load crispy_forms_tags %}
 
 {% block content %}
@@ -9,29 +10,5 @@
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const classificationField = document.querySelectorAll('input[name="classification"]');
-        const reasonsField = document.querySelector('.form-group:has([name="reasons"])');
-
-        function toggleReasonsField() {
-            const selectedValue = document.querySelector('input[name="classification"]:checked').value;
-            if (selectedValue === 'red' || selectedValue === 'orange') {
-                reasonsField.style.display = '';
-            } else {
-                reasonsField.style.display = 'none';
-                // Uncheck all reasons if hidden
-                document.querySelectorAll('input[name="reasons"]').forEach(checkbox => checkbox.checked = false);
-            }
-        }
-
-        // Attach event listeners to classification radio buttons
-        classificationField.forEach(radio => {
-            radio.addEventListener('change', toggleReasonsField);
-        });
-
-        // Initialize the reasons field visibility
-        toggleReasonsField();
-    });
-</script>
+<script src="{% static 'js/create_report.js' %}"></script>
 {% endblock %}
