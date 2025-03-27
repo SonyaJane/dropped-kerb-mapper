@@ -2,7 +2,12 @@ from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from .models import Report
 
-# Create your views here.
+def home(request):
+    """
+    Render the home page
+    """
+    return render(request, 'mapper/home.html')
+ 
 class ReportList(generic.ListView):
    queryset = Report.objects.all()
    template_name = "mapper/reports.html"
