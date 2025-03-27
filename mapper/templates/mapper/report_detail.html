@@ -26,13 +26,19 @@
       {% if report.reasons %}
         {{ report.get_reasons_display }}
       {% else %}
-        N/A
+        None
       {% endif %}
     </td>
   </tr>
   <tr>
     <th>Comments</th>
-    <td>{{ report.comments }}</td>
+    <td>
+        {% if report.comments %}
+            {{ report.comments }}
+        {% else %}
+            None
+        {% endif %}
+    </td>
   </tr>
   <tr>
     <th>Created on</th>

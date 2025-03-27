@@ -79,7 +79,7 @@ class Photo(models.Model):
     # on_delete=models.CASCADE ensures that if a report is deleted, all associated photos are also deleted.
     # related_name="photos" allows you to access all photos for a report using report.photos.all().
     report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name="photos")
-    photo = models.ImageField(upload_to='kerb_photos/')
+    photo = models.ImageField(upload_to='dropped_kerb_photos/')
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
