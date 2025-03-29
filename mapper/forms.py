@@ -29,53 +29,50 @@ class ReportForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.add_input(Submit('submit', 'Submit Report'))
-        
-    from io import BytesIO
-from django.core.files.uploadedfile import InMemoryUploadedFile
-from PIL import Image
 
-def clean_photo(self):
-    """
-    Custom clean method converts the image format to webp, and compresses it if the result exceeds a certain size.
-    """
-    photo = self.cleaned_data.get('photo')
-    if photo:
-        # convert image to webp format:
-        try:
-            # Open the image using PIL
-            image = Image.open(photo)
-            
-            # Convert to RGB as webp does not support RGBA
-            image = image.convert("RGB") 
-            
-            # Create a BytesIO object to save the image
-            output = BytesIO() 
-            image.save(output, format='WEBP')
-            output.seek(0) # Reset the pointer to the start of the BytesIO object
-            
-            # check if the image size exceeds the limit
-            max_size = 5 * 1024 * 1024  # 5MB in bytes
-            if output.getbuffer().nbytes > max_size:
-                # If it does, reduce the quality iteratively starting from 85
-                quality = 85
-                while output.getbuffer().nbytes > max_size and quality > 10:
-                    quality -= 5  # Lower the quality by 5 units
-                    output = BytesIO()  # Reset the in-memory buffer
-                    image.save(output, format="WEBP", quality=quality)
-                    output.seek(0)
-            
-            # Update the filename to have a .webp extension
-            new_filename = photo.name.rsplit('.', 1)[0] + '.webp'
-            print("Photo converted to webp format")
-            # Create a new InMemoryUploadedFile with the converted WebP image
-            photo = InMemoryUploadedFile(
-                output,
-                'ImageField',
-                new_filename,
-                'image/webp',
-                output.getbuffer().nbytes,
-                None
-            )
-        except Exception as e:
-            raise forms.ValidationError(f"Error processing image: {str(e)}")
-    return photo
+    def clean_photo(self):
+        """
+        Custom clean method converts the image format to webp, and compresses it if the result exceeds a certain size.
+        """
+        print("Starting cleaning photo")
+        photo = self.cleaned_data.get('photo')
+        if photo:
+            # convert image to webp format:
+            try:
+                # Open the image using PIL
+                image = Image.open(photo)
+                print('opened photo')
+                # Convert to RGB as webp does not support RGBA
+                image = image.convert("RGB") 
+                print('converted photo to RGB')
+                # Create a BytesIO object to save the image
+                output = BytesIO() 
+                image.save(output, format='WEBP')
+                output.seek(0) # Reset the pointer to the start of the BytesIO object
+                
+                # check if the image size exceeds the limit
+                max_size = 5 * 1024 * 1024  # 5MB in bytes
+                if output.getbuffer().nbytes > max_size:
+                    # If it does, reduce the quality iteratively starting from 85
+                    quality = 85
+                    while output.getbuffer().nbytes > max_size and quality > 10:
+                        quality -= 5  # Lower the quality by 5 units
+                        output = BytesIO()  # Reset the in-memory buffer
+                        image.save(output, format="WEBP", quality=quality)
+                        output.seek(0)
+                
+                # Update the filename to have a .webp extension
+                new_filename = photo.name.rsplit('.', 1)[0] + '.webp'
+                print("Photo converted to webp format")
+                # Create a new InMemoryUploadedFile with the converted WebP image
+                photo = InMemoryUploadedFile(
+                    output,
+                    'ImageField',
+                    new_filename,
+                    'image/webp',
+                    output.getbuffer().nbytes,
+                    None
+                )
+            except Exception as e:
+                raise forms.ValidationError(f"Error processing image: {str(e)}")
+        return photo
