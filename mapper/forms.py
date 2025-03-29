@@ -18,7 +18,7 @@ class ReportForm(forms.ModelForm):
         widgets = {
             'classification': forms.RadioSelect,      
             'reasons': forms.CheckboxSelectMultiple(attrs={'id': 'reasons'}),
-            'photo': forms.ImageField,
+            'photo': forms.ClearableFileInput(attrs={'accept': 'image/*'}), 
         }
 
     def __init__(self, *args, **kwargs):
@@ -36,46 +36,46 @@ from PIL import Image
 
 def clean_photo(self):
     """
-    Custom clean method to compress the uploaded image if it exceeds a certain size.
+    Custom clean method converts the image format to webp, and compresses it if the result exceeds a certain size.
     """
     photo = self.cleaned_data.get('photo')
     if photo:
-        max_size = 5 * 1024 * 1024  # 5MB in bytes
-        # Only attempt compression if the original file is over the limit.
-        if photo.size > max_size:
-            try:
-                # Open the uploaded image with Pillow
-                img = Image.open(photo)
-                # Convert the image to RGB if necessary (JPEG does not support alpha channels)
-                if img.mode in ("RGBA", "P"):
-                    img = img.convert("RGB")
-                
-                # Set initial quality (start high and reduce as needed)
+        # convert image to webp format:
+        try:
+            # Open the image using PIL
+            image = Image.open(photo)
+            
+            # Convert to RGB as webp does not support RGBA
+            image = image.convert("RGB") 
+            
+            # Create a BytesIO object to save the image
+            output = BytesIO() 
+            image.save(output, format='WEBP')
+            output.seek(0) # Reset the pointer to the start of the BytesIO object
+            
+            # check if the image size exceeds the limit
+            max_size = 5 * 1024 * 1024  # 5MB in bytes
+            if output.getbuffer().nbytes > max_size:
+                # If it does, reduce the quality iteratively starting from 85
                 quality = 85
-                # Create a buffer for the in-memory image
-                output = BytesIO()
-                
-                # Save image to the buffer with the initial quality setting
-                img.save(output, format="JPEG", quality=quality)
-                
-                # While the size is still above max_size and quality is above a threshold, reduce quality.
                 while output.getbuffer().nbytes > max_size and quality > 10:
-                    quality -= 5  # Decrease quality
-                    output = BytesIO()  # Reset the buffer
-                    img.save(output, format="JPEG", quality=quality)
-                
-                # Reset the file pointer of the buffer. Ensures that when we later read from the buffer (or pass it to another function), the read operation starts at the very beginning of the data. 
-                output.seek(0)
-                
-                # Replace the original photo with the compressed version.
-                photo = InMemoryUploadedFile(
-                    output,
-                    'ImageField',
-                    photo.name,
-                    'image/jpeg',
-                    output.getbuffer().nbytes,
-                    None
-                )
-            except Exception as e:
-                raise forms.ValidationError("Error processing image: " + str(e))
+                    quality -= 5  # Lower the quality by 5 units
+                    output = BytesIO()  # Reset the in-memory buffer
+                    image.save(output, format="WEBP", quality=quality)
+                    output.seek(0)
+            
+            # Update the filename to have a .webp extension
+            new_filename = photo.name.rsplit('.', 1)[0] + '.webp'
+            print("Photo converted to webp format")
+            # Create a new InMemoryUploadedFile with the converted WebP image
+            photo = InMemoryUploadedFile(
+                output,
+                'ImageField',
+                new_filename,
+                'image/webp',
+                output.getbuffer().nbytes,
+                None
+            )
+        except Exception as e:
+            raise forms.ValidationError(f"Error processing image: {str(e)}")
     return photo

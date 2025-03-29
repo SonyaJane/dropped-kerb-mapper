@@ -29,17 +29,8 @@ def create_report(request):
     if request.method == 'POST':
         form = ReportForm(request.POST, request.FILES)
         if form.is_valid():
-            report = form.save(commit=False)
-            report.user = request.user if request.user.is_authenticated else None
-            report.save()
-
-            # Save up to 3 photos
-            # photos = request.FILES.getlist('photos')
-            # for photo in photos[:3]:  # Limit to 3 photos
-            #     Photo.objects.create(report=report, photo=photo)
-
+            form.save()
             return redirect('reports-list')  # Redirect to the reports list page
     else:
         form = ReportForm()
-
     return render(request, 'mapper/create_report.html', {'form': form})
