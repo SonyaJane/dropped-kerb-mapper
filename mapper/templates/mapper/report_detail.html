@@ -61,13 +61,11 @@
 </table>
 
 <h2>Photos</h2>
-{% if report.photos.all %}
-  {% for photo in report.photos.all %}
-    <div style="margin-bottom: 20px;">
-      <img src="{{ photo.photo.url }}" alt="Photo for Report {{ report.id }}" style="max-width: 100%; height: auto;">
-      <p>Uploaded on: {{ photo.created_at|date:"Y-m-d H:i" }}</p>
-    </div>
-  {% endfor %}
+{% if report.photo %}
+  <div style="margin-bottom: 20px;">
+    <img src="{{ report.photo.url }}" alt="Photo for Report {{ report.id }}" style="max-width: 100%; height: auto;">
+    <p>Uploaded on: {{ photo.created_at|date:"Y-m-d H:i" }}</p>
+  </div>
 {% else %}
   <p>No photos available for this report.</p>
 {% endif %}

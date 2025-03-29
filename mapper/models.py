@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from multiselectfield import MultiSelectField
+from cloudinary.models import CloudinaryField
 
 class Report(models.Model):
     TRAFFIC_LIGHT_CHOICES = [
@@ -40,6 +41,8 @@ class Report(models.Model):
     reasons = MultiSelectField(choices=ALLOWED_REASONS, blank=True, null=True, help_text="Select reasons (allowed only if classification is red or orange)")
     comments = models.CharField(max_length=1000, blank=True) # Optional comments
     
+    photo = CloudinaryField('image', blank=True, null=True) # Optional photo of the dropped kerb
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -67,29 +70,3 @@ class Report(models.Model):
  
     def __str__(self):
         return f"Report {self.id}: {self.classification} by {self.user}"
-
-
-
-# A single report can have multiple photos attached
-# stores individual photos. Each photo is linked to a report using a ForeignKey.
-# The photo field is an ImageField that stores the uploaded image in the kerb_photos/ directory.
-# The __str__ method returns a string representation of the photo, including the report ID.
-class Photo(models.Model):
-    # ForeignKey linking each photo to a particular Report
-    # on_delete=models.CASCADE ensures that if a report is deleted, all associated photos are also deleted.
-    # related_name="photos" allows you to access all photos for a report using report.photos.all().
-    report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name="photos")
-    photo = models.ImageField(upload_to='dropped_kerb_photos/')
-    created_at = models.DateTimeField(auto_now_add=True)
-    
-    class Meta:
-        ordering = ['-created_at']          # Sort photos by creation date, newest first.
-        verbose_name = "Dropped Kerb Photo"         # Singular name for the model in the admin interface.
-        verbose_name_plural = "Dropped Kerb Photos" # Plural name for the model in the admin interface.
-        indexes = [
-            models.Index(fields=['report']), # Index the report field for faster lookups.
-        ]
-        
-    def __str__(self):
-        return f"Photo for Report {self.report.id}"
-

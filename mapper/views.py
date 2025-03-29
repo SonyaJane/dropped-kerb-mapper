@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
 from .forms import ReportForm
-from .models import Report, Photo
+from .models import Report
 
 def home(request):
     """
