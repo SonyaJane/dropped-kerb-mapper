@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Edit Report</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form |crispy }}
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a href="{% url 'report-detail' pk=object.pk %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+<script src="{% static 'js/create_report.js' %}"></script>
+
+{% endblock %}

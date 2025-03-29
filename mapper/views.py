@@ -1,7 +1,11 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views import generic
 from .forms import ReportForm
 from .models import Report
+from django.http import HttpResponseRedirect
+from django.contrib import messages
+from django.urls import reverse_lazy
+from django.views.generic.edit import UpdateView
 
 def home(request):
     """
@@ -34,3 +38,13 @@ def create_report(request):
     else:
         form = ReportForm()
     return render(request, 'mapper/create_report.html', {'form': form})
+
+
+class ReportEditView(UpdateView):
+    model = Report
+    form_class = ReportForm
+    template_name = 'mapper/report_edit.html'
+
+    def get_success_url(self):
+        # Redirect to the report detail page after editing
+        return reverse_lazy('report-detail', kwargs={'pk': self.object.pk})
