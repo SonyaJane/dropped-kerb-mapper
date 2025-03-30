@@ -71,7 +71,7 @@
 {% endif %}
 
 {% if user.is_authenticated and report.user == user %}
-<a href="{% url 'report-edit' pk=report.id %}" class="btn btn-primary btn-edit">Edit</a>
+<a href="{% url 'edit-report' pk=report.id %}" class="btn btn-primary btn-edit">Edit</a>
 {% endif %}
 
 

@@ -15,9 +15,20 @@ def home(request):
  
  
 class ReportList(generic.ListView):
-   queryset = Report.objects.all()
    template_name = "mapper/reports.html"
    paginate_by = 24
+   
+   def get_queryset(self):
+        """
+        Return reports created by the logged-in user.
+        If the user is a superuser, return all reports.
+        """
+        if self.request.user.is_superuser:
+            # Superuser sees all reports
+            return Report.objects.all()
+        else:
+            # Regular users see only their own reports
+            return Report.objects.filter(user=self.request.user)
    
    
 def report_detail(request, pk):
@@ -31,9 +42,12 @@ def report_detail(request, pk):
 
 def create_report(request):
     if request.method == 'POST':
-        form = ReportForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
+        report_form = ReportForm(request.POST, request.FILES)
+        if report_form.is_valid():
+            report = report_form.save(commit=False)
+            report.user = request.user
+            report.save()
+            messages.success(request, 'Report created successfully!')
             return redirect('reports-list')  # Redirect to the reports list page
     else:
         form = ReportForm()
@@ -43,7 +57,7 @@ def create_report(request):
 class ReportEditView(UpdateView):
     model = Report
     form_class = ReportForm
-    template_name = 'mapper/report_edit.html'
+    template_name = 'mapper/edit_report.html'
 
     def get_success_url(self):
         # Redirect to the report detail page after editing
