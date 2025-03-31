@@ -4,8 +4,24 @@
 <h1>Welcome to Dropped-Kerb Mapper</h1>
 
 <p>The Dropped-Kerb Mapper helps users record the location and condition of dropped kerbs in the UK. This data contributes to creating accessible routes for wheeled mobility device users.</p>
-<p>Sign up or log in to start contributing!</p>
+
 <div>
-    <a href="/accounts/login/">Log In</a> | <a href="/accounts/signup/">Sign Up</a>
+    <h2>How to Contribute</h2>
+    <p>When you have created an account and signed in, you can</p>
+    <ul>
+        <li>Create a new dropped kerb report</li>
+        <li>View your existing dropped kerb report</li>
+        <li>View all dropped kerb reports on a map</li>
+    </ul>
+</div>  
+
+{% if not user.is_authenticated %}
+<div id="not-logged-in">
+    <p>Sign in or create an account to start contributing!</p>
+    <a href="{% url 'account_login' %}" class="btn btn-primary">Sign In</a>
+    <a href="{% url 'account_signup' %}" class="btn btn-primary">Create Account</a>
+
 </div>
+{% endif %}
+
 {% endblock content %}

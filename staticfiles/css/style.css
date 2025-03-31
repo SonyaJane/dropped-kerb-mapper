@@ -7,3 +7,44 @@
 #logo {
     height: 25px;
 }
+
+#map {
+    width: 100%;
+}
+
+#toggle-satellite {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 8px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.hide-os .os-api-branding {
+    display: none !important;
+}
+
+/* Custom Google attribution elements */
+#google-logo {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    z-index: 2;
+    display: none;
+    /* Initially hidden */
+}
+
+#google-copyright {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    z-index: 2;
+    display: none;
+    /* Initially hidden */
+    font-size: 12px;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 2px 4px;
+}
