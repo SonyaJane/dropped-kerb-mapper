@@ -48,3 +48,21 @@
     background: rgba(255, 255, 255, 0.8);
     padding: 2px 4px;
 }
+
+.maplibregl-ctrl.maplibregl-ctrl-attrib.maplibregl-compact {
+    background: rgba(255, 255, 255, 0.5);
+    bottom: 0px;
+    right: 0px;
+    padding: 0 5px;
+    margin: 0;
+}
+
+.hide-os .maplibregl-ctrl.maplibregl-ctrl-attrib.maplibregl-compact,
+.hide-os .maplibregl-ctrl.maplibregl-ctrl-attrib.maplibregl-compact a {
+    background: rgba(255, 255, 255, 0);
+    color: white; 
+}
+
+.maplibregl-ctrl-attrib-button {
+    background-image: none !important;
+}

@@ -109,8 +109,6 @@ def get_os_map_tiles(request, z, x, y):
     
     
     if response.status_code == 200:
-        # print response attributes
-        print(dir(response.content))
         # Return the image content with appropriate content-type
         return HttpResponse(response.content, content_type="image/png")
     else:
@@ -180,8 +178,6 @@ def get_google_satellite_tiles(request, z, x, y):
     response = requests.get(tile_url)
     
     if response.status_code == 200:
-        # print the response attributes
-        print(dir(response.content))
         # Return the image content with appropriate content-type
         return HttpResponse(response.content, content_type="image/png")
     elif response.status_code == 404: # Tile not found at requested zoom level

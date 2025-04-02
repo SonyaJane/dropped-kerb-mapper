@@ -11,12 +11,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 "tiles": [window.location.origin + '/os_tiles/{z}/{x}/{y}/'], // Django proxy URL for tiles
                 "tileSize": 256,
                 "maxzoom": 20,
+                "attribution": "Contains OS data © Crown copyright and database rights 2025"
             },
             "google-satellite": {
                 "type": "raster",
                 "tiles": [window.location.origin + '/google_satellite_tiles/{z}/{x}/{y}/'],
                 "tileSize": 256,
                 "maxzoom": 20,
+                "attribution": "Map data &copy; 2025"
             }
         },
         "layers": [
@@ -43,11 +45,17 @@ document.addEventListener('DOMContentLoaded', function () {
         maxZoom: 20,
         style: style,
         center: [-3.11, 55.95], // Initial map center (longitude, latitude)
-        zoom: 10 // Initial zoom level
+        zoom: 10,
     });
 
     // Add navigation controls to the map
     map.addControl(new maplibregl.NavigationControl());
+
+    map.on('styledata', function () {
+        document.querySelector('.os-api-branding.copyright').remove();
+    });
+// class="maplibregl-ctrl maplibregl-ctrl-attrib maplibregl-compact"
+// class="maplibregl-ctrl maplibregl-ctrl-attrib maplibregl-compact maplibregl-compact-show" open="">
 
     // Add markers for each report
     reports.forEach(report => {
@@ -66,21 +74,19 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById("toggle-satellite").addEventListener("click", function () {
         const googleVisibility = map.getLayoutProperty("google-satellite-layer", "visibility");
         const mapContainer = document.getElementById("map");
+        // const attributionContainer = document.querySelector('.os-api-branding.copyright');
         if (googleVisibility === "none") {
             map.setLayoutProperty("google-satellite-layer", "visibility", "visible");
             map.setLayoutProperty("os-layer", "visibility", "none");
             mapContainer.classList.add("hide-os");
             // Show the Google attribution elements.
             document.getElementById("google-logo").style.display = "block";
-            document.getElementById("google-copyright").style.display = "block";
         } else {
             map.setLayoutProperty("google-satellite-layer", "visibility", "none");
             map.setLayoutProperty("os-layer", "visibility", "visible");
             mapContainer.classList.remove("hide-os");
             // Hide the Google attribution elements.
             document.getElementById("google-logo").style.display = "none";
-            document.getElementById("google-copyright").style.display = "none";
-
         }
     });
 
