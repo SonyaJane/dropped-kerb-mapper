@@ -72,19 +72,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Toggle the Google Satellite layer when the button is clicked.
     document.getElementById("toggle-satellite").addEventListener("click", function () {
+        const toggleText = document.getElementById("toggle-text");
+        const toggleIcon = document.getElementById("toggle-icon");
         const googleVisibility = map.getLayoutProperty("google-satellite-layer", "visibility");
         const mapContainer = document.getElementById("map");
-        // const attributionContainer = document.querySelector('.os-api-branding.copyright');
         if (googleVisibility === "none") {
             map.setLayoutProperty("google-satellite-layer", "visibility", "visible");
             map.setLayoutProperty("os-layer", "visibility", "none");
             mapContainer.classList.add("hide-os");
+            toggleText.innerText = "Map View";
+            toggleIcon.src = "{% static 'images/map-icon.png' %}";
             // Show the Google attribution elements.
             document.getElementById("google-logo").style.display = "block";
         } else {
             map.setLayoutProperty("google-satellite-layer", "visibility", "none");
             map.setLayoutProperty("os-layer", "visibility", "visible");
             mapContainer.classList.remove("hide-os");
+            toggleText.innerText = "Satellite View";
+            toggleIcon.src = "{% static 'images/satellite-icon.png' %}";
             // Hide the Google attribution elements.
             document.getElementById("google-logo").style.display = "none";
         }
