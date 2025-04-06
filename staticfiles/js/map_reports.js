@@ -11,14 +11,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 "tiles": [window.location.origin + '/os_tiles/{z}/{x}/{y}/'], // Django proxy URL for tiles
                 "tileSize": 256,
                 "maxzoom": 20,
-                "attribution": "Contains OS data © Crown copyright and database rights 2025"
+                "attribution": "Contains OS data &copy; Crown copyright and database rights 2025 | Maplibre"
             },
             "google-satellite": {
                 "type": "raster",
                 "tiles": [window.location.origin + '/google_satellite_tiles/{z}/{x}/{y}/'],
                 "tileSize": 256,
                 "maxzoom": 20,
-                "attribution": "Map data &copy; 2025"
+                "attribution": "Map data &copy; 2025 | Maplibre"
             }
         },
         "layers": [
@@ -46,16 +46,41 @@ document.addEventListener('DOMContentLoaded', function () {
         style: style,
         center: [-3.11, 55.95], // Initial map center (longitude, latitude)
         zoom: 10,
+        attributionControl: false, // Disable default attribution control
     });
 
     // Add navigation controls to the map
     map.addControl(new maplibregl.NavigationControl());
 
-    map.on('styledata', function () {
-        document.querySelector('.os-api-branding.copyright').remove();
+    // Add a custom AttributionControl with compact mode enabled.
+    const attributionControl = new maplibregl.AttributionControl({
+        compact: true
     });
-// class="maplibregl-ctrl maplibregl-ctrl-attrib maplibregl-compact"
-// class="maplibregl-ctrl maplibregl-ctrl-attrib maplibregl-compact maplibregl-compact-show" open="">
+    map.addControl(attributionControl, 'bottom-right');
+
+    // Compact mode for small screens
+    function updateAttributionControl() {
+        const screenWidth = window.innerWidth;
+        const attributionElement = document.querySelector('.maplibregl-ctrl-attrib');
+        if (screenWidth < 550) {
+            attributionElement.classList.remove('maplibregl-compact-show');
+            attributionElement.removeAttribute('open');
+        } else {
+            attributionElement.classList.add('maplibregl-compact-show');
+            attributionElement.setAttribute('open', '');
+        }
+    }
+
+    // Run on window resize
+    window.addEventListener('resize', updateAttributionControl);
+
+    map.on('styledata', function () {
+        const brandingElement = document.querySelector('.os-api-branding.copyright');
+        if (brandingElement) {
+            brandingElement.remove();
+        }
+        updateAttributionControl();
+    });
 
     // Add markers for each report
     reports.forEach(report => {
@@ -70,18 +95,19 @@ document.addEventListener('DOMContentLoaded', function () {
             .addTo(map);
     });
 
-    // Toggle the Google Satellite layer when the button is clicked.
+    // Toggle the Google Satellite and Os Map layer when the button is clicked
     document.getElementById("toggle-satellite").addEventListener("click", function () {
         const toggleText = document.getElementById("toggle-text");
         const toggleIcon = document.getElementById("toggle-icon");
         const googleVisibility = map.getLayoutProperty("google-satellite-layer", "visibility");
         const mapContainer = document.getElementById("map");
+
         if (googleVisibility === "none") {
             map.setLayoutProperty("google-satellite-layer", "visibility", "visible");
             map.setLayoutProperty("os-layer", "visibility", "none");
             mapContainer.classList.add("hide-os");
             toggleText.innerText = "Map View";
-            toggleIcon.src = "{% static 'images/map-icon.png' %}";
+            toggleIcon.src = mapIconUrl;
             // Show the Google attribution elements.
             document.getElementById("google-logo").style.display = "block";
         } else {
@@ -89,10 +115,72 @@ document.addEventListener('DOMContentLoaded', function () {
             map.setLayoutProperty("os-layer", "visibility", "visible");
             mapContainer.classList.remove("hide-os");
             toggleText.innerText = "Satellite View";
-            toggleIcon.src = "{% static 'images/satellite-icon.png' %}";
+            toggleIcon.src = satelliteIconUrl;
             // Hide the Google attribution elements.
             document.getElementById("google-logo").style.display = "none";
         }
     });
+    
+    // to hold the popup reference.
+    let popup = null;
 
+    // add an event listener to the add-report button that enables a click event listener on the map
+    const addReportButton = document.getElementById('add-report');
+    
+    addReportButton.addEventListener('click', function () {
+        console.log('Add report button clicked!');
+        // turn the cursor into crosshair
+        map.getCanvas().style.cursor = 'crosshair';
+        // Add a click event listener to the map
+        map.on('click', function handleMapClick(e) {
+        
+            // If a popup already exists, remove it.
+            if (popup) {
+                popup.remove();
+            }
+
+            // Get the HTML content of the form from the hidden div.
+            const formHtml = document.getElementById('map-report-form-container').innerHTML;
+
+            // Create a new popup at the clicked coordinates.
+            popup = new maplibregl.Popup({ maxWidth: 'none' })
+            .setLngLat(e.lngLat)
+            .setHTML(formHtml)
+            .addTo(map);
+
+            const { lng, lat } = e.lngLat;
+
+            // Populate the latitude and longitude fields in the form
+            document.getElementById('id_latitude').value = lat.toFixed(6);
+            document.getElementById('id_longitude').value = lng.toFixed(6);
+
+            // Add an eevent listener to the classification selection dropdown
+            const classification = document.getElementById('classification');
+            
+            function toggleReasonsField() {
+                const reasonsDiv = document.getElementById('div_id_reasons');
+                const reasonsHelpText = document.querySelector('.reasons-help-text');
+                // get selected classification from dropdown
+                const selectedClassification = classification.value;
+        
+                if (selectedClassification && (selectedClassification === 'red' || selectedClassification === 'orange')) {
+                    reasonsDiv.style.display = '';
+                    reasonsHelpText.style.display = '';
+                    console.log('Reasons div should be visible');
+                } else {
+                    reasonsDiv.style.display = 'none';
+                    reasonsHelpText.style.display = 'none';
+                    console.log('Reasons div should be hidden');
+                    // Unselect all reasons in the dropdown
+                    // const reasons = document.querySelectorAll('input[name="reasons"]');
+                }
+            }
+            
+            // Attach event listener to classification dropdown
+            classification.addEventListener('change', toggleReasonsField);
+
+            // Call the function once to set the initial state
+            toggleReasonsField();
+        });
+    });
 });

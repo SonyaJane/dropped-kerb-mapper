@@ -1,25 +1,47 @@
 {% extends "base.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-<div class="container mt-4">
-    <h1 class="mb-4">Dropped Kerb Reports Map</h1>
+<div>
+    <h1 class="mb-4 d-none d-lg-block h2">Dropped Kerb Reports Map</h1>
     
-    <div id="map" style="width: 100%; height: 500px;">
+    <div id="map">
+
+        {% comment %} Toggle map style button {% endcomment %}
         <button id="toggle-satellite">
-            <img id="toggle-icon" src="{% static 'images/satellite-icon.png' %}" alt="Satellite Icon">
+            <img id="toggle-icon" src="{% static 'images/satellite_icon.png' %}" alt="Satellite Icon">
             <span id="toggle-text">Satellite View</span>
         </button>
+
+        {% comment %} Button to add new report {% endcomment %}
+        <button id="add-report">
+            <img src="{% static 'images/marker.png' %}" alt="Add Report Icon">
+        </button>
+
         <!-- Google Logo -->
         <div id="google-logo">
             <img src={% static 'images/google_on_non_white_hdpi.png'%} alt="Google Logo" style="height:20px;">
         </div>
     </div>
-    
+
+    <div id="map-report-form-container">
+        <form method="post" enctype="multipart/form-data" id="map-report-form">
+            {% csrf_token %}
+            {% crispy form %}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
 
     <!-- Embed the reports data safely using json_script -->
     {{ reports|json_script:"reports-data" }}
 </div>
 
+ <!-- Define JS variables with the static URLs -->
+<script>
+    const satelliteIconUrl = "{% static 'images/satellite_icon.png' %}";
+    const mapIconUrl = "{% static 'images/map_icon.png' %}";
+    const markerUrl = "{% static 'images/marker_32_48.png' %}";
+</script>
 <script src="{% static 'js/map_reports.js' %}"></script>
 {% endblock %}

@@ -47,7 +47,7 @@ def report_detail(request, pk):
    return render(request, "mapper/report_detail.html", {"report": report})
 
 
-def create_report(request):
+def map_reports(request):
     if request.method == 'POST':
         report_form = ReportForm(request.POST, request.FILES)
         if report_form.is_valid():
@@ -55,10 +55,22 @@ def create_report(request):
             report.user = request.user
             report.save()
             messages.success(request, 'Report created successfully!')
-            return redirect('reports-list')  # Redirect to the reports list page
+            return redirect('map-reports')  # Redirect to the reports list page
     else:
         form = ReportForm()
-    return render(request, 'mapper/create_report.html', {'form': form})
+    reports = Report.objects.all()
+    reports_data = [
+        {
+            'id': report.id,
+            'latitude': report.latitude,
+            'longitude': report.longitude,
+            'classification': report.classification,
+            'reasons': report.get_reasons_display(),
+            'comments': report.comments,
+        }
+        for report in reports
+    ]
+    return render(request, 'mapper/map_reports.html', {'form': form, 'reports': reports_data})
 
 
 class ReportEditView(UpdateView):
@@ -71,23 +83,6 @@ class ReportEditView(UpdateView):
         return reverse_lazy('report-detail', kwargs={'pk': self.object.pk})
     
     
-def map_reports(request):
-    """
-    Create a map with all dropped kerb reports.
-    """
-    reports = Report.objects.all()  # Fetch all reports
-    reports_data = [
-        {
-            'id': report.id,
-            'latitude': report.latitude,
-            'longitude': report.longitude,
-            'classification': report.classification,
-            'reasons': report.get_reasons_display(),
-            'comments': report.comments,
-        }
-        for report in reports
-    ]
-    return render(request, 'mapper/map_reports.html', {'reports': reports_data})
 
 
 def get_os_map_tiles(request, z, x, y):

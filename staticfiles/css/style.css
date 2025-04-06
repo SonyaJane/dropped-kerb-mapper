@@ -4,12 +4,43 @@
 /* Bootstrap icons */
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
 
+:root {
+    /* Fonts */
+    --primary-font: 'Open Sans', sans-serif;
+    --bs-body-font-size: 1.4rem;
+
+    /* Colours */
+    --color-coffee-6: #432b20;
+    --color-orange-1: #f5ddd2;
+    --color-orange-4: #bd582c;
+}
+
+body {
+    font-family: var(--primary-font), sans-serif;
+}
+
+nav {
+    height: 56px;
+}
+
+/* Buttons */
+.btn {
+    font-family: var(--primary-font), sans-serif;
+}
+
+label, .reasons-help-text {
+    font-family: var(--primary-font), sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
 #logo {
     height: 25px;
 }
 
 #map {
     width: 100%;
+    height: calc(100vh - 56px); /* Full height minus navbar height */
 }
 
 #toggle-satellite {
@@ -27,6 +58,24 @@
     height:20px; 
     vertical-align: middle;
 }
+
+#add-report {
+    position: absolute;
+    top: 10px;
+    left: 140px;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 8px;
+    cursor: pointer;
+    z-index: 1000;
+    height: 40px; 
+}
+
+#add-report img {
+    height: 20px; 
+    vertical-align: middle;
+}
+
 
 .hide-os .os-api-branding {
     display: none !important;
@@ -58,7 +107,6 @@
     background: rgba(255, 255, 255, 0.5);
     bottom: 0px;
     right: 0px;
-    padding: 0 5px;
     margin: 0;
 }
 
@@ -68,6 +116,49 @@
     color: white; 
 }
 
-.maplibregl-ctrl-attrib-button {
-    background-image: none !important;
+.maplibregl-ctrl-bottom-right {
+    width: calc(100% - 120px);
+    /* position to the right */
+    right: 0px;
+}
+
+.cursor-crosshair {
+    cursor: crosshair;
+}
+
+#map-report-form-container {
+    display: none; /* Initially hidden */
+}
+
+.maplibregl-popup {
+    max-width: 320px;
+}
+
+.col-form-label {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+#reasons .form-check {
+    width: 48%; /* Adjust width to fit two columns */
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+.hide-sm {
+    display: none;
+}
+
+/* Allow wrapping for small screens */
+@media (max-width: 549px) {
+    .maplibregl-ctrl-attrib {
+        white-space: normal; /* Allow text to wrap */
+        word-wrap: break-word; /* Break long words if necessary */
+    }
+}
+
+@media (min-width: 992px) {
+    .hide-sm {
+        display: block;
+    }
 }

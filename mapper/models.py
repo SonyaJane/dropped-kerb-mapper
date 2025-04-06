@@ -38,7 +38,7 @@ class Report(models.Model):
     
     # Each instance represents an option (checkbox) that explains why a particular 
     # traffic light classification was chosen. 
-    reasons = MultiSelectField(choices=ALLOWED_REASONS, blank=True, null=True, help_text="Select reasons (allowed only if classification is red or orange)")
+    reasons = MultiSelectField(choices=ALLOWED_REASONS, blank=True, null=True)
     comments = models.CharField(max_length=1000, blank=True) # Optional comments
     
     photo = CloudinaryField('image', blank=True, null=True) # Optional photo of the dropped kerb
