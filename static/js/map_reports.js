@@ -120,9 +120,6 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById("google-logo").style.display = "none";
         }
     });
-    
-    // to hold the popup reference.
-    let popup = null;
 
     // add an event listener to the add-report button that enables a click event listener on the map
     const addReportButton = document.getElementById('add-report');
@@ -133,21 +130,12 @@ document.addEventListener('DOMContentLoaded', function () {
         map.getCanvas().style.cursor = 'crosshair';
         // Add a click event listener to the map
         map.on('click', function handleMapClick(e) {
-        
-            // If a popup already exists, remove it.
-            if (popup) {
-                popup.remove();
-            }
+            // Show form
+            const formContainer = document.getElementById('map-report-form-container');
+            formContainer.style.display = 'block';
 
-            // Get the HTML content of the form from the hidden div.
-            const formHtml = document.getElementById('map-report-form-container').innerHTML;
-
-            // Create a new popup at the clicked coordinates.
-            popup = new maplibregl.Popup({ maxWidth: 'none' })
-            .setLngLat(e.lngLat)
-            .setHTML(formHtml)
-            .addTo(map);
-
+            // If the screenwidth < 500, show the map-report-form-container
+            const screenWidth = window.innerWidth;
             const { lng, lat } = e.lngLat;
 
             // Populate the latitude and longitude fields in the form
@@ -159,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (reasonsSelect) {
                 new Choices(reasonsSelect, {
                 removeItemButton: true,       // Allows removal of selected options via an "x"
-                placeholderValue: "Add reasons",  // Placeholder text
+                placeholderValue: "Add reasons for classification",  // Placeholder text
                 shouldSort: true             // Maintain the original order of options
                 });
             }

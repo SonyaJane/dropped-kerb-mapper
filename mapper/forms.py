@@ -4,7 +4,7 @@
 
 from .models import Report
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Div, Field, Layout, Field, HTML
+from crispy_forms.layout import Div, Field, Layout, HTML
 from django import forms
 # for image size reduction
 from io import BytesIO
@@ -19,7 +19,7 @@ class ReportForm(forms.ModelForm):
             'latitude': forms.TextInput(attrs={'id': 'latitude'}),
             'longitude': forms.TextInput(attrs={'id': 'longitude'}),
             'classification': forms.Select(attrs={'id': 'classification'}), 
-            'reasons': forms.SelectMultiple(attrs={'id': 'reasons', 'class': 'form-control'}),
+            'reasons': forms.SelectMultiple(attrs={'id': 'reasons'}),
             'photo': forms.ClearableFileInput(attrs={'accept': 'image/*'}), 
         }
 
@@ -27,21 +27,20 @@ class ReportForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['classification'].empty_label = None  # Remove the default '-------' option
         self.fields['classification'].choices = [choice for choice in self.fields['classification'].choices if choice[0]]  # Remove empty choice        
-        self.fields['classification'].initial = 'green'   # Set the default value to "green"
-        self.fields['reasons'].label = ''                 # Remove the header for the reasons field
+        self.fields['classification'].initial = 'green'
+        self.fields['reasons'].label = "Reasons*"
 
         # Set the layout for the form using crispy-forms
         self.helper = FormHelper()
         self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-4'   # Labels in 3/12 of the row
-        self.helper.field_class = 'col-8'   # Fields in 9/12 of the row
+        self.helper.label_class = 'col-12 col-md-4'   # Labels in 4/12 of the row
+        self.helper.field_class = 'col-12 col-md-8'   # Fields in 8/12 of the row
         
         self.helper.layout = Layout(
             'latitude',
             'longitude',
             'classification',
-            HTML('<p class="reasons-help-text">Select one or more reasons:</p>'),  # Add help text above the reasons field
-            'reasons',         
+            'reasons',        
             'comments',
             'photo',
         )

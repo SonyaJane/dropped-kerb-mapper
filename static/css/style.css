@@ -128,6 +128,12 @@ label, .reasons-help-text {
 
 #map-report-form-container {
     display: none; /* Initially hidden */
+    position: absolute;
+    bottom: 0;
+    max-width: 400px;
+    background-color: #f5ddd2;
+    z-index: 1000;
+    padding: 10px;
 }
 
 .maplibregl-popup {
