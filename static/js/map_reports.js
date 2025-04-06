@@ -1,6 +1,15 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Retrieve the reports data from the embedded JSON script
-    const reports = JSON.parse(document.getElementById('reports-data').textContent);
+    
+    // Initialise Choices on the multi-select field with ID "id_reasons"
+    const reasonsSelect = document.getElementById("reasons");
+    console.log(reasonsSelect);
+    if (reasonsSelect) {
+        new Choices(reasonsSelect, {
+        removeItemButton: true,       // Allows removal of selected options via an "x"
+        placeholderValue: "Add reasons for classification",  // Placeholder text
+        shouldSort: true             // Maintain the original order of options
+        });
+    }
 
     // Create a map style object using the ZXY service.
     const style = {
@@ -80,20 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
             brandingElement.remove();
         }
         updateAttributionControl();
-    });
-
-    // Add markers for each report
-    reports.forEach(report => {
-        new maplibregl.Marker()
-            .setLngLat([report.longitude, report.latitude]) // Set marker position
-            .setPopup(new maplibregl.Popup().setHTML(`
-                <strong>Report ID:</strong> ${report.id}<br>
-                <strong>Classification:</strong> ${report.classification}<br>
-                <strong>Reasons:</strong> ${report.reasons}<br>
-                <strong>Comments:</strong> ${report.comments}
-            `)) // Add a popup with report details
-            .addTo(map);
-    });
+    });    
 
     // Toggle the Google Satellite and Os Map layer when the button is clicked
     document.getElementById("toggle-satellite").addEventListener("click", function () {
@@ -123,9 +119,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // add an event listener to the add-report button that enables a click event listener on the map
     const addReportButton = document.getElementById('add-report');
-    
+    let newMarker = null;
     addReportButton.addEventListener('click', function () {
-        console.log('Add report button clicked!');
         // turn the cursor into crosshair
         map.getCanvas().style.cursor = 'crosshair';
         // Add a click event listener to the map
@@ -134,51 +129,89 @@ document.addEventListener('DOMContentLoaded', function () {
             const formContainer = document.getElementById('map-report-form-container');
             formContainer.style.display = 'block';
 
-            // If the screenwidth < 500, show the map-report-form-container
-            const screenWidth = window.innerWidth;
+            // if a newMarker already exists, remove it
+            if (newMarker) {
+                newMarker.remove(); // Remove the previous marker
+            }
+
+            // Add an event listener to the classification selection dropdown
+            const classification = document.getElementById('classification');
+
+            // add a marker at the clicked location
+            newMarker = new maplibregl.Marker({
+                color: classification.value // Set the marker color to green
+            })
+                .setLngLat(e.lngLat)  // Set marker position
+                .addTo(map);          // Add marker to the map
+
             const { lng, lat } = e.lngLat;
 
             // Populate the latitude and longitude fields in the form
             document.getElementById('latitude').value = lat.toFixed(6);
             document.getElementById('longitude').value = lng.toFixed(6);
 
-            // Initialise Choices on the multi-select field with ID "id_reasons"
-            const reasonsSelect = document.getElementById("reasons");
-            if (reasonsSelect) {
-                new Choices(reasonsSelect, {
-                removeItemButton: true,       // Allows removal of selected options via an "x"
-                placeholderValue: "Add reasons for classification",  // Placeholder text
-                shouldSort: true             // Maintain the original order of options
-                });
-            }
-
-            // Add an eevent listener to the classification selection dropdown
-            const classification = document.getElementById('classification');
-            
             function toggleReasonsField() {
                 const reasonsDiv = document.getElementById('div_id_reasons');
-                const reasonsHelpText = document.querySelector('.reasons-help-text');
                 // get selected classification from dropdown
                 const selectedClassification = classification.value;
         
                 if (selectedClassification && (selectedClassification === 'red' || selectedClassification === 'orange')) {
                     reasonsDiv.style.display = '';
-                    reasonsHelpText.style.display = '';
                     console.log('Reasons div should be visible');
                 } else {
                     reasonsDiv.style.display = 'none';
-                    reasonsHelpText.style.display = 'none';
                     console.log('Reasons div should be hidden');
                     // Unselect all reasons in the dropdown
                     // const reasons = document.querySelectorAll('input[name="reasons"]');
                 }
+
+            }
+
+            function setMarkerColor() {
+                // change the colour of the marker to the classification valu
+                
+                let element = newMarker.getElement();
+                let svg = element.getElementsByTagName("svg")[0];
+                let path = svg.getElementsByTagName("path")[0];
+                path.setAttribute("fill", classification.value);
             }
             
             // Attach event listener to classification dropdown
-            classification.addEventListener('change', toggleReasonsField);
+            classification.addEventListener('change', function () {
+                toggleReasonsField();
+                setMarkerColor();
+            });
 
             // Call the function once to set the initial state
             toggleReasonsField();
+
+            // Add event listener to the close buttons
+            const closeButtons = document.querySelectorAll('.close-btn');
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    // Remove the marker from the map
+                    newMarker.remove(); // Remove the marker
+                    formContainer.style.display = 'none'; // Hide the form
+                    map.getCanvas().style.cursor = ''; // Reset cursor style
+                    map.off('click'); // Remove click event listener from the map
+                });
+            });
         });
     });
+
+    // Retrieve the reports data from the embedded JSON script
+    const reports = JSON.parse(document.getElementById('reports-data').textContent);
+    // Add markers for each report
+    reports.forEach(report => {
+        new maplibregl.Marker()
+            .setLngLat([report.longitude, report.latitude]) // Set marker position
+            .setPopup(new maplibregl.Popup().setHTML(`
+                <strong>Report ID:</strong> ${report.id}<br>
+                <strong>Classification:</strong> ${report.classification}<br>
+                <strong>Reasons:</strong> ${report.reasons}<br>
+                <strong>Comments:</strong> ${report.comments}
+            `)) // Add a popup with report details
+            .addTo(map);
+    });
+
 });
