@@ -16,8 +16,10 @@ class ReportForm(forms.ModelForm):
         model = Report
         fields = ['latitude', 'longitude', 'classification', 'reasons', 'comments', 'photo']
         widgets = {
+            'latitude': forms.TextInput(attrs={'id': 'latitude'}),
+            'longitude': forms.TextInput(attrs={'id': 'longitude'}),
             'classification': forms.Select(attrs={'id': 'classification'}), 
-            'reasons': forms.CheckboxSelectMultiple(attrs={'id': 'reasons', 'class': 'form-check'}),
+            'reasons': forms.SelectMultiple(attrs={'id': 'reasons', 'class': 'form-control'}),
             'photo': forms.ClearableFileInput(attrs={'accept': 'image/*'}), 
         }
 
@@ -39,10 +41,7 @@ class ReportForm(forms.ModelForm):
             'longitude',
             'classification',
             HTML('<p class="reasons-help-text">Select one or more reasons:</p>'),  # Add help text above the reasons field
-            Div(
-                Field('reasons', css_class='form-check'),  # No col-8 class applied here
-                css_class='form-group'  # Optional: Add a wrapper class for styling
-            ),            
+            'reasons',         
             'comments',
             'photo',
         )

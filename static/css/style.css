@@ -157,6 +157,13 @@ label, .reasons-help-text {
     }
 }
 
+/* Hide longitude and latitude on small screens */
+@media (max-width: 767px) {
+    #div_id_latitude, #div_id_longitude {
+        display: none;
+    }
+}
+
 @media (min-width: 992px) {
     .hide-sm {
         display: block;

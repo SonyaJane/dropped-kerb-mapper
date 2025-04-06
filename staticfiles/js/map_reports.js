@@ -151,8 +151,18 @@ document.addEventListener('DOMContentLoaded', function () {
             const { lng, lat } = e.lngLat;
 
             // Populate the latitude and longitude fields in the form
-            document.getElementById('id_latitude').value = lat.toFixed(6);
-            document.getElementById('id_longitude').value = lng.toFixed(6);
+            document.getElementById('latitude').value = lat.toFixed(6);
+            document.getElementById('longitude').value = lng.toFixed(6);
+
+            // Initialise Choices on the multi-select field with ID "id_reasons"
+            const reasonsSelect = document.getElementById("reasons");
+            if (reasonsSelect) {
+                new Choices(reasonsSelect, {
+                removeItemButton: true,       // Allows removal of selected options via an "x"
+                placeholderValue: "Add reasons",  // Placeholder text
+                shouldSort: true             // Maintain the original order of options
+                });
+            }
 
             // Add an eevent listener to the classification selection dropdown
             const classification = document.getElementById('classification');
