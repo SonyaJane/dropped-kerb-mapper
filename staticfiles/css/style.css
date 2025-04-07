@@ -23,6 +23,10 @@ nav {
     height: 56px;
 }
 
+.hidden {
+    display: none !important;
+}
+
 /* Buttons */
 .btn {
     font-family: var(--primary-font), sans-serif;
@@ -130,12 +134,10 @@ label, .reasons-help-text {
     display: none; /* Initially hidden */
     position: absolute;
     bottom: 0;
-    max-width: 400px;
+    left: 0;
     background-color: #f5ddd2;
-    z-index: 1000;
     padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
 }
 
 #close-form {
@@ -192,5 +194,17 @@ label, .reasons-help-text {
 @media (min-width: 992px) {
     .hide-sm {
         display: block;
+    }
+
+    #map-report-form-container {
+        display: none; /* Initially hidden */
+        position: absolute;
+        bottom: 0;
+        max-width: 400px;
+        background-color: #f5ddd2;
+        z-index: 1000;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 }
