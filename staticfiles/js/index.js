@@ -13,13 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
     window.DKM = window.DKM || {}; // || {} ensures that if the namespace already exists, it won't be overwritten
     DKM.newMarker = null; // Initialise new map marker for the clicked location on adding a new report
 
-    initialiseReasonsChoices();
-    addEventListenerClassificationField(); 
     initialiseMap();
     addEventListenerOnStyledata();
     addEventListenerOnWindowResize();
     addEventListenerToggleMapStyle();
     addEventListenerAddReportButton();
-    addExistingReportsToMap()
-
+    addExistingReportsToMap();
+    initialiseReasonsChoices();
+    addEventListenerClassificationField(); 
+    
 });

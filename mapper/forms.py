@@ -4,7 +4,7 @@
 
 from .models import Report
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Div, Field, Layout, HTML
+from crispy_forms.layout import Layout, Submit
 from django import forms
 # for image size reduction
 from io import BytesIO
@@ -14,7 +14,7 @@ from PIL import Image
 class ReportForm(forms.ModelForm):
     class Meta:
         model = Report
-        fields = ['latitude', 'longitude', 'classification', 'reasons', 'comments', 'photo']
+        fields = ('latitude', 'longitude', 'classification', 'reasons', 'comments', 'photo')
         widgets = {
             'latitude': forms.TextInput(attrs={'id': 'latitude'}),
             'longitude': forms.TextInput(attrs={'id': 'longitude'}),
@@ -43,6 +43,7 @@ class ReportForm(forms.ModelForm):
             'reasons',        
             'comments',
             'photo',
+            Submit('submit', 'Submit', css_class='btn btn-primary'),  
         )
         
     def clean_photo(self):
@@ -51,6 +52,7 @@ class ReportForm(forms.ModelForm):
         """
         print("Starting cleaning photo")
         photo = self.cleaned_data.get('photo')
+        print("Got photo", photo)
         if photo:
             # convert image to webp format:
             try:

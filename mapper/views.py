@@ -48,16 +48,19 @@ def report_detail(request, pk):
 
 
 def map_reports(request):
-    if request.method == 'POST':
-        report_form = ReportForm(request.POST, request.FILES)
+    if request.method =="POST":
+        report_form = ReportForm(data=request.POST, files=request.FILES)
         if report_form.is_valid():
             report = report_form.save(commit=False)
             report.user = request.user
             report.save()
-            messages.success(request, 'Report created successfully!')
-            return redirect('map-reports')  # Redirect to the reports list page
-    else:
-        form = ReportForm()
+            messages.add_message(request, messages.SUCCESS, 'Report created successfully!')
+            # return redirect('map-reports')  # Redirect to the reports list page
+        if not report_form.is_valid():
+            print(report_form.errors)
+    report_form = ReportForm()
+        
+    # Get all reports for the map view    
     reports = Report.objects.all()
     reports_data = [
         {
@@ -70,7 +73,7 @@ def map_reports(request):
         }
         for report in reports
     ]
-    return render(request, 'mapper/map_reports.html', {'form': form, 'reports': reports_data})
+    return render(request, 'mapper/map_reports.html', {'form': report_form, 'reports': reports_data})
 
 
 class ReportEditView(UpdateView):
