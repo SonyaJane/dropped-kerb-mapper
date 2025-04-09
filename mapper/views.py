@@ -62,6 +62,7 @@ def map_reports(request):
         
     # Get all reports for the map view    
     reports = Report.objects.all()
+    print("Reports:", reports[0].id, reports[0].photo, reports[0].photo.url if reports[0].photo else None)
     reports_data = [
         {
             'id': report.id,
@@ -70,6 +71,7 @@ def map_reports(request):
             'classification': report.classification,
             'reasons': report.get_reasons_display(),
             'comments': report.comments,
+            'photoUrl': report.photo.url if report.photo else None,
         }
         for report in reports
     ]
