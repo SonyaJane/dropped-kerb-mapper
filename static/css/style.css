@@ -140,6 +140,16 @@ label, .reasons-help-text {
     z-index: 1000;
 }
 
+#submission-success-container {
+    display: none; /* Initially hidden */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: #f5ddd2;
+    padding: 10px;
+    z-index: 1001;
+}
+
 #close-form {
     position: absolute;
     top: 0;

@@ -14,7 +14,5 @@ class ReportAdmin(SummernoteModelAdmin):
     search_fields = ['reasons', 'comments']
     # Filter options to be displayed on the right side of the dashboard
     list_filter = ('classification', ReasonsFilter, 'user', 'created_at')
-    # Create WYSIWYG editor for the comments field
-    summernote_fields = ('comments',)
 
 

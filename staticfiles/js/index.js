@@ -18,8 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     addEventListenerOnWindowResize();
     addEventListenerToggleMapStyle();
     addEventListenerAddReportButton();
-    addExistingReportsToMap();
     initialiseReasonsChoices();
     addEventListenerClassificationField(); 
-    
+    addExistingReportsToMap();
 });
