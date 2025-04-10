@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Add a click event listener to the map
         map.on('click', function handleMapClick(e) {
             // Show form
-            const formContainer = document.getElementById('map-report-form-container');
+            const formContainer = document.querySelector('.map-report-form-container');
             formContainer.style.display = 'block';
 
             // if a newMarker already exists, remove it

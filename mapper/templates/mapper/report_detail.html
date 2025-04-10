@@ -60,7 +60,6 @@
   </tr>
 </table>
 
-<h2>Photos</h2>
 {% if report.photo %}
   <div style="margin-bottom: 20px;">
     <img src="{{ report.photo.url }}" alt="Photo for Report {{ report.id }}" style="max-width: 100%; height: auto;">
@@ -71,7 +70,7 @@
 {% endif %}
 
 {% if user.is_authenticated and report.user == user %}
-<a href="{% url 'edit-report' pk=report.id %}" class="btn btn-primary btn-edit">Edit</a>
+<a href="{% url 'edit-report' report.id %}" class="btn btn-edit">Edit</a>
 {% endif %}
 
 

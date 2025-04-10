@@ -130,7 +130,7 @@ label, .reasons-help-text {
     cursor: crosshair;
 }
 
-#map-report-form-container {
+.map-report-form-container {
     display: none; /* Initially hidden */
     position: absolute;
     bottom: 0;
@@ -206,7 +206,7 @@ label, .reasons-help-text {
         display: block;
     }
 
-    #map-report-form-container {
+    .map-report-form-container {
         display: none; /* Initially hidden */
         position: absolute;
         bottom: 0;

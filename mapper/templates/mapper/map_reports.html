@@ -25,8 +25,7 @@
         </div>
     </div>
 
-    {% comment %} <div id="map-report-form-container" class="hidden"> {% endcomment %}
-    <div id="map-report-form-container">
+    <div class="map-report-form-container">
         <button id="close-form" class="close-btn" aria-label="Close">&times;</button>
         <form method="post" enctype="multipart/form-data" id="map-report-form">
             {% csrf_token %}
@@ -56,5 +55,5 @@
     const mapIconUrl = "{% static 'images/map_icon.png' %}";
     const markerUrl = "{% static 'images/marker_32_48.png' %}";
 </script>
-<script type="module" src="{% static 'js/index.js' %}"></script>
+<script type="module" src="{% static 'js/map-reports.js' %}"></script>
 {% endblock %}

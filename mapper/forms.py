@@ -4,7 +4,7 @@
 
 from .models import Report
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit
+from crispy_forms.layout import Layout, Submit, HTML
 from django import forms
 # for image size reduction
 from io import BytesIO
@@ -12,6 +12,11 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image
 
 class ReportForm(forms.ModelForm):
+    delete_photo = forms.BooleanField(
+        required=False,
+        label="Delete current photo",
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+    )
     class Meta:
         model = Report
         fields = ('latitude', 'longitude', 'classification', 'reasons', 'comments', 'photo')
@@ -20,7 +25,7 @@ class ReportForm(forms.ModelForm):
             'longitude': forms.TextInput(attrs={'id': 'longitude'}),
             'classification': forms.Select(attrs={'id': 'classification'}), 
             'reasons': forms.SelectMultiple(attrs={'id': 'reasons'}),
-            'photo': forms.ClearableFileInput(attrs={'accept': 'image/*'}), 
+            'photo': forms.FileInput(attrs={'accept': 'image/*'}), 
         }
 
     def __init__(self, *args, **kwargs):
@@ -33,8 +38,8 @@ class ReportForm(forms.ModelForm):
         # Set the layout for the form using crispy-forms
         self.helper = FormHelper()
         self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-12 col-md-4'   # Labels in 4/12 of the row
-        self.helper.field_class = 'col-12 col-md-8'   # Fields in 8/12 of the row
+        self.helper.label_class = 'col-12 col-md-4' # Labels in 4/12 of the row
+        self.helper.field_class = 'col-12 col-md-8' # Fields in 8/12 of the row
         
         self.helper.layout = Layout(
             'latitude',
@@ -43,16 +48,43 @@ class ReportForm(forms.ModelForm):
             'reasons',        
             'comments',
             'photo',
-            Submit('submit', 'Submit', css_class='btn btn-primary'),  
+            # Display the current photo
+            HTML("""
+                {% if report.photo %}
+                    <div class="form-group">
+                        <label class = 'col-12 col-md-4'>Current Photo</label>
+                        <img src="{{ report.photo.url }}" alt="Current Photo" style="max-width: 200px; height: auto;" class='col-12 col-md-8'>
+                    </div>
+                    <div class="form-group">
+                        {{ form.delete_photo.label_tag }}
+                        {{ form.delete_photo }}
+                    </div>
+                {% endif %}
+            """),
+            Submit('submit', 'Submit', css_class='btn btn-primary'),
+            HTML("""
+             <a href="{% url 'report-detail' report.id %}" class="btn btn-secondary">Cancel</a>
+             """),
         )
-        
+                
     def clean_photo(self):
         """
         Custom clean method converts the image format to webp, and compresses it if the result exceeds a certain size.
         """
-        print("Starting cleaning photo")
         photo = self.cleaned_data.get('photo')
-        print("Got photo", photo)
+        delete_photo = self.data.get('delete_photo')  # Check if the delete_photo checkbox is checked
+        print(f"delete_photo: {delete_photo}")
+        
+        # Skip processing if delete_photo is checked
+        if delete_photo == 'on':
+            print("Photo deletion requested, skipping photo processing.")
+            return None
+    
+        # Skip processing if the photo is a CloudinaryResource (already uploaded)
+        if photo and not hasattr(photo, 'read'):
+            print("Photo is a CloudinaryResource, skipping processing.")
+            return photo
+    
         if photo:
             # convert image to webp format:
             try:

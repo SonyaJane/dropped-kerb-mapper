@@ -24,7 +24,7 @@ export default function addEventListenerOnMapClick() {
             .addTo(DKM.map);
 
         // Show new report form
-        const formContainer = document.getElementById('map-report-form-container');
+        const formContainer = document.querySelector('.map-report-form-container');
         formContainer.style.display = 'block';
 
         // Populate the latitude and longitude fields in the form

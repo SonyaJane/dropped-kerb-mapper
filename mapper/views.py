@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect, reverse
+from django.shortcuts import render, get_object_or_404, reverse
 from django.views import generic
 from .forms import ReportForm
 from .models import Report
@@ -62,7 +62,6 @@ def map_reports(request):
         
     # Get all reports for the map view    
     reports = Report.objects.all()
-    print("Reports:", reports[0].id, reports[0].photo, reports[0].photo.url if reports[0].photo else None)
     reports_data = [
         {
             'id': report.id,
@@ -78,17 +77,39 @@ def map_reports(request):
     return render(request, 'mapper/map_reports.html', {'form': report_form, 'reports': reports_data})
 
 
-class ReportEditView(UpdateView):
-    model = Report
-    form_class = ReportForm
-    template_name = 'mapper/edit_report.html'
-
-    def get_success_url(self):
-        # Redirect to the report detail page after editing
-        return reverse_lazy('report-detail', kwargs={'pk': self.object.pk})
+def edit_report(request, pk):
+    """
+    Edit an existing report
+    """
+    # Get the report object based on the primary key (pk) from the URL
+    queryset = Report.objects.all()
+    report = get_object_or_404(queryset, pk=pk)
     
-    
+    # For when the form is submitted:
+    if request.method == "POST":
+        print("POST data:", request.POST)
+        # Bind the form to the POST data and files
+        form = ReportForm(request.POST, request.FILES, instance=report)
+        if form.is_valid() and report.user == request.user:
+            form.save()
+            messages.add_message(request, messages.SUCCESS, 'Report updated successfully!')
+            return HttpResponseRedirect(reverse('report-detail', args=[pk]))
+        else:
+            messages.add_message(request, messages.ERROR, 'Error updating report.')
+    else:
+        # Prepopulate the form with the existing report data
+        form = ReportForm(instance=report)
+    return render(request, 'mapper/edit_report.html', {'form': form, 'report': report})    
 
+
+def delete_report(request, pk):
+    """
+    Edit an existing report
+    """
+    # Get the report object based on the primary key (pk) from the URL
+    queryset = Report.objects.all()
+    report = get_object_or_404(queryset, pk=pk)
+    
 
 def get_os_map_tiles(request, z, x, y):
     """
