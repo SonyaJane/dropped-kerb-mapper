@@ -4,14 +4,15 @@ from .forms import ReportForm
 from .models import Report
 from django.http import HttpResponseRedirect
 from django.contrib import messages
-from django.urls import reverse_lazy
 from django.views.generic.edit import UpdateView
 import os
 import requests
 from django.http import HttpResponse, Http404
 import time
-import json
 from django.core.cache import cache
+from django.http import JsonResponse
+import json
+from django.views.decorators.csrf import csrf_protect
 
 
 def home(request):
@@ -57,7 +58,7 @@ def map_reports(request):
             messages.add_message(request, messages.SUCCESS, 'Report created successfully!')
             # return redirect('map-reports')  # Redirect to the reports list page
         if not report_form.is_valid():
-            print(report_form.errors)
+            print("Report form errors:", report_form.errors)
     report_form = ReportForm()
         
     # Get all reports for the map view    
@@ -109,6 +110,12 @@ def delete_report(request, pk):
     # Get the report object based on the primary key (pk) from the URL
     queryset = Report.objects.all()
     report = get_object_or_404(queryset, pk=pk)
+    if report.user == request.user:
+        report.delete()
+        messages.add_message(request, messages.SUCCESS, 'Report deleted successfully!')
+        return HttpResponseRedirect(reverse('reports-list'))
+    else:
+        messages.add_message(request, messages.ERROR, 'You do not have permission to delete this report.')
     
 
 def get_os_map_tiles(request, z, x, y):
@@ -180,7 +187,6 @@ def get_google_session_token():
         raise Exception("Failed to obtain session token: " + response.text)
 
 
-
 def get_google_satellite_tiles(request, z, x, y):
     """
     Proxy view to fetch Google Satellite map tiles.
@@ -211,3 +217,28 @@ def get_google_satellite_tiles(request, z, x, y):
         )
     else:
         raise Http404("Tile not found.")
+    
+    
+@csrf_protect
+def update_report_location(request, pk):
+    if request.method == 'POST':
+        try:
+            # Parse the JSON data from the request body
+            data = json.loads(request.body)
+            latitude = data.get('latitude')
+            longitude = data.get('longitude')
+
+            # Validate the data
+            if latitude is None or longitude is None:
+                return JsonResponse({'success': False, 'error': 'Invalid data'}, status=400)
+
+            # Get the report object and update its location
+            report = get_object_or_404(Report, pk=pk)
+            report.latitude = latitude
+            report.longitude = longitude
+            report.save()
+
+            return JsonResponse({'success': True, 'message': 'Location updated successfully!'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)

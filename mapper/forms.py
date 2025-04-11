@@ -63,8 +63,12 @@ class ReportForm(forms.ModelForm):
             """),
             Submit('submit', 'Submit', css_class='btn btn-primary'),
             HTML("""
-             <a href="{% url 'report-detail' report.id %}" class="btn btn-secondary">Cancel</a>
-             """),
+                {% if report.id %}
+                    <a href="{% url 'report-detail' report.id %}" class="btn btn-secondary">Cancel</a>
+                {% else %}
+                    <a href="{% url 'reports-list' %}" class="btn btn-secondary">Cancel</a>
+                {% endif %}             
+                """),   
         )
                 
     def clean_photo(self):
