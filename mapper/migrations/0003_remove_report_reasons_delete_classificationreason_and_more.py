@@ -21,6 +21,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='report',
             name='reasons',
-            field=multiselectfield.db.fields.MultiSelectField(blank=True, choices=[('too_steep', 'Too steep'), ('lip_too_high', 'Lip too high'), ('cobbles', 'Cobblestones'), ('obstacle', 'Obstacle')], help_text='Select reasons (allowed only if classification is red or orange)', max_length=39, null=True),
+            field=multiselectfield.db.fields.MultiSelectField(blank=True, choices=[('too_steep', 'Too steep'), ('lip_too_high', 'Lip too high'), ('cobbles', 'Cobblestones'), ('obstacle', 'Obstacle')], help_text='Select reasons (allowed only if classification is red or orange)', max_length=200, null=True),
         ),
     ]

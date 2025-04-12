@@ -44,6 +44,10 @@ export default function initialiseMap() {
         style: style,
         center: [-3.11, 55.95], // Initial map center (longitude, latitude)
         zoom: 10,
+        maxBounds: [
+            [ -10.76418, 49.528423 ],
+            [ 1.9134116, 61.331151 ]
+        ], // UK bounds
         attributionControl: false, // Disable default attribution control
     });
 

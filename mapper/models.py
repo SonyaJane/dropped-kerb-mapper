@@ -6,8 +6,9 @@ from django.core.exceptions import ValidationError
 from multiselectfield import MultiSelectField
 from cloudinary.models import CloudinaryField
 from decimal import Decimal
-
-
+from pyproj import Transformer
+from osdatahub import NamesAPI
+from geopy import Nominatim
 class County(geomodels.Model):
     county = models.CharField(max_length=100)
     polygon = geomodels.MultiPolygonField(srid=4326)  # stores the county geometry, target CRS is WGS84 (lat/long)
@@ -18,6 +19,17 @@ class County(geomodels.Model):
     def __str__(self):
         return self.county
     
+    
+class LocalAuthority(geomodels.Model):
+    local_authority = models.CharField(max_length=100)
+    polygon = geomodels.MultiPolygonField(srid=4326)  # stores the county geometry, target CRS is WGS84 (lat/long)
+
+    class Meta:
+        verbose_name_plural = "LocalAuthorities"
+        
+    def __str__(self):
+        return self.local_authority
+
 class Report(models.Model):
     TRAFFIC_LIGHT_CHOICES = [
         ('green', 'Green'),   # Usable and in good condition
@@ -48,7 +60,9 @@ class Report(models.Model):
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
     # ForeignKey to the matching County
     county = models.ForeignKey(County, null=True, blank=True, on_delete=models.SET_NULL)
-    
+    local_authority = models.ForeignKey(LocalAuthority, null=True, blank=True, on_delete=models.SET_NULL)
+    # place name (get via reverse geocoding)
+    place_name = models.CharField(max_length=1000, blank=True, null=True)
     # Uses a choices field to enforce the available traffic light ratings.
     classification = models.CharField(max_length=6, choices=TRAFFIC_LIGHT_CHOICES)
     
@@ -87,18 +101,38 @@ class Report(models.Model):
     def save(self, *args, **kwargs):
         # If latitude and longitude are provided, create a GeoDjango Point.
         if self.latitude and self.longitude:
-            lon = Decimal(self.longitude)
-            lat = Decimal(self.latitude)
+            lon = round(self.longitude, 6)
+            lat = round(self.latitude, 6)
             point = Point((lon, lat))  # Ensure the point is in the same CRS as your County model.
             # Find the first County whose polygon contains the point.
-            # (Ensure that your County data is in the same CRS, here EPSG:4326.)
+            # Ensure the County data is in the same CRS, here EPSG:4326.
             matching_county = County.objects.filter(polygon__contains=point).first()
             if matching_county:
                 self.county = matching_county
             else:
                 self.county = None  # Or handle cases where no county matches.
-        super().save(*args, **kwargs)
-        
+            # find the matching local authority
+            matching_local_authority = LocalAuthority.objects.filter(polygon__contains=point).first()
+            if matching_local_authority:
+                self.local_authority = matching_local_authority
+            else:
+                self.local_authority = None
+            # Reverse geocode the latitude and longitude to get the place name.
+            geolocator = Nominatim(user_agent="Dropped-Kerb-Mapper")
+            location = geolocator.reverse(f"{lat},{lon}", zoom=17, addressdetails=True)
+             # Extract all values from location.raw['address'] until the key 'county'
+            address = location.raw.get('address', {})
+            values_until_county = []
+            for key, value in address.items():
+                if key in ['county', 'state', 'country', 'postode', 'country_code', 'province'] or key.startswith('ISO'):
+                    break
+                values_until_county.append(value)
+            
+            # Join the values into a single string
+            self.place_name = ", ".join(values_until_county) if values_until_county else None
+        super().save(*args, **kwargs)    
+    
     def __str__(self):
         return f"Report {self.id}: {self.classification} by {self.user}"
+ 
  

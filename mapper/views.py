@@ -1,19 +1,17 @@
+from django.http import HttpResponseRedirect
+from django.contrib import messages
+from django.http import HttpResponse, Http404
+from django.core.cache import cache
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import render, get_object_or_404, reverse
 from django.views import generic
 from .forms import ReportForm
 from .models import Report
-from django.http import HttpResponseRedirect
-from django.contrib import messages
-from django.views.generic.edit import UpdateView
 import os
-import requests
-from django.http import HttpResponse, Http404
-import time
-from django.core.cache import cache
-from django.http import JsonResponse
 import json
-from django.views.decorators.csrf import csrf_protect
-
+import requests
+import time
 
 def home(request):
     """
@@ -68,6 +66,8 @@ def map_reports(request):
             'id': report.id,
             'latitude': report.latitude,
             'longitude': report.longitude,
+            'place_name': report.place_name,
+            'county': report.county.county if report.county else None,
             'classification': report.classification,
             'reasons': report.get_reasons_display(),
             'comments': report.comments,
@@ -134,7 +134,6 @@ def get_os_map_tiles(request, z, x, y):
     
     # Make a GET request to fetch the tile image
     response = requests.get(tile_url)
-    
     
     if response.status_code == 200:
         # Return the image content with appropriate content-type
@@ -230,15 +229,27 @@ def update_report_location(request, pk):
 
             # Validate the data
             if latitude is None or longitude is None:
-                return JsonResponse({'success': False, 'error': 'Invalid data'}, status=400)
+                return JsonResponse({'success': False, 
+                                     'error': 'Invalid data'}, 
+                                    status=400)
 
             # Get the report object and update its location
             report = get_object_or_404(Report, pk=pk)
             report.latitude = latitude
             report.longitude = longitude
             report.save()
-
-            return JsonResponse({'success': True, 'message': 'Location updated successfully!'})
+            
+            # get the new place_name and county
+            updated_place_name = report.place_name
+            print(f"Updated place name: {updated_place_name}")
+            updated_county = report.county.county if report.county else None
+            print(f"Updated county: {updated_county}")
+            
+            return JsonResponse({'success': True, 
+                                 'message': 'Location updated successfully!',
+                                 'place_name': updated_place_name,
+                                 'county': updated_county})
         except Exception as e:
+            print(f"Error: {e}")
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
