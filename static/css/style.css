@@ -186,6 +186,21 @@ label, .reasons-help-text {
     display: none;
 }
 
+.table-responsive {
+    overflow-x: auto; /* Enable horizontal scrolling */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling for touch devices */
+    width: 100%; /* Ensure the container takes up the full width */
+}
+
+.table-responsive table {
+    width: 100%; /* Ensure the table takes up the full width */
+}
+
+.created-col {
+    min-width: 120px; /* to fit the date */
+    white-space: nowrap; 
+}
+
 /* Allow wrapping for small screens */
 @media (max-width: 549px) {
     .maplibregl-ctrl-attrib {

@@ -1,9 +1,23 @@
+from django.contrib.gis.db import models as geomodels
 from django.db import models
+from django.contrib.gis.geos import Point
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from multiselectfield import MultiSelectField
 from cloudinary.models import CloudinaryField
+from decimal import Decimal
 
+
+class County(geomodels.Model):
+    county = models.CharField(max_length=100)
+    polygon = geomodels.MultiPolygonField(srid=4326)  # stores the county geometry, target CRS is WGS84 (lat/long)
+
+    class Meta:
+        verbose_name_plural = "Counties"  # Set the plural name to "Counties"
+        
+    def __str__(self):
+        return self.county
+    
 class Report(models.Model):
     TRAFFIC_LIGHT_CHOICES = [
         ('green', 'Green'),   # Usable and in good condition
@@ -32,6 +46,8 @@ class Report(models.Model):
     # Store location as latitude and longitude
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
+    # ForeignKey to the matching County
+    county = models.ForeignKey(County, null=True, blank=True, on_delete=models.SET_NULL)
     
     # Uses a choices field to enforce the available traffic light ratings.
     classification = models.CharField(max_length=6, choices=TRAFFIC_LIGHT_CHOICES)
@@ -68,6 +84,21 @@ class Report(models.Model):
         if self.classification not in ['red', 'orange'] and self.reasons:
             raise ValidationError("Reasons can only be provided for red or orange classifications.")
  
+    def save(self, *args, **kwargs):
+        # If latitude and longitude are provided, create a GeoDjango Point.
+        if self.latitude and self.longitude:
+            lon = Decimal(self.longitude)
+            lat = Decimal(self.latitude)
+            point = Point((lon, lat))  # Ensure the point is in the same CRS as your County model.
+            # Find the first County whose polygon contains the point.
+            # (Ensure that your County data is in the same CRS, here EPSG:4326.)
+            matching_county = County.objects.filter(polygon__contains=point).first()
+            if matching_county:
+                self.county = matching_county
+            else:
+                self.county = None  # Or handle cases where no county matches.
+        super().save(*args, **kwargs)
+        
     def __str__(self):
         return f"Report {self.id}: {self.classification} by {self.user}"
  

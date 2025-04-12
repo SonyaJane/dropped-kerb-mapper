@@ -5,17 +5,18 @@
 <div class="container-fluid">
     <!-- Reports Table -->
     <h2>Reports</h2>
-    <table border="0" cellspacing="0" cellpadding="8" style="width:100%;">
+    <div class="table-responsive">
+    <table border="0" cellspacing="0" cellpadding="8">
     <thead>
         <tr>
-        <th>Report ID</th>
+        <th>ID</th>
         <th>Latitude</th>
         <th>Longitude</th>
         <th>Classification</th>
         <th>Reasons</th>
         <th>Comments</th>
         <th>User</th>
-        <th>Created on</th>
+        <th class="created-col">Created</th>
         </tr>
     </thead>
     <tbody>
@@ -32,7 +33,7 @@
         <td>{{ report.get_reasons_display }}</td>
         <td>{{ report.comments }}</td>
         <td>{{ report.user }}</td>
-        <td>{{ report.created_at|date:"Y-m-d H:i" }}</td>
+        <td>{{ report.created_at|date:"d-m-Y" }}</td>
         </tr>
         {% empty %}
         <tr>
@@ -41,7 +42,7 @@
         {% endfor %}
     </tbody>
     </table>
-                
+    </div>    
     <!-- Pagination -->
     {% if is_paginated %}
     <nav aria-label="Page navigation">

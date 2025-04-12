@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.gis',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -105,6 +106,9 @@ WSGI_APPLICATION = 'dropped_kerb_mapper.wsgi.application'
 DATABASES = {
     'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
+
+# Override the engine to use GeoDjango's PostGIS backend
+DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 
 CSRF_TRUSTED_ORIGINS = [
     "https://*.azurewebsites.net",
