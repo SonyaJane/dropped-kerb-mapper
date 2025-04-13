@@ -70,11 +70,13 @@
 {% endif %}
 
 {% if user.is_authenticated and report.user == user %}
-<a href="{% url 'edit-report' report.id %}" class="btn btn-edit">Edit</a>
-<button type="button" class="btn btn-delete" data-bs-toggle="modal" data-bs-target="#delete-modal">
+<a href="{% url 'edit-report' report.id %}" class="btn btn-edit btn-primary">Edit</a>
+<button type="button" class="btn btn-delete btn-light" data-bs-toggle="modal" data-bs-target="#delete-modal">
   Delete
 </button>
 {% endif %}
+
+<a href="{% url 'reports-list' %}" class="btn btn-secondary">Back to Reports List</a>
 
 <!-- Delete confirmation modal -->
 <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">

@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 
-<!-- reports.html content starts here -->
 <div class="container-fluid">
-    <!-- Reports Table -->
-    <h2>Reports</h2>
+    {% if user.is_superuser %}
+        <h2>All Reports</h2>
+    {% else %}
+        <h2>Your Reports</h2>
+    {% endif %}
     <div class="table-responsive">
     <table border="0" cellspacing="0" cellpadding="8">
     <thead>
@@ -21,23 +23,25 @@
     </thead>
     <tbody>
         {% for report in report_list %}
-        <tr>
-        <td>
-            <a href="{% url 'report-detail' report.id %}" class="report-link">
-                {{ report.id }}
-            </a>
-        </td>
-        <td>{{ report.latitude }}</td>
-        <td>{{ report.longitude }}</td>
-        <td>{{ report.get_classification_display }}</td>
-        <td>{{ report.get_reasons_display }}</td>
-        <td>{{ report.comments }}</td>
-        <td>{{ report.user }}</td>
-        <td>{{ report.created_at|date:"d-m-Y" }}</td>
-        </tr>
+            {% if user.is_superuser or report.user == user %}
+                <tr>
+                <td>
+                    <a href="{% url 'report-detail' report.id %}" class="report-link">
+                        {{ report.id }}
+                    </a>
+                </td>
+                <td>{{ report.latitude }}</td>
+                <td>{{ report.longitude }}</td>
+                <td>{{ report.get_classification_display }}</td>
+                <td>{{ report.get_reasons_display }}</td>
+                <td>{{ report.comments }}</td>
+                <td>{{ report.user }}</td>
+                <td>{{ report.created_at|date:"d-m-Y" }}</td>
+                </tr>
+            {% endif %}
         {% empty %}
         <tr>
-        <td colspan="5">No reports available.</td>
+            <td colspan="5">No reports available.</td>
         </tr>
         {% endfor %}
     </tbody>
