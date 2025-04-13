@@ -1,3 +1,5 @@
+import setMarkerColour from "./set-marker-colour.js";
+
 export default function addExistingReportsToMap() {
     // Disable double-click zoom on the map
     DKM.map.doubleClickZoom.disable();
@@ -19,17 +21,26 @@ export default function addExistingReportsToMap() {
         // Add a double-click event listener to make marker draggable
         marker.getElement().addEventListener('dblclick', (e) => {
             e.stopPropagation(); // Prevent the map click event from firing
+            e.preventDefault(); // Prevent the popup from toggling
+            // Close the popup if it is open
+            if (marker.getPopup()) {
+                marker.getPopup().remove();
+            }
             marker.setDraggable(true); // Enable dragging
+            setMarkerColour(marker.getElement(), 'white'); //change the marker colour to white
         });
 
         // Add an event listener to capture the new position when the marker is dragged
         marker.on('dragend', () => {
+            // Close the popup if it is open
+            if (marker.getPopup()) {
+                marker.getPopup().remove();
+            }
+
             const newLngLat = marker.getLngLat();
             // round the coordinates to 6 decimal places
             newLngLat.lat = parseFloat(newLngLat.lat.toFixed(6));
             newLngLat.lng = parseFloat(newLngLat.lng.toFixed(6));
-
-            // check if the clicked location is within the boundary of the UK
 
             // Check if the clicked location is within the boundary of the UK
             const point = turf.point([newLngLat.lng, newLngLat.lat]);
@@ -60,12 +71,19 @@ export default function addExistingReportsToMap() {
                     console.error('Error updating report location:', error);
                     alert(`An error occurred while updating the location: ${error.message}`);
                 });
+            
+            // disable dragging after the location is updated
+            if (marker.isDraggable()) {
+                marker.setDraggable(false); 
+                setMarkerColour(marker.getElement(), report.classification); // Reset the marker colour to its original classification colour
+            }
         });
 
         // Add a click event listener to the map to disable marker dragging
         DKM.map.on('click', () => {
             if (marker.isDraggable()) {
                 marker.setDraggable(false); // Disable dragging
+                setMarkerColour(marker.getElement(), report.classification); // Reset the marker colour to its original classification colour
             }
         });
     });
