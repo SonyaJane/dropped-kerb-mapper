@@ -80,6 +80,10 @@ label, .reasons-help-text {
     vertical-align: middle;
 }
 
+.add-report-active {
+    background: #F7CE9D !important;
+    border: 1px solid #bd582c !important;
+}
 
 .hide-os .os-api-branding {
     display: none !important;

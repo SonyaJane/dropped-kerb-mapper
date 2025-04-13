@@ -5,7 +5,6 @@ export default function addEventListenerFormCloseButtons(formcontainer) {
         button.addEventListener('click', function () {
             DKM.newMarker.remove();                // Remove the marker
             formcontainer.style.display = 'none';  // Hide the form
-            DKM.map.getCanvas().style.cursor = ''; // Reset cursor style
         });
     });
 }
