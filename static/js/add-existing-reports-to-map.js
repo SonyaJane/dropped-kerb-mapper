@@ -19,6 +19,26 @@ export default function addExistingReportsToMap() {
             // round the coordinates to 6 decimal places
             newLngLat.lat = parseFloat(newLngLat.lat.toFixed(6));
             newLngLat.lng = parseFloat(newLngLat.lng.toFixed(6));
+
+            // check if the clicked location is within the boundary of the UK
+
+            // Check if the clicked location is within the boundary of the UK
+            const point = turf.point([newLngLat.lng, newLngLat.lat]);
+            // Check if the point is within any of the 4 UK polygons
+            let isWithinUK = false;
+            for (const feature of DKM.ukBoundary.features) {
+                if (turf.booleanPointInPolygon(point, feature)) {
+                    isWithinUK = true;
+                    break; // Exit the loop as soon as the point is within a polygon
+                }
+            }
+
+            if (!isWithinUK) {
+                // return the marker to its original position
+                marker.setLngLat([report.longitude, report.latitude]); // Set marker position
+                return; // Exit the function if the location is outside the UK
+            }
+            
             // Send the updated latitude and longitude to the server
             updateReportLocation(report.id, newLngLat.lat, newLngLat.lng)
                 .then(data => {

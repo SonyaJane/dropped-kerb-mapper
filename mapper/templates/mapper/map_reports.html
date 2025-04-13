@@ -49,8 +49,11 @@
     {{ reports|json_script:"reports-data" }}
 </div>
 
+{% comment %} turf.js for checking clicked locations are inside UK boundary {% endcomment %}
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf@7/turf.min.js"></script>
  <!-- Define JS variables with the static URLs -->
 <script>
+
     const satelliteIconUrl = "{% static 'images/satellite_icon.png' %}";
     const mapIconUrl = "{% static 'images/map_icon.png' %}";
     const markerUrl = "{% static 'images/marker_32_48.png' %}";

@@ -1,5 +1,6 @@
 import initialiseReasonsChoices from './initialise-reasons-choices.js';
 import initialiseMap from './initialise-map.js';
+import loadBoundary from './load-uk-boundary.js';
 import addEventListenerOnStyledata from './add-event-listener-on-map-styledata.js';
 import addEventListenerOnWindowResize from './add-event-listener-on-window-resize.js';
 import addEventListenerToggleMapStyle from './add-event-listener-toggle-map-style.js';
@@ -12,9 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create DKM (Dropped Kerb Mapper) global namespace to store global variables
     window.DKM = window.DKM || {}; // || {} ensures that if the namespace already exists, it won't be overwritten
     DKM.newMarker = null; // Initialise new map marker for the clicked location on adding a new report
+    DKM.ukBoundary = null; // Initialise UK boundary variable
 
     initialiseMap();
     addEventListenerOnStyledata();
+    loadBoundary();
     addEventListenerOnWindowResize();
     addEventListenerToggleMapStyle();
     addEventListenerAddReportButton();

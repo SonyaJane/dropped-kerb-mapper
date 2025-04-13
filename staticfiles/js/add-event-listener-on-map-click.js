@@ -6,6 +6,24 @@ export default function addEventListenerOnMapClick() {
     // Add a click event listener to the map
     DKM.map.on('click', function handleMapClick(e) {
 
+        // check if the clicked location is within the boundary of the UK
+        const { lng, lat } = e.lngLat;
+
+        // Check if the clicked location is within the boundary of the UK
+        const point = turf.point([lng, lat]);
+        // Check if the point is within any of the 4 UK polygons
+        let isWithinUK = false;
+        for (const feature of DKM.ukBoundary.features) {
+            if (turf.booleanPointInPolygon(point, feature)) {
+                isWithinUK = true;
+                break; // Exit the loop as soon as the point is within a polygon
+            }
+        }
+
+        if (!isWithinUK) {
+            return; // Exit the function if the location is outside the UK
+        }
+
         // add a marker at the clicked location
 
         // if a newMarker already exists, remove it
@@ -28,7 +46,6 @@ export default function addEventListenerOnMapClick() {
         formContainer.style.display = 'block';
 
         // Populate the latitude and longitude fields in the form
-        const { lng, lat } = e.lngLat;
         document.getElementById('latitude').value = lat.toFixed(6);
         document.getElementById('longitude').value = lng.toFixed(6);
 

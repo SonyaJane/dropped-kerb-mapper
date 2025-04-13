@@ -6,7 +6,6 @@ from django.core.exceptions import ValidationError
 from multiselectfield import MultiSelectField
 from cloudinary.models import CloudinaryField
 from decimal import Decimal
-from pyproj import Transformer
 from osdatahub import NamesAPI
 from geopy import Nominatim
 class County(geomodels.Model):
