@@ -10,6 +10,8 @@ from django import forms
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image
+from allauth.account.forms import SignupForm
+from django.contrib.auth import get_user_model
 
 class ReportForm(forms.ModelForm):
     delete_photo = forms.BooleanField(
@@ -133,3 +135,67 @@ class ReportForm(forms.ModelForm):
             except Exception as e:
                 raise forms.ValidationError(f"Error processing image: {str(e)}")
         return photo
+    
+
+class CustomSignupForm(SignupForm):
+    first_name = forms.CharField(max_length=30, label="First Name", required=True)
+    last_name = forms.CharField(max_length=30, label="Last Name", required=True) 
+    
+    uses_mobility_device = forms.TypedChoiceField(
+        label="Do you use a wheeled mobility device?",
+        required=False,
+        choices=((True, 'Yes'), (False, 'No')),
+        coerce=lambda x: x == 'True',  # converts the posted value to boolean
+        widget=forms.Select,
+    )
+    
+    # Define choices for mobility devices.
+    MOBILITY_DEVICE_CHOICES = (
+        ('manual_wheelchair', 'Manual Wheelchair'),
+        ('powered_wheelchair', 'Powered Wheelchair'),
+        ('mobility_scooter', 'Mobility Scooter'),
+        ('tricycle', 'Tricycle'),
+        ('adapted_bicycle', 'Adapted Bicycle'),
+        ('bicycle', 'Bicycle'),
+        ('other', 'Other'),
+    )
+    
+    mobility_device_type = forms.ChoiceField(
+        label="Please select your mobility device:",
+        choices=MOBILITY_DEVICE_CHOICES,
+        required=False,
+    )
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        uses = cleaned_data.get('uses_mobility_device')
+        device = cleaned_data.get('mobility_device_type')
+        
+        if uses and not device:
+            self.add_error('mobility_device_type', "Please select your mobility device type.")
+        return cleaned_data
+
+    def save(self, request):
+        User = get_user_model()  # Get the user model
+        user = super(CustomSignupForm, self).save(request)
+        first = self.cleaned_data.get('first_name').strip().lower()
+        last = self.cleaned_data.get('last_name').strip().lower()
+        base_username = f"{first}_{last}"
+        username = base_username
+        # Ensure the username is unique
+        counter = 1
+        while User.objects.filter(username=username).exists():
+            username = f"{base_username}{counter}"
+            counter += 1
+        user.first_name = first.capitalize()
+        user.last_name = last.capitalize()
+        user.username = username
+        user.save()
+        
+        # Store mobility device data. This might require a custom user profile model.
+        profile = user.profile
+        profile.uses_mobility_device = self.cleaned_data.get('uses_mobility_device')
+        profile.mobility_device_type = self.cleaned_data.get('mobility_device_type')
+        profile.save()
+        
+        return user

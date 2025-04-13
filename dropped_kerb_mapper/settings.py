@@ -138,6 +138,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ACCOUNT_LOGIN_METHODS = {'email'}  # Use email for authentication
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']  # Required fields for signup
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Require email verification
+ACCOUNT_EMAIL_REQUIRED = True  # Require email for signup
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True # Log in the user when they click the confirmation link.
 # Email backend for development
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -147,6 +149,10 @@ AUTHENTICATION_BACKENDS = (
     # `allauth` specific authentication methods, such as login by e-mail
     "allauth.account.auth_backends.AuthenticationBackend"
 )
+
+ACCOUNT_FORMS = {
+    'signup': 'mapper.forms.CustomSignupForm',
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
