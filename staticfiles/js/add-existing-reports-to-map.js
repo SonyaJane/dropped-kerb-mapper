@@ -1,11 +1,14 @@
 export default function addExistingReportsToMap() {
+    // Disable double-click zoom on the map
+    DKM.map.doubleClickZoom.disable();
+
     // Retrieve the reports data from the embedded JSON script
     const reports = JSON.parse(document.getElementById('reports-data').textContent);
     // Add markers for each report
     reports.forEach(report => {
         const marker = new maplibregl.Marker({
             color: report.classification, // Set the marker colour
-            draggable: true
+            draggable: false
         })
             .setLngLat([report.longitude, report.latitude]) // Set marker position
             .setPopup(new maplibregl.Popup().setHTML(
@@ -13,7 +16,14 @@ export default function addExistingReportsToMap() {
             ))
             .addTo(DKM.map);
 
-         // Add an event listener to capture the new position when the marker is dragged
+        // Add a double-click event listener to make marker draggable
+        marker.getElement().addEventListener('dblclick', (e) => {
+            e.stopPropagation(); // Prevent the map click event from firing
+            marker.setDraggable(true); // Enable dragging
+            console.log('Marker double-clicked! Dragging enabled.');
+        });
+
+        // Add an event listener to capture the new position when the marker is dragged
         marker.on('dragend', () => {
             const newLngLat = marker.getLngLat();
             // round the coordinates to 6 decimal places
@@ -38,20 +48,27 @@ export default function addExistingReportsToMap() {
                 marker.setLngLat([report.longitude, report.latitude]); // Set marker position
                 return; // Exit the function if the location is outside the UK
             }
-            
+
             // Send the updated latitude and longitude to the server
             updateReportLocation(report.id, newLngLat.lat, newLngLat.lng)
                 .then(data => {
                     // Refresh the popup content with updated data
                     marker.setPopup(new maplibregl.Popup().setHTML(
                         generatePopupHTML(report, newLngLat.lat, newLngLat.lng, data.place_name, data.county)
-                    ));
+                    )).togglePopup();
                 })
                 .catch(error => {
                     console.error('Error updating report location:', error);
                     alert(`An error occurred while updating the location: ${error.message}`);
                 });
-        });   
+        });
+
+        // Add a click event listener to the map to disable marker dragging
+        DKM.map.on('click', () => {
+            if (marker.isDraggable()) {
+                marker.setDraggable(false); // Disable dragging
+            }
+        });
     });
 }
 
@@ -82,7 +99,7 @@ async function updateReportLocation(reportId, latitude, longitude) {
         },
         body: JSON.stringify({ latitude, longitude })
     });
-    
+
     if (!response.ok) {
         throw new Error('Failed to update location. Please try again.');
     }
