@@ -75,7 +75,7 @@ def map_reports(request):
         }
         for report in reports
     ]
-    return render(request, 'mapper/map_reports.html', {'form': report_form, 'reports': reports_data})
+    return render(request, 'mapper/map_reports.html', {'form': report_form, 'reports': reports_data, 'is_map_reports': True})
 
 
 def edit_report(request, pk):

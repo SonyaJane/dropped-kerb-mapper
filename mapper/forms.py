@@ -63,11 +63,15 @@ class ReportForm(forms.ModelForm):
             """),
             Submit('submit', 'Submit', css_class='btn btn-primary'),
             HTML("""
-                {% if report.id %}
-                    <a href="{% url 'report-detail' report.id %}" class="btn btn-secondary">Cancel</a>
-                {% else %}
-                    <a href="{% url 'reports-list' %}" class="btn btn-secondary">Cancel</a>
-                {% endif %}             
+                {% if is_map_reports %}
+                    <a href="javascript:void(0);" class="btn btn-secondary" onclick="document.querySelector('.map-report-form-container').style.display = 'none';">Cancel</a>
+                {% else %} 
+                    {% if report.id %}
+                        <a href="{% url 'report-detail' report.id %}" class="btn btn-secondary">Cancel</a>
+                    {% else %}
+                        <a href="{% url 'reports-list' %}" class="btn btn-secondary">Cancel</a>
+                    {% endif %}   
+                {% endif %}          
                 """),   
         )
                 
