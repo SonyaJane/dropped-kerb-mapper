@@ -12,15 +12,39 @@
     /* Colours */
     --color-coffee-6: #432b20;
     --color-orange-1: #f5ddd2;
+    --color-orange-2: #eabaa5; 
     --color-orange-4: #bd582c;
+}
+
+/* Ensure the body and html take up the full height */
+html, body {
+    height: 100%;
 }
 
 body {
     font-family: var(--primary-font), sans-serif;
+    display: flex;
+    flex-direction: column;
 }
 
-nav {
-    height: 56px;
+/* Allow the main content to grow and push the footer down */
+main {
+    flex-grow: 1;
+}
+
+.dkm-container {
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.offcanvas {
+    background-color: #FBE6CE;
+}
+
+a {
+	text-decoration: none;
+	color: var(--color-coffee-6);
+	cursor: pointer;
 }
 
 .hidden {
@@ -205,6 +229,23 @@ label, .reasons-help-text {
     white-space: nowrap; 
 }
 
+/* Used in footer */
+.background-orange-2 {
+	background-color: var(--color-orange-2);
+}
+
+/* Blusky icon */
+.bi-bluesky::before {
+    content: "";
+    background-color: currentColor;
+    -webkit-mask: url("../images/icons/bluesky.svg") no-repeat 50% 50%;
+    mask: url("../images/bluesky.svg") no-repeat 50% 50%;
+    -webkit-mask-size: cover;
+    mask-size: cover;
+    height: 22px;
+    width: 22px;
+}
+
 /* Allow wrapping for small screens */
 @media (max-width: 549px) {
     .maplibregl-ctrl-attrib {
@@ -215,8 +256,17 @@ label, .reasons-help-text {
 
 /* Hide longitude and latitude on small screens */
 @media (max-width: 767px) {
+    
     #div_id_latitude, #div_id_longitude {
         display: none;
+    }
+}
+
+/* Add a left margin to the main content for medium screens and larger */
+@media (min-width: 768px) {
+
+    main {
+        margin-right: 250px; /* width of the menu panel */
     }
 }
 

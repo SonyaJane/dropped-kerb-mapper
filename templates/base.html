@@ -8,6 +8,7 @@
 {% url 'map-reports' as map_reports_url %}
 {% url 'instructions' as instructions_url %}
 {% url 'contact' as contact_url %}
+{% url 'instructions' as instructions_url %}
 
 <!DOCTYPE html>
 <html class="h-100" lang="en">
@@ -33,86 +34,67 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
 
 </head>
-<body class="d-flex flex-column h-100 main-bg">
+<body>
     <!-- Navigation -->
-    <!-- Navbar, expands on tablets-->
     <nav class="navbar navbar-expand-md" role="navigation" aria-label="main navigation">
         <div class="container-fluid nav-container">
 
             <!-- Logo - left aligned-->
-            <a class="navbar-brand" href='#'>
+            <a class="navbar-brand" href='{% url 'home' %}'>
                 <img src="{% static 'images/dropped_kerb_mapper_logo.png' %}" alt="Dropped Kerb Mapper logo" id="logo">
             </a>
 
             <!-- Hamburger menu icon for sm screens -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" 
+            <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" 
                 aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <!-- Navbar links - right aligned -->
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto h5">
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.path == home_url %}active{% endif %}" aria-current="page" href="{% url 'home' %}">Home</a>
-                    </li>
-
-                    <!-- Authentication Links -->
-                    {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.path == map_reports_url %}active{% endif %}" aria-current="page" href="{% url 'map-reports' %}">Add Report</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.path == reports_list_url %}active{% endif %}" href="{% url 'reports-list' %}">List Reports</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.path == instructions_url %}active{% endif %}" href="{% url 'instructions' %}">Instructions</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.path == contact_url %}active{% endif %}" aria-current="page" href="{% url 'contact' %}">Contact</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.path == logout_url %}active{% endif %}" aria-current="page" href="{% url 'account_logout' %}">Sign out</a>
-                    </li>
-                    {% else %} 
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.path == signup_url %}active{% endif %}" aria-current="page" href="{% url 'account_signup' %}">Register</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.path == login_url %}active{% endif %}" aria-current="page" href="{% url 'account_login' %}">Sign in</a>
-                    </li>
-                    {% endif %}
-                </ul>
+            <div class="offcanvas offcanvas-end d-md-none" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    {% include 'partials/menu.html' %}
+                </div>
             </div>
-            
-        </div>
+
+            <!-- Always visible panel for medium screens and larger -->
+            <div class="d-none d-md-block position-fixed top-0 end-0 vh-100 bg-light shadow" style="width: 250px; z-index: 1045;">
+                <div class="p-3">
+                    <h5 class="text-center">Menu</h5>
+                    {% include 'partials/menu.html' %}
+                </div>
+            </div>
+        </div>        
     </nav>
 
-    <main class="flex-shrink-0 main-bg">
-        {% if user.is_authenticated %}
-        <p class="text-end m-3 hide-sm">You are logged in as {{ user }}</p>
-        {% else %}
-        <p class="text-end m-3 hide-sm">You are not logged in</p>
-        {% endif %}
+    <main class="mt-2">
         {% block content %}
         <!-- Content Goes here -->
         {% endblock content %}
     </main>
 
     <!-- Footer -->
-    <footer class="d-none d-lg-block">
+    <footer class="background-orange-2">
         <div class="py-4">
 
             <!-- Social media icons -->
             <div class="text-center">
-                Connect with Mobility Mapper on social media
                 <a href="https://www.facebook.com/profile.php?id=61556696245180" target="_blank"
                     rel="noopener noreferrer" aria-label="Go to the Mobility Mapper Facebook page">
                     <i class="bi bi-facebook mx-2 mx-md-3"></i>
                 </a>
-                <a href="https://www.instagram.com/mobilitymapper/" target="_blank" rel="noopener noreferrer" aria-label="Go to the Mobility Mapper Instagram page">
+                <a href="https://www.instagram.com/mobilitymapper/" target="_blank" 
+                    rel="noopener noreferrer" aria-label="Go to the Mobility Mapper Instagram page">
                     <i class="bi bi-instagram mx-2 mx-md-3"></i>
+                </a>
+                <a href="https://bsky.app/profile/mobilitymapper.bsky.social/" target="_blank" 
+                    rel="noopener noreferrer" aria-label="Go to the Mobility Mapper Bluesky page">
+                    <i class="bi bi-bluesky mx-2 mx-md-3"></i>
                 </a>
             </div>
 
