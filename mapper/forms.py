@@ -182,20 +182,26 @@ class CustomSignupForm(SignupForm):
         last = self.cleaned_data.get('last_name').strip().lower()
         base_username = f"{first}_{last}"
         username = base_username
+        
         # Ensure the username is unique
         counter = 1
         while User.objects.filter(username=username).exists():
-            username = f"{base_username}{counter}"
+            username = f"{base_username}_{counter}"
             counter += 1
         user.first_name = first.capitalize()
         user.last_name = last.capitalize()
         user.username = username
+        
+        # Set the mobility device fields
+        user.uses_mobility_device = self.cleaned_data.get('uses_mobility_device')
+        user.mobility_device_type = self.cleaned_data.get('mobility_device_type')
         user.save()
         
-        # Store mobility device data. This might require a custom user profile model.
-        profile = user.profile
-        profile.uses_mobility_device = self.cleaned_data.get('uses_mobility_device')
-        profile.mobility_device_type = self.cleaned_data.get('mobility_device_type')
-        profile.save()
-        
         return user
+    
+    
+class ContactForm(forms.Form):
+    message = forms.CharField(
+        widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Your Message', 'rows': 5}),
+        label="Your Message"
+    )

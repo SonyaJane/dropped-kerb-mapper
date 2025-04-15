@@ -3,11 +3,17 @@ from django.contrib import messages
 from django.http import HttpResponse, Http404
 from django.core.cache import cache
 from django.http import JsonResponse
+from allauth.account.views import ConfirmEmailView
+from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import render, get_object_or_404, reverse
 from django.views import generic
-from .forms import ReportForm
+from .forms import ReportForm, ContactForm
 from .models import Report
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from django.conf import settings
 import os
 import json
 import requests
@@ -253,3 +259,81 @@ def update_report_location(request, pk):
             print(f"Error: {e}")
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
+
+class CustomConfirmEmailView(ConfirmEmailView):
+    def get(self, *args, **kwargs):
+        # Automatically confirm the email
+        confirmation = self.get_object()
+        confirmation.confirm(self.request)
+
+        # Log the user in
+        user = confirmation.email_address.user
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
+        login(self.request, user)
+        
+        # Redirect to a success page or login the user
+        return redirect('email-confirmation-success')
+    
+
+def email_confirmation_success(request):
+    """
+    Render the email confirmation success page.
+    """
+    return render(request, 'mapper/email_confirmation_success.html')
+
+
+def instructions(request):
+    """
+    Render the instructions page.
+    """
+    return render(request, 'mapper/instructions.html')
+
+
+@login_required
+def contact(request):
+    """
+    Render the contact page and handle form submissions.
+    """
+    message_sent = False
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            # Get the logged-in user's details
+            user = request.user
+            name = f"{user.first_name} {user.last_name}"
+            email = user.email
+            # Get the message from the form
+            message = form.cleaned_data['message']
+
+            # Send the message to yourself
+            send_mail(
+                subject=f"Contact Form Submission from {name}",
+                message=f"Message from {name} ({email}):\n\n{message}",
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[settings.EMAIL_HOST_USER],
+            )
+
+            # Send a confirmation email to the user
+            confirmation_message = (
+                f"Hi {name},\n\n"
+                "Thank you for your message, we will get back to you as soon as possible.\n\n"
+                "Here is a copy of your message:\n"
+                f"{message}\n\n"
+                "Kind regards,\n"
+                "Mobility Mapper"
+            )
+            
+            send_mail(
+                subject="Thank you for contacting Mobility Mapper",
+                message=confirmation_message,
+                from_email=settings.EMAIL_HOST_USER, 
+                recipient_list=[email],
+            )
+
+             # Display a success message
+            messages.success(request, 'Message submitted successfully!')
+            message_sent = True  # Set the flag to True
+    else:
+        form = ContactForm()
+        
+    return render(request, 'mapper/contact.html', {'form': form, 'message_sent': message_sent})

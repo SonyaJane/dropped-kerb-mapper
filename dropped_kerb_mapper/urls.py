@@ -16,11 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from mapper.views import CustomConfirmEmailView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path(
+        'accounts/confirm-email/<str:key>/',
+        CustomConfirmEmailView.as_view(),
+        name='account_confirm_email',
+    ),
     path("accounts/", include("allauth.urls")),
     path('summernote/', include('django_summernote.urls')),
     # mapper app urls
-    path('', include('mapper.urls'), name='mapper-urls'),
+    path('', include('mapper.urls'), name='mapper-urls'),  
 ]

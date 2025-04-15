@@ -1,40 +1,22 @@
 {% extends "base.html" %}
-{% load i18n %}
 {% load static %}
 
-{% block head_title %}
-{% trans "Signup" %}
-{% endblock %}
-
 {% block content %}
+
 <div class="container">
-  <div class="row">
-    <div class="col-md-8 mt-3 offset-md-2">
-      <h3>{% trans "Sign Up" %}</h3>
-      <p>{% blocktrans %}
-        Welcome to Dropped Kerb Mapper. If you already have an account, please
-        <a class="link" href="{{ login_url }}">sign in</a>
-        instead.
-      {% endblocktrans %}</p>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-8 mt-3 offset-md-2">
 
-      <form class="signup" id="signup_form" method="post"
-        action="{% url 'account_signup' %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        {% if redirect_field_value %}
-        <input type="hidden" name="{{ redirect_field_name }}"
-          value="{{ redirect_field_value }}" />
-        {% endif %}
-        <button class="btn btn-signup right" type="submit">
-          {% trans "Sign Up" %} &raquo;</button>
-      </form>
+  <h3>Create an account to report the locations of dropped kerbs in the UK.</h3>
+  <p>If you already have an account, please <a class="link" href="{{ login_url }}">sign in</a> instead.</p>
 
-    </div>
-  </div>
+  <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+    <button class="btn btn-signup right" type="submit">Sign Up &raquo;</button>
+  </form>
+
 </div>
 
 <script src="{% static 'js/sign-up-form.js' %}"></script>

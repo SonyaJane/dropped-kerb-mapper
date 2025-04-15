@@ -1,13 +1,36 @@
 from django.contrib.gis.db import models as geomodels
 from django.db import models
 from django.contrib.gis.geos import Point
-from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from multiselectfield import MultiSelectField
 from cloudinary.models import CloudinaryField
-from decimal import Decimal
-from osdatahub import NamesAPI
+from django.contrib.auth.models import AbstractUser
 from geopy import Nominatim
+from django.conf import settings
+
+class CustomUser(AbstractUser):
+    # Add mobility device fields
+    uses_mobility_device = models.BooleanField(
+        default=False,
+        verbose_name="Uses a wheeled mobility device"
+    )
+    MOBILITY_DEVICE_CHOICES = (
+        ('manual_wheelchair', 'Manual Wheelchair'),
+        ('powered_wheelchair', 'Powered Wheelchair'),
+        ('mobility_scooter', 'Mobility Scooter'),
+        ('tricycle', 'Tricycle'),
+        ('adapted_bicycle', 'Adapted Bicycle'),
+        ('bicycle', 'Bicycle'),
+        ('other', 'Other'),
+    )
+    mobility_device_type = models.CharField(
+        max_length=50,
+        choices=MOBILITY_DEVICE_CHOICES,
+        blank=True,
+        null=True,
+        verbose_name="Mobility Device Type"
+    )
+    
 class County(geomodels.Model):
     county = models.CharField(max_length=100)
     polygon = geomodels.MultiPolygonField(srid=4326)  # stores the county geometry, target CRS is WGS84 (lat/long)
@@ -75,10 +98,17 @@ class Report(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
-    # A foreign key to associate the report with the authenticated user who submitted it.
-    # on_delete the report is retained, but its user field will be set to null.
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="reports")
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,  # custom user model
+        on_delete=models.SET_NULL,
+        related_name='reports',
+        null=True,  # Allow the user field to be NULL
+        blank=True 
+    )
+    
+    username = models.CharField(max_length=150, blank=True, null=True)  # Store the username as a string
 
+    
     class Meta:
         ordering = ['-created_at'] # Sort reports by creation date, newest first.
         verbose_name = "Dropped Kerb Report" # Singular name for the model in the admin interface.
@@ -125,13 +155,13 @@ class Report(models.Model):
             for key, value in address.items():
                 if key in ['county', 'state', 'country', 'postode', 'country_code', 'province'] or key.startswith('ISO'):
                     break
-                values_until_county.append(value)
-            
+                values_until_county.append(value)            
             # Join the values into a single string
             self.place_name = ", ".join(values_until_county) if values_until_county else None
+            # Automatically set the username field if the user is set
+            if self.user and not self.username:
+                self.username = self.user.username
         super().save(*args, **kwargs)    
     
     def __str__(self):
-        return f"Report {self.id}: {self.classification} by {self.user}"
- 
- 
+        return f"Report {self.id}: {self.classification} by {self.username or 'Unknown User'}"
