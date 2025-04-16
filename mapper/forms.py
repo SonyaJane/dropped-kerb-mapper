@@ -201,7 +201,35 @@ class CustomSignupForm(SignupForm):
     
     
 class ContactForm(forms.Form):
+    first_name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}),
+        label="First Name",
+        required=True
+    )
+    last_name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}),
+        label="Last Name",
+        required=True
+    )
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email Address'}),
+        label="Email Address",
+        required=True
+    )
     message = forms.CharField(
         widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Your Message', 'rows': 5}),
         label="Your Message"
     )
+    
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)  # Get the user from the kwargs
+        super().__init__(*args, **kwargs)
+
+        if user and user.is_authenticated:
+            # Pre-fill fields with user data and make them read-only
+            self.fields['first_name'].initial = user.first_name
+            self.fields['first_name'].widget.attrs['readonly'] = True
+            self.fields['last_name'].initial = user.last_name
+            self.fields['last_name'].widget.attrs['readonly'] = True
+            self.fields['email'].initial = user.email
+            self.fields['email'].widget.attrs['readonly'] = True

@@ -8,6 +8,7 @@ export default function initialiseMap() {
                 "type": "raster",
                 "tiles": [window.location.origin + '/os_tiles/{z}/{x}/{y}/'], // Django proxy URL for tiles
                 "tileSize": 256,
+                "minzoom": 7,
                 "maxzoom": 20,
                 "attribution": "Contains OS data &copy; Crown copyright and database rights 2025 | Maplibre"
             },
@@ -15,6 +16,7 @@ export default function initialiseMap() {
                 "type": "raster",
                 "tiles": [window.location.origin + '/google_satellite_tiles/{z}/{x}/{y}/'],
                 "tileSize": 256,
+                "minzoom": 7,
                 "maxzoom": 20,
                 "attribution": "Map data &copy; 2025 | Maplibre"
             }
@@ -39,16 +41,33 @@ export default function initialiseMap() {
     // Create map
     DKM.map = new maplibregl.Map({
         container: 'map', // ID of the div where the map will be rendered
-        // max zoom:
+        minZoom: 6,
         maxZoom: 20,
         style: style,
-        center: [-3.11, 55.95], // Initial map center (longitude, latitude)
-        zoom: 10,
+        center: [-3.2, 55],  // Rough center of the UK
+        zoom: 6,
         maxBounds: [
             [ -10.76418, 49.528423 ],
             [ 1.9134116, 61.331151 ]
         ], // UK bounds
         attributionControl: false, // Disable default attribution control
+    });
+
+    // add geolocation control to the map
+    const geolocateControl = new maplibregl.GeolocateControl({
+        positionOptions: {
+            enableHighAccuracy: true
+        },
+        showAccuracyCircle: false,
+        fitBoundsOptions: {
+            animate: true
+        }
+    });
+    DKM.map.addControl(geolocateControl);
+
+    // Trigger geolocation on map load
+    DKM.map.on('load', () => {
+        geolocateControl.trigger(); // Automatically zoom to user's location
     });
 
     // Add navigation controls to the map
@@ -59,4 +78,9 @@ export default function initialiseMap() {
         compact: true
     });
     DKM.map.addControl(attributionControl, 'bottom-right');
+
+    // Log zoom level when it changes
+    DKM.map.on('zoom', () => {
+        console.log(`Current zoom level: ${DKM.map.getZoom().toFixed(2)}`);
+    });
 }

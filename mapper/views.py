@@ -289,33 +289,30 @@ def instructions(request):
     return render(request, 'mapper/instructions.html')
 
 
-@login_required
 def contact(request):
     """
     Render the contact page and handle form submissions.
     """
     message_sent = False
     if request.method == 'POST':
-        form = ContactForm(request.POST)
+        form = ContactForm(request.POST, user=request.user if request.user.is_authenticated else None)
         if form.is_valid():
-            # Get the logged-in user's details
-            user = request.user
-            name = f"{user.first_name} {user.last_name}"
-            email = user.email
-            # Get the message from the form
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            email = form.cleaned_data['email']
             message = form.cleaned_data['message']
 
-            # Send the message to yourself
+            # Send the message to myself
             send_mail(
-                subject=f"Contact Form Submission from {name}",
-                message=f"Message from {name} ({email}):\n\n{message}",
+                subject=f"Contact Form Submission from {first_name} {last_name}",
+                message=f"Message from {first_name} {last_name} ({email}):\n\n{message}",
                 from_email=settings.EMAIL_HOST_USER,
                 recipient_list=[settings.EMAIL_HOST_USER],
             )
 
             # Send a confirmation email to the user
             confirmation_message = (
-                f"Hi {name},\n\n"
+                f"Hi {first_name} {last_name},\n\n"
                 "Thank you for your message, we will get back to you as soon as possible.\n\n"
                 "Here is a copy of your message:\n"
                 f"{message}\n\n"
@@ -332,8 +329,8 @@ def contact(request):
 
              # Display a success message
             messages.success(request, 'Message submitted successfully!')
-            message_sent = True  # Set the flag to True
+            message_sent = True
     else:
-        form = ContactForm()
+        form = ContactForm(user=request.user if request.user.is_authenticated else None)
         
     return render(request, 'mapper/contact.html', {'form': form, 'message_sent': message_sent})
