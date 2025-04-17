@@ -80,7 +80,7 @@ export default function initialiseMap() {
     DKM.map.addControl(attributionControl, 'bottom-right');
 
     // Log zoom level when it changes
-    DKM.map.on('zoom', () => {
-        console.log(`Current zoom level: ${DKM.map.getZoom().toFixed(2)}`);
-    });
+    // DKM.map.on('zoom', () => {
+    //     console.log(`Current zoom level: ${DKM.map.getZoom().toFixed(2)}`);
+    // });
 }

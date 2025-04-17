@@ -3,9 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<div>
-    <h1 class="mb-4 d-none d-lg-block h2">Dropped Kerb Reports Map</h1>
-    
+<div>    
     <div id="map">
 
         {% comment %} Toggle map style button {% endcomment %}
@@ -27,10 +25,11 @@
 
     <div class="map-report-form-container">
         <button id="close-form" class="close-btn" aria-label="Close">&times;</button>
-        <form method="post" enctype="multipart/form-data" id="map-report-form">
+        <form method="post" enctype="multipart/form-data" id="map-report-form" action="{% url 'map-reports' %}" hx-post="{% url 'map-reports' %}" hx-target="#map" hx-swap="beforeend">
             {% csrf_token %}
             {% crispy form %}
         </form>
+        <div id="form-errors" class="text-danger"></div> <!-- Placeholder for form errors -->
     </div>
 
     <div id="submission-success-container">
@@ -39,9 +38,6 @@
             {{ message|safe }}
         </div>
         {% endfor %}
-        Would you like to add another report?
-        <button id="yes-submit" class="btn btn-primary">Yes</button>
-        <button id="no-submit" class="btn btn-primary close-btn">No</button>
     </div>
 
     <!-- Embed the reports data safely using json_script -->
@@ -62,4 +58,5 @@
     const markerUrl = "{% static 'images/marker_32_48.png' %}";
 </script>
 <script type="module" src="{% static 'js/map-reports.js' %}"></script>
+<script src="{% static 'js/add-event-listener-new-report-marker.js' %}"></script>
 {% endblock %}

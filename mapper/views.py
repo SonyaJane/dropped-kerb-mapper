@@ -11,7 +11,7 @@ from django.views import generic
 from .forms import ReportForm, ContactForm
 from .models import Report
 from django.contrib.auth import login
-from django.contrib.auth.decorators import login_required
+from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.conf import settings
 import os
@@ -44,12 +44,28 @@ class ReportList(generic.ListView):
    
    
 def report_detail(request, pk):
-   """
-   Retrieves a single report from the database and displays it on the page.
-   """
-   queryset = Report.objects.all()
-   report = get_object_or_404(queryset, pk=pk)
-   return render(request, "mapper/report_detail.html", {"report": report})
+    """
+    Retrieves a single report from the database and displays it on the page.
+    """
+    queryset = Report.objects.all()
+    report = get_object_or_404(queryset, pk=pk)
+    
+    # Check if the request is an AJAX or HTMX request
+    if request.headers.get('HX-Request') or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({
+            'id': report.id,
+            'latitude': report.latitude,
+            'longitude': report.longitude,
+            'place_name': report.place_name,
+            'county': report.county.county if report.county else None,
+            'classification': report.classification,
+            'reasons': report.get_reasons_display(),
+            'comments': report.comments,
+            'photoUrl': report.photo.url if report.photo else None,
+        })
+    
+    # Render the report detail page for non-AJAX requests
+    return render(request, "mapper/report_detail.html", {"report": report})
 
 
 def map_reports(request):
@@ -59,12 +75,20 @@ def map_reports(request):
             report = report_form.save(commit=False)
             report.user = request.user
             report.save()
-            messages.add_message(request, messages.SUCCESS, 'Report created successfully!')
-            # return redirect('map-reports')  # Redirect to the reports list page
-        if not report_form.is_valid():
-            print("Report form errors:", report_form.errors)
-    report_form = ReportForm()
+            
+            # If the request is an HTMX request, return the report ID in the response
+            if request.headers.get('HX-Request'):
+                return JsonResponse({'success': True, 'report_id': report.id})
+            
+            # Redirect for non-HTMX requests, or handle as a normal POST request
+            return redirect('map-reports')
+
+        # Return errors if the form is invalid
+        if request.headers.get('HX-Request'):
+            return JsonResponse({'success': False, 'errors': report_form.errors}, status=400)
         
+    # For GET requests, render the map_reports template
+    report_form = ReportForm()        
     # Get all reports for the map view    
     reports = Report.objects.all()
     reports_data = [

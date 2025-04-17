@@ -5,11 +5,10 @@ export default function handleMapClick(e) {
 
     // check if the clicked location is within the boundary of the UK
     const { lng, lat } = e.lngLat;
-
-    // Check if the clicked location is within the boundary of the UK
     const point = turf.point([lng, lat]);
-    // Check if the point is within any of the 4 UK polygons
     let isWithinUK = false;
+
+    // Check if the point is within any of the 4 UK polygons
     for (const feature of DKM.ukBoundary.features) {
         if (turf.booleanPointInPolygon(point, feature)) {
             isWithinUK = true;
@@ -21,8 +20,6 @@ export default function handleMapClick(e) {
         return; // Exit the function if the location is outside the UK
     }
 
-    // add a marker at the clicked location
-
     // if a newMarker already exists, remove it
     if (DKM.newMarker) {
         DKM.newMarker.remove();
@@ -31,14 +28,14 @@ export default function handleMapClick(e) {
     // Get the current classification value (for the marker colour)
     const classification = document.getElementById('classification');
 
-    // add marker
+    // Add a new marker at the clicked location
     DKM.newMarker = new maplibregl.Marker({
         color: classification.value // Set the marker colour
     })
         .setLngLat(e.lngLat) 
         .addTo(DKM.map);
 
-    // Show new report form
+    // Show report form
     const formContainer = document.querySelector('.map-report-form-container');
     formContainer.style.display = 'block';
 
