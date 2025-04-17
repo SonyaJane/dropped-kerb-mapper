@@ -11,32 +11,57 @@
     <table border="0" cellspacing="0" cellpadding="8">
     <thead>
         <tr>
-        <th>ID</th>
+        {% if user.is_superuser %}
+        <th>Report ID</th>
+        <th>User</th>
+        <th>User Report Number</th>
+        {% endif %}
+        {% if not user.is_superuser %}
+        <th>Report Number</th>
+        {% endif %}
         <th>Latitude</th>
         <th>Longitude</th>
+        <th>Place</th>
+        <th>County</th>
         <th>Classification</th>
         <th>Reasons</th>
         <th>Comments</th>
-        <th>User</th>
+        <th>Photo</th>
         <th class="created-col">Created</th>
+        <th class="updated-col">Updated</th>
         </tr>
     </thead>
     <tbody>
         {% for report in report_list %}
             {% if user.is_superuser or report.user == user %}
                 <tr>
-                <td>
-                    <a href="{% url 'report-detail' report.id %}" class="report-link">
-                        {{ report.id }}
-                    </a>
-                </td>
-                <td>{{ report.latitude }}</td>
-                <td>{{ report.longitude }}</td>
-                <td>{{ report.get_classification_display }}</td>
-                <td>{{ report.get_reasons_display }}</td>
-                <td>{{ report.comments }}</td>
-                <td>{{ report.user }}</td>
-                <td>{{ report.created_at|date:"d-m-Y" }}</td>
+                    {% if user.is_superuser %}
+                    <td>
+                        <a href="{% url 'report-detail' report.id %}" class="report-link">
+                            {{ report.id }}
+                        </a>
+                    </td>
+                    <td>{{ report.user }}</td>
+                    <td>{{ report.user_report_number }}</td>
+                    {% endif %}
+                    {% if not user.is_superuser %}
+                    <td>{{ report.user_report_number }}</td>
+                    {% endif %}
+                    </td>
+                    <td>{{ report.latitude }}</td>
+                    <td>{{ report.longitude }}</td>
+                    <td>{{ report.place_name }}</td>
+                    <td>{{ report.get_county_display }}</td>
+                    <td>{{ report.get_classification_display }}</td>
+                    <td>{{ report.get_reasons_display }}</td>
+                    <td>{{ report.comments }}</td>
+                    <td>
+                        {% if report.photo %}
+                            <a href="{{ report.photo.url }}" target="_blank" rel="noopener noreferrer">Photo</a>
+                        {% endif %}
+                    </td>
+                    <td>{{ report.created_at|date:"d-m-Y" }}</td>
+                    <td>{{ report.updated_at|date:"d-m-Y" }}</td>
                 </tr>
             {% endif %}
         {% empty %}
