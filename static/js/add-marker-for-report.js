@@ -1,7 +1,6 @@
 import setMarkerColour from "./set-marker-colour.js";
 
 export default function addMarkerForReport(report) {
-    console.log('Adding marker for report:', report.id);
     const marker = new maplibregl.Marker({
         color: report.classification, // Set the marker colour
         draggable: false

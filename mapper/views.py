@@ -52,17 +52,7 @@ def report_detail(request, pk):
     
     # Check if the request is an AJAX or HTMX request
     if request.headers.get('HX-Request') or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        return JsonResponse({
-            'id': report.id,
-            'latitude': report.latitude,
-            'longitude': report.longitude,
-            'place_name': report.place_name,
-            'county': report.county.county if report.county else None,
-            'classification': report.classification,
-            'reasons': report.get_reasons_display(),
-            'comments': report.comments,
-            'photoUrl': report.photo.url if report.photo else None,
-        })
+        return JsonResponse(serialise_report(report))
     
     # Render the report detail page for non-AJAX requests
     return render(request, "mapper/report_detail.html", {"report": report})
@@ -75,38 +65,35 @@ def map_reports(request):
             report = report_form.save(commit=False)
             report.user = request.user
             report.save()
-            
-            # If the request is an HTMX request, return the report ID in the response
-            if request.headers.get('HX-Request'):
-                return JsonResponse({'success': True, 'report_id': report.id})
-            
-            # Redirect for non-HTMX requests, or handle as a normal POST request
-            return redirect('map-reports')
-
-        # Return errors if the form is invalid
-        if request.headers.get('HX-Request'):
+            # POST requests are always HTMX request, so render the partial template
+            return render(request, 'mapper/partials/new_report.html', {'report': serialise_report(report)})
+        else:
+            # Return errors for invalid form submissions
             return JsonResponse({'success': False, 'errors': report_form.errors}, status=400)
         
     # For GET requests, render the map_reports template
     report_form = ReportForm()        
     # Get all reports for the map view    
     reports = Report.objects.all()
-    reports_data = [
-        {
-            'id': report.id,
-            'latitude': report.latitude,
-            'longitude': report.longitude,
-            'place_name': report.place_name,
-            'county': report.county.county if report.county else None,
-            'classification': report.classification,
-            'reasons': report.get_reasons_display(),
-            'comments': report.comments,
-            'photoUrl': report.photo.url if report.photo else None,
-        }
-        for report in reports
-    ]
+    reports_data = [serialise_report(report) for report in reports]
     return render(request, 'mapper/map_reports.html', {'form': report_form, 'reports': reports_data, 'is_map_reports': True})
 
+
+def serialise_report(report):
+    """
+    Serialise a Report object into a dictionary.
+    """
+    return {
+        'id': report.id,
+        'latitude': report.latitude,
+        'longitude': report.longitude,
+        'place_name': report.place_name,
+        'county': report.county.county if report.county else None,
+        'classification': report.classification,
+        'reasons': report.get_reasons_display(),
+        'comments': report.comments,
+        'photoUrl': report.photo.url if report.photo else None,
+}
 
 def edit_report(request, pk):
     """

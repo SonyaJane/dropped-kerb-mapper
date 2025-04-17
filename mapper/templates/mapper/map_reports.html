@@ -25,7 +25,11 @@
 
     <div class="map-report-form-container">
         <button id="close-form" class="close-btn" aria-label="Close">&times;</button>
-        <form method="post" enctype="multipart/form-data" id="map-report-form" action="{% url 'map-reports' %}" hx-post="{% url 'map-reports' %}" hx-target="#map" hx-swap="beforeend">
+        <form method="post" enctype="multipart/form-data" id="map-report-form" 
+            action="{% url 'map-reports' %}" 
+            hx-post="{% url 'map-reports' %}" 
+            hx-target="#new-report-container" 
+            hx-swap="beforeend">
             {% csrf_token %}
             {% crispy form %}
         </form>
@@ -42,6 +46,10 @@
 
     <!-- Embed the reports data safely using json_script -->
     {{ reports|json_script:"reports-data" }}
+
+    {% comment %} Container for new report data {% endcomment %}
+    <div id="new-report-container">
+    </div>
 </div>
 
 <!-- Maplibre GL JS -->
