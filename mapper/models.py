@@ -77,6 +77,8 @@ class Report(models.Model):
         ('accessibility_barrier', 'Accessibility barrier'),
     ]
     
+    # Unique report number for each user
+    user_report_number = models.PositiveIntegerField(null=True, blank=True)  
     # Store location as latitude and longitude
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
@@ -128,6 +130,11 @@ class Report(models.Model):
             raise ValidationError("Reasons can only be provided for red or orange classifications.")
  
     def save(self, *args, **kwargs):
+        # Automatically assign the next report number for the user
+        if self.user and not self.user_report_number:
+            # Get the highest report number for this user and increment it
+            last_report = Report.objects.filter(user=self.user).order_by('-user_report_number').first()
+            self.user_report_number = (last_report.user_report_number + 1) if last_report else 1
         # If latitude and longitude are provided, create a GeoDjango Point.
         if self.latitude and self.longitude:
             lon = round(self.longitude, 6)
@@ -161,7 +168,7 @@ class Report(models.Model):
             # Automatically set the username field if the user is set
             if self.user and not self.username:
                 self.username = self.user.username
-        super().save(*args, **kwargs)    
+        super().save(*args, **kwargs)
     
     def __str__(self):
         return f"Report {self.id}: {self.classification} by {self.username or 'Unknown User'}"

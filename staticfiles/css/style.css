@@ -10,11 +10,31 @@
     --bs-body-font-size: 1.4rem;
 
     /* Colours */
-    --color-coffee-6: #432b20;
-    --color-orange-1: #f5ddd2;
-    --color-orange-2: #eabaa5; 
-    --color-orange-4: #bd582c;
-    --color-green-1: #E0E4DB;
+    /* Orange */
+	--color-orange-1: #f5ddd2;
+	--color-orange-1-a: #f5ddd2DD; 
+	--color-orange-2: #eabaa5; 
+	--color-orange-2-b: #ebbaa6d9; 
+	--color-orange-3: #e09878;  	
+	--color-orange-3-a: #e09878DD; 
+	--color-orange-4: #bd582c; 	/* main colour */
+	--color-orange-4-a: #bd582cdd; 
+	--color-orange-4-b: #bd582cbb;
+	--color-orange-5: #8e4221; 
+	--color-orange-6: #5f2c16;
+	
+	/* Coffee */
+	--color-coffee-1: #ebdcd5;
+	--color-coffee-2: #D7B8AB; 	
+	--color-coffee-3: #C29580;
+	--color-coffee-4: #865640;
+	--color-coffee-4-a: #865640da; 
+	--color-coffee-5: #644030;
+	--color-coffee-6: rgb(67, 43, 32); 	/* main font-color */
+	--color-coffee-6-a: #432b20cc; 
+
+	/* Green */
+	--color-green-1: #E0E4DB;
 	--color-green-1-a: #E0E4DBCC;
 	--color-green-2: #C1CAB6;
 	--color-green-2-a: #C1CAB6CC;
@@ -23,6 +43,25 @@
 	--color-green-4-a: #637052cc;
 	--color-green-5: #4A543E;
 	--color-green-6: #313829;
+
+	/* Brown */
+	--color-brown-1: #ECE6DD;
+	--color-brown-2: #D8CEBA;
+	--color-brown-3: #C5B598;
+	--color-brown-4: #9B8357;
+	--color-brown-5: #746241;
+	--color-brown-6: #4E422C;
+
+	/* Mango */
+	--color-mango-1: #FBE6CE;
+	--color-mango-1-a: #FBE6CEF0;
+	--color-mango-2: #F7CE9D;
+	--color-mango-2-a: #F7CE9DF0;
+	--color-mango-3: #F3B56C;
+	--color-mango-3-a: #F3B56CF0;
+	--color-mango-4: #E48312;
+	--color-mango-5: #AB620E;
+	--color-mango-6: #724209;
 }
 
 /* Ensure the body and html take up the full height */
@@ -41,9 +80,13 @@ main {
     flex-grow: 1;
 }
 
-p, li {
+p, li, td {
     font-size: 1.25rem;
     font-weight: 400;
+}
+
+tr {
+    font-size: 1.25rem;
 }
 
 h2 {
@@ -96,6 +139,36 @@ a {
 
 .btn-green:hover {
     background-color: var(--color-green-3);
+    color: black;
+}
+
+.btn-red {
+    background-color: rgb(230, 129, 129);
+    color: black;
+}
+
+.btn-red:hover {
+    background-color: rgb(236, 121, 121);
+    color: black;
+}
+
+.btn-mango {
+    background-color: var(--color-mango-2);
+    color: black;
+}
+
+.btn-mango:hover {
+    background-color: var(--color-mango-3);
+    color: black;
+}
+
+.btn-orange {
+    background-color: var(--color-orange-2);
+    color: black;
+}
+
+.btn-orange:hover {
+    background-color: var(--color-orange-3);
     color: black;
 }
 
@@ -237,16 +310,6 @@ label, .reasons-help-text {
     z-index: 1000;
 }
 
-#submission-success-container {
-    display: none; /* Initially hidden */
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    background-color: #f5ddd2;
-    padding: 10px;
-    z-index: 1001;
-}
-
 #close-form {
     position: absolute;
     top: 0;
@@ -315,17 +378,51 @@ label, .reasons-help-text {
     width: 22px;
 }
 
+/* Show the successful report submission message in the centre of the map */
 .success-message {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: #4caf50;
-    color: white;
-    padding: 10px 20px;
+    position: absolute;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    background-color: var(--color-mango-1);
+    color: var(--color-brown-6);
+    font-size: 1.25rem;
+    padding: 10px 10px;
     border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    font-size: 16px;
+    border: 1px solid var(--color-brown-4);
     z-index: 1001;
+    width: 300px;
+}
+
+/* Report details page */
+.report-photo-container{
+    width: 300px;
+}
+
+.report-photo {
+    width: 100%; 
+    height: auto;
+}
+
+.what-next {
+    width: 300px;
+}
+
+@media (max-width: 360px) {
+    /* Make the logo smaller so the menu toggler can fit on the same line on tiny screens */
+    #logo {
+        height: 22px;
+    }
+
+    .navbar-toggler {
+        height: 30px;
+        padding: 2px 8px; 
+    }
+
+    .navbar-toggler-icon {
+        height: 20px;  
+        width: 20px;  
+    }
 }
 
 /* Allow wrapping for small screens */
@@ -336,21 +433,25 @@ label, .reasons-help-text {
     }
 }
 
-/* Hide longitude and latitude on small screens */
 @media (max-width: 767px) {
-    
+    /* Hide longitude and latitude on small screens */
     #div_id_latitude, #div_id_longitude {
+        display: none;
+    }
+    
+    /* when #map exists in the doc hide the footer for small screens */
+    html:has(#map) footer {
         display: none;
     }
 }
 
 /* Add a left margin to the main content for medium screens and larger */
 @media (min-width: 768px) {
-
     main,
     footer {
         margin-right: 250px; /* width of the menu panel */
     }
+
 }
 
 @media (min-width: 992px) {

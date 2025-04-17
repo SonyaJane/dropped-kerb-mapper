@@ -2,12 +2,9 @@
 {% block content %}
 {% load static %}
 
-<h2>Report Details</h2>
+<div class="m-2 md-3">
+<h2 class="fw-bold">Details for Report Number {{ report.id }}</h2>
 <table>
-  <tr>
-    <th>Report ID</th>
-    <td>{{ report.id }}</td>
-  </tr>
   <tr>
     <th>Latitude</th>
     <td>{{ report.latitude }}</td>
@@ -15,6 +12,14 @@
   <tr>
     <th>Longitude</th>
     <td>{{ report.longitude }}</td>
+  </tr>
+  <tr>
+    <th>Place</th>
+    <td>{{ report.place_name }}</td>
+  </tr>
+  <tr>
+    <th>County</th>
+    <td>{{ report.county.county}}</td>
   </tr>
   <tr>
     <th>Classification</th>
@@ -41,42 +46,47 @@
     </td>
   </tr>
   <tr>
-    <th>Created on</th>
-    <td>{{ report.created_at|date:"Y-m-d H:i" }}</td>
-  </tr>
-  <tr>
-    <th>Updated on</th>
-    <td>{{ report.updated_at|date:"Y-m-d H:i" }}</td>
-  </tr>
-  <tr>
-    <th>Created by user</th>
+    <th>Created by</th>
     <td>
       {% if report.user %}
-        {{ report.user.username }}
+        {{ report.user.first_name }} {{ report.user.last_name }}
       {% else %}
         Anonymous
       {% endif %}
     </td>
   </tr>
+  <tr>
+    <th>Created on</th>
+    <td>{{ report.created_at|date:"d-m-Y H:i" }}</td>
+  </tr>
+  <tr>
+    <th>Updated on</th>
+    <td>{{ report.updated_at|date:"d-m-Y H:i" }}</td>
+  </tr>
 </table>
 
 {% if report.photo %}
-  <div style="margin-bottom: 20px;">
-    <img src="{{ report.photo.url }}" alt="Photo for Report {{ report.id }}" style="max-width: 100%; height: auto;">
-    <p>Uploaded on: {{ photo.created_at|date:"Y-m-d H:i" }}</p>
+  <div class="my-3 report-photo-container">
+    <img src="{{ report.photo.url }}" alt="Photo for Report {{ report.id }}" class="report-photo">
   </div>
 {% else %}
   <p>No photos available for this report.</p>
 {% endif %}
 
-{% if user.is_authenticated and report.user == user %}
-<a href="{% url 'edit-report' report.id %}" class="btn btn-edit btn-primary">Edit</a>
-<button type="button" class="btn btn-delete btn-light" data-bs-toggle="modal" data-bs-target="#delete-modal">
-  Delete
-</button>
-{% endif %}
 
-<a href="{% url 'reports-list' %}" class="btn btn-secondary">Back to Reports List</a>
+  <h3 class="mt-4">What would you like to do next?</h3>
+  <div class="what-next mb-4">
+  {% if user.is_authenticated and report.user == user %}
+  <a href="{% url 'edit-report' report.id %}" class="btn btn-edit btn-orange my-2 d-block">Edit this report</a>
+  <button type="button" class="btn btn-red my-2 d-block w-100" data-bs-toggle="modal" data-bs-target="#delete-modal">
+    Delete this report
+  </button>
+  {% endif %}
+  <a href="{% url 'reports-list' %}" class="btn btn-mango my-2 d-block">Go to your reports list</a>
+  <a href="{% url 'map-reports' %}" class="btn btn-green my-2 d-block">Create new report</a>
+</div>
+
+</div>
 
 <!-- Delete confirmation modal -->
 <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -91,7 +101,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <a href="{% url 'delete-report' report.id %}" class="btn btn-delete">Delete</a>
+        <a href="{% url 'delete-report' report.id %}" class="btn btn-red">Delete</a>
       </div>
     </div>
   </div>

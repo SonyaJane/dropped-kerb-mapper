@@ -17,7 +17,9 @@ document.addEventListener('htmx:afterSwap', (e) => {
     const successMessage = document.createElement('div');
     successMessage.className = 'success-message';
     successMessage.textContent = 'Report submitted successfully!';
-    document.body.appendChild(successMessage);
+    // Append the success message to the map container
+    const mapContainer = document.getElementById('map');
+    mapContainer.appendChild(successMessage);
 
     // Automatically remove the success message after 3 seconds
     setTimeout(() => {
