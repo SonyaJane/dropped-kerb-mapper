@@ -156,13 +156,16 @@ class Report(models.Model):
             # Reverse geocode the latitude and longitude to get the place name.
             geolocator = Nominatim(user_agent="Dropped-Kerb-Mapper")
             location = geolocator.reverse(f"{lat},{lon}", zoom=17, addressdetails=True)
-             # Extract all values from location.raw['address'] until the key 'county'
+            # Extract all values from location.raw['address'] until the key 'county'
             address = location.raw.get('address', {})
+            print(address)
             values_until_county = []
             for key, value in address.items():
                 if key in ['county', 'state', 'country', 'postode', 'country_code', 'province'] or key.startswith('ISO'):
                     break
-                values_until_county.append(value)            
+                if value not in values_until_county:
+                    # Avoid duplicates in the place name
+                    values_until_county.append(value)
             # Join the values into a single string
             self.place_name = ", ".join(values_until_county) if values_until_county else None
             # Automatically set the username field if the user is set
