@@ -17,7 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
     window.DKM = window.DKM || {}; // || {} ensures that if the namespace already exists, it won't be overwritten
     DKM.newMarker = null; // Initialise new map marker for the clicked location on adding a new report
     DKM.ukBoundary = null; // Initialise UK boundary variable
-
+    DKM.markers = []; // Initialise markers array to store all markers on the map
+    
     initialiseMap();
     addEventListenerOnStyledata();
     loadBoundary();

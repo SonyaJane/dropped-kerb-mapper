@@ -10,12 +10,20 @@ export default function addEventListenerAddReportButton() {
             // If the button is active, disable "add report" mode
             addReportButton.classList.remove('add-report-active'); // Remove the active class
             DKM.map.getCanvas().style.cursor = ''; // Reset the cursor to default
-            DKM.map.off('click', handleMapClick) // Remove click event listener to the map        
+            DKM.map.off('click', handleMapClick) // Remove click event listener to the map   
+            // reenable popup event listener for all the markers
+            DKM.markers.forEach(marker => {
+                marker.setPopup(marker._savedPopup);
+              });     
             } else {
             // If the button is not active, enable "add report" mode
             addReportButton.classList.add('add-report-active'); // Add the active class
             DKM.map.getCanvas().style.cursor = 'crosshair'; // Change the cursor to crosshair
-            DKM.map.on('click', handleMapClick) // Add a click event listener to the map        }
+            DKM.map.on('click', handleMapClick) // Add a click event listener to the map
+            // remove popup event listener from all the markers
+            DKM.markers.forEach(marker => {
+                marker.setPopup(null);
+            });
         }
     });
 }

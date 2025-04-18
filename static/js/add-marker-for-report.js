@@ -80,6 +80,11 @@ export default function addMarkerForReport(report) {
         }
     });
 
+    // stash the popup on the marker so we can remove it then re‑attach later
+    marker._savedPopup = marker.getPopup();
+    // add the marker to the markers array
+    DKM.markers.push(marker);
+
 }
 function generatePopupHTML(report, latitude, longitude, placeName, county) {
     return `
