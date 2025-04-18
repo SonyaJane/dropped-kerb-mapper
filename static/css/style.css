@@ -4,9 +4,6 @@
 /* Bootstrap icons */
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
 
-/* Choices CSS */
-@import "choices.js/src/styles/choices";
-
 :root {
     /* Fonts */
     --primary-font: 'Open Sans', sans-serif;
@@ -308,6 +305,8 @@ label, .reasons-help-text {
     position: absolute;
     bottom: 0;
     left: 0;
+    width: 100%;
+    max-width: 500px;
     background-color: #f5ddd2;
     padding: 10px;
     z-index: 1000;
@@ -336,7 +335,7 @@ label, .reasons-help-text {
 
 .col-form-label {
     font-size: 1.25rem;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 #map-report-form input,
@@ -346,9 +345,12 @@ label, .reasons-help-text {
 }
 
 /* Reasons list items */
-.choices__list--dropdown .choices__item,
-.choices__list--multiple .choices__item {
+.choices__list--dropdown .choices__item {
     font-size: 1.25rem !important;
+}
+
+.choices__list--multiple .choices__item {
+    font-size: 1.15rem !important;
 }
 
 #reasons .form-check {
@@ -423,8 +425,29 @@ label, .reasons-help-text {
     width: 300px;
 }
 
+/* Create new report form */
+
 #div_id_reasons > div {
     width: 100% !important;
+}
+
+/* Crispy applies mb-3 to div that contains form elements */
+.map-report-form-container .row.mb-3 {
+    margin-bottom: 0.25rem !important; /* Reduce the margin between form groups */
+}
+
+#div_id_condition > div {
+    padding-right: 0;
+    width: 100% !important;
+}
+
+.map-report-form-container {
+    max-height: 80vh;    /* Adjust based on how tall you want the form */
+    overflow-y: auto;    /* Enable vertical scrolling */
+}
+
+#div_id_photo {
+    padding-bottom: 0.75rem;
 }
 
 @media (max-width: 360px) {
@@ -452,7 +475,7 @@ label, .reasons-help-text {
     }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 575px) {
     /* Hide longitude and latitude on small screens */
     #div_id_latitude, #div_id_longitude {
         display: none;
@@ -461,6 +484,13 @@ label, .reasons-help-text {
     /* when #map exists in the doc hide the footer for small screens */
     html:has(#map) footer {
         display: none;
+    }
+}
+
+@media (min-width: 576px) {
+    /* Crispy applies mb-3 to div that contains form elements */
+    .map-report-form-container .row.mb-3 {
+        margin-bottom: 0.5rem !important; /* Reduce the margin between form groups */
     }
 }
 
@@ -479,17 +509,6 @@ label, .reasons-help-text {
         display: block;
     }
 
-    .map-report-form-container {
-        display: none; /* Initially hidden */
-        position: absolute;
-        bottom: 0;
-        max-width: 400px;
-        background-color: #f5ddd2;
-        z-index: 1000;
-        padding: 10px;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
 }
 
 @media (min-width: 1200px) {

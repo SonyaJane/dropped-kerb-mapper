@@ -89,7 +89,7 @@ def serialise_report(report):
         'longitude': report.longitude,
         'place_name': report.place_name,
         'county': report.county.county if report.county else None,
-        'classification': report.classification,
+        'condition': report.condition,
         'reasons': report.get_reasons_display(),
         'comments': report.comments,
         'photoUrl': report.photo.url if report.photo else None,

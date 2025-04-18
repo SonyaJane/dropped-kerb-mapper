@@ -2,7 +2,7 @@ import setMarkerColour from "./set-marker-colour.js";
 
 export default function addMarkerForReport(report) {
     const marker = new maplibregl.Marker({
-        color: report.classification, // Set the marker colour
+        color: report.condition, // Set the marker colour
         draggable: false
     })
         .setLngLat([report.longitude, report.latitude]) // Set marker position
@@ -68,7 +68,7 @@ export default function addMarkerForReport(report) {
         // disable dragging after the location is updated
         if (marker.isDraggable()) {
             marker.setDraggable(false); 
-            setMarkerColour(marker.getElement(), report.classification); // Reset the marker colour to its original classification colour
+            setMarkerColour(marker.getElement(), report.condition); // Reset the marker colour to its original condition colour
         }
     });
 
@@ -76,7 +76,7 @@ export default function addMarkerForReport(report) {
     DKM.map.on('click', () => {
         if (marker.isDraggable()) {
             marker.setDraggable(false); // Disable dragging
-            setMarkerColour(marker.getElement(), report.classification); // Reset the marker colour to its original classification colour
+            setMarkerColour(marker.getElement(), report.condition); // Reset the marker colour to its original condition colour
         }
     });
 
@@ -88,7 +88,7 @@ function generatePopupHTML(report, latitude, longitude, placeName, county) {
         <strong>Longitude:</strong><span id="longitude-${report.id}"> ${longitude}</span><br>
         <strong>Place:</strong><span id="place_name-${report.id}"> ${placeName || 'Unknown'}</span><br>
         <strong>County:</strong><span id="county-${report.id}"> ${county || 'Unknown'}</span><br>
-        <strong>Classification:</strong> ${report.classification}<br>
+        <strong>Condition:</strong> ${report.condition}<br>
         <strong>Reasons:</strong> ${report.reasons}<br>
         <strong>Comments:</strong> ${report.comments}<br>
         ${report.photoUrl ? `<img src="${report.photoUrl}" alt="Photo of dropped kerb" style="max-width: 100%; height: auto;">` : ''}

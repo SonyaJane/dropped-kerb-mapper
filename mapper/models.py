@@ -88,10 +88,10 @@ class Report(models.Model):
     # place name (get via reverse geocoding)
     place_name = models.CharField(max_length=1000, blank=True, null=True)
     # Uses a choices field to enforce the available traffic light ratings.
-    classification = models.CharField(max_length=6, choices=TRAFFIC_LIGHT_CHOICES)
+    condition = models.CharField(max_length=6, choices=TRAFFIC_LIGHT_CHOICES)
     
     # Each instance represents an option (checkbox) that explains why a particular 
-    # traffic light classification was chosen. 
+    # traffic light condition was chosen. 
     reasons = MultiSelectField(choices=ALLOWED_REASONS, blank=True, null=True)
     comments = models.CharField(max_length=1000, blank=True) # Optional comments
     
@@ -117,17 +117,17 @@ class Report(models.Model):
         verbose_name_plural = "Dropped Kerb Reports" # Plural name for the model in the admin interface.
         get_latest_by = "created_at" # Retrieve the latest report by creation date.
         indexes = [
-            models.Index(fields=['classification']), # Index the classification field for faster lookups.
+            models.Index(fields=['condition']), # Index the condition field for faster lookups.
             models.Index(fields=['user']),           # Index the user field for faster lookups.
         ]
         
     def clean(self):
         """
-        Enforce that reasons are only provided if the classification is red or orange.
+        Enforce that reasons are only provided if the condition is red or orange.
         """
         super().clean()
-        if self.classification not in ['red', 'orange'] and self.reasons:
-            raise ValidationError("Reasons can only be provided for red or orange classifications.")
+        if self.condition not in ['red', 'orange'] and self.reasons:
+            raise ValidationError("Reasons can only be provided for red or orange conditions.")
  
     def save(self, *args, **kwargs):
         # Automatically assign the next report number for the user
@@ -174,4 +174,4 @@ class Report(models.Model):
         super().save(*args, **kwargs)
     
     def __str__(self):
-        return f"Report {self.id}: {self.classification} by {self.username or 'Unknown User'}"
+        return f"Report {self.id}: {self.condition} by {self.username or 'Unknown User'}"

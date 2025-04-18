@@ -27,7 +27,7 @@ class Command(BaseCommand):
                     report = Report.objects.create(
                         latitude=row['latitude'],
                         longitude=row['longitude'],
-                        classification=row['classification'],
+                        condition=row['condition'],
                         comments=row.get('comments', ''),
                         user=user,
                     )

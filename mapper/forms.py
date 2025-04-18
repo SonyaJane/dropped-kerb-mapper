@@ -1,10 +1,10 @@
-# When building your form (or in the admin), filter the queryset for reasons so that only options matching the chosen classification are displayed.
-# When creating your form or view, you can further customize the reasons field so that the checkboxes dynamically change based on the user's classification choice. For example, in a custom ModelForm, you might override the __init__ method to filter the reasons queryset based on an initial value for the classification field.
-#This design keeps the reasons for classification as a field on the DroppedKerbReport, while still allowing you to have a distinct set of reasons available for each traffic light option.
+# When building your form (or in the admin), filter the queryset for reasons so that only options matching the chosen condition are displayed.
+# When creating your form or view, you can further customize the reasons field so that the checkboxes dynamically change based on the user's condition choice. For example, in a custom ModelForm, you might override the __init__ method to filter the reasons queryset based on an initial value for the condition field.
+#This design keeps the reasons for condition as a field on the DroppedKerbReport, while still allowing you to have a distinct set of reasons available for each traffic light option.
 
 from .models import Report
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, HTML, Field
+from crispy_forms.layout import Layout, Submit, HTML, Field, Div
 from django import forms
 # for image size reduction
 from io import BytesIO
@@ -21,39 +21,51 @@ class ReportForm(forms.ModelForm):
     )
     class Meta:
         model = Report
-        fields = ('latitude', 'longitude', 'classification', 'reasons', 'comments', 'photo')
+        fields = ('latitude', 'longitude', 'condition', 'reasons', 'comments', 'photo')
         widgets = {
             'latitude': forms.TextInput(attrs={'id': 'latitude'}),
             'longitude': forms.TextInput(attrs={'id': 'longitude'}),
-            'classification': forms.Select(attrs={'id': 'classification'}), 
+            'condition': forms.Select(attrs={'id': 'condition'}), 
             'reasons': forms.SelectMultiple(attrs={'id': 'reasons'}),
             'photo': forms.FileInput(attrs={'accept': 'image/*'}), 
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['classification'].empty_label = None  # Remove the default '-------' option
-        self.fields['classification'].choices = [choice for choice in self.fields['classification'].choices if choice[0]]  # Remove empty choice        
-        self.fields['classification'].initial = 'green'
+        
+        # Make latitude and longitude uneditable
+        self.fields['latitude'].widget.attrs['readonly'] = True
+        self.fields['longitude'].widget.attrs['readonly'] = True
+        self.fields['latitude'].required = False
+        self.fields['longitude'].required = False
+        
+        self.fields['condition'].empty_label = None  # Remove the default '-------' option
+        self.fields['condition'].choices = [choice for choice in self.fields['condition'].choices if choice[0]]  # Remove empty choice        
+        self.fields['condition'].initial = 'green'
+        self.fields['condition'].label = ""
         self.fields['reasons'].label = ""
 
         # Set the layout for the form using crispy-forms
         self.helper = FormHelper()
         self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-12 col-md-4' # Labels in 4/12 of the row
-        self.helper.field_class = 'col-12 col-md-8' # Fields in 8/12 of the row
-        
+        self.helper.label_class = 'col-12 col-sm-4' # Labels in 4/12 of the row
+        self.helper.field_class = 'col-12 col-sm-8' # Fields in 8/12 of the row
+    
         self.helper.layout = Layout(
             'latitude',
             'longitude',
-            'classification',
+            Div(
+                HTML('<label for="id_condition" class="col-4 col-form-label">Condition</label>'),
+                Field('condition', wrapper_class='pe-0 col-8'),
+                css_class='row'
+            ),
             # Custom layout for the reasons field, required to force col-md-4 and col-md-8 classes on choices.js field
             HTML("""
                 <div class="row">
-                    <div class="col-12 col-md-4">
-                        <label for="id_reasons" class="col-form-label">Reasons*</label>
+                    <div class="col-12 col-sm-4" id="reasons-label">
+                        <label for="id_reasons" class="col-form-label">Reasons</label>
                     </div>
-                    <div class="col-12 col-md-8">
+                    <div class="col-12 col-sm-8">
             """),
             Field('reasons'), 
             HTML("""

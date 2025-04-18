@@ -1,3 +1,6 @@
+import toggleReasonsFieldVisibility from "./toggle-reasons-field-visibility.js";
+import addEventListenerFormCloseButtons from "./add-event-listener-form-close-buttons.js";
+
 export default function handleMapClick(e) {
 
     // check if the clicked location is within the boundary of the UK
@@ -22,12 +25,12 @@ export default function handleMapClick(e) {
         DKM.newMarker.remove();
     }
 
-    // Get the current classification value (for the marker colour)
-    const classification = document.getElementById('classification');
+    // Get the current condition value (for the marker colour)
+    const condition = document.getElementById('condition');
 
     // Add a new marker at the clicked location
     DKM.newMarker = new maplibregl.Marker({
-        color: classification.value // Set the marker colour
+        color: condition.value // Set the marker colour
     })
         .setLngLat(e.lngLat) 
         .addTo(DKM.map);
@@ -40,4 +43,8 @@ export default function handleMapClick(e) {
     document.getElementById('latitude').value = lat.toFixed(6);
     document.getElementById('longitude').value = lng.toFixed(6);
 
+    // Call the function once to set the initial state
+    toggleReasonsFieldVisibility();
+    // Add event listener to the close buttons
+    addEventListenerFormCloseButtons(formContainer); 
 };

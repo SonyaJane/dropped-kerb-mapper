@@ -25,12 +25,12 @@ export default function handleMapClick(e) {
         DKM.newMarker.remove();
     }
 
-    // Get the current classification value (for the marker colour)
-    const classification = document.getElementById('classification');
+    // Get the current condition value (for the marker colour)
+    const condition = document.getElementById('condition');
 
     // Add a new marker at the clicked location
     DKM.newMarker = new maplibregl.Marker({
-        color: classification.value // Set the marker colour
+        color: condition.value // Set the marker colour
     })
         .setLngLat(e.lngLat) 
         .addTo(DKM.map);

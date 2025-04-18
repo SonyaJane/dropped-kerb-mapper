@@ -5,7 +5,7 @@ import addEventListenerOnStyledata from './add-event-listener-on-map-styledata.j
 import addEventListenerOnWindowResize from './add-event-listener-on-window-resize.js';
 import addEventListenerToggleMapStyle from './add-event-listener-toggle-map-style.js';
 import addEventListenerAddReportButton from './add-event-listener-add-report-button.js';
-import addEventListenerClassificationField from "./add-event-listener-classification-field.js";
+import addEventListenerConditionField from "./add-event-listener-condition-field.js";
 import addExistingReportsToMap from './add-existing-reports-to-map.js';
 import addEventListenerFormCloseButtons from "./add-event-listener-form-close-buttons.js";
 import toggleReasonsFieldVisibility from "./toggle-reasons-field-visibility.js";
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     addEventListenerToggleMapStyle();
     addEventListenerAddReportButton();
     initialiseReasonsChoices();
-    addEventListenerClassificationField(); 
+    addEventListenerConditionField(); 
     addExistingReportsToMap();
     // Call the function once to set the initial state
     toggleReasonsFieldVisibility();

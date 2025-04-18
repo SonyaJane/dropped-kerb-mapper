@@ -12,11 +12,11 @@ from .models import CustomUser
 class ReportAdmin(SummernoteModelAdmin):
     form = ReportAdminForm  # Link the custom form to the admin
     # Fields to be displayed in the admin dashboard
-    list_display = ('id', 'county', 'classification', 'get_reasons_display', 'photo', 'user', 'created_at')
+    list_display = ('id', 'county', 'condition', 'get_reasons_display', 'photo', 'user', 'created_at')
     # Which fields to search using the search bar
     search_fields = ['reasons', 'comments']
     # Filter options to be displayed on the right side of the dashboard
-    list_filter = ('classification', ReasonsFilter, 'user', 'created_at')
+    list_filter = ('condition', ReasonsFilter, 'user', 'created_at')
 
 # register the area models with the admin site
 admin.site.register(County, geo_admin.ModelAdmin)
