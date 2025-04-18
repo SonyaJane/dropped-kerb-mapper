@@ -1,7 +1,6 @@
 export default function removeCrispyClassesFromForm() {
    // Remove .btn-primary class from the submit button
     const submitButton = document.getElementById('submit-btn');
-    console.log(submitButton);
     if (submitButton) {
         submitButton.classList.remove('btn-primary');
     }

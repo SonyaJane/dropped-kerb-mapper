@@ -4,7 +4,7 @@
 
 from .models import Report
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, HTML
+from crispy_forms.layout import Layout, Submit, HTML, Field
 from django import forms
 # for image size reduction
 from io import BytesIO
@@ -35,7 +35,7 @@ class ReportForm(forms.ModelForm):
         self.fields['classification'].empty_label = None  # Remove the default '-------' option
         self.fields['classification'].choices = [choice for choice in self.fields['classification'].choices if choice[0]]  # Remove empty choice        
         self.fields['classification'].initial = 'green'
-        self.fields['reasons'].label = "Reasons*"
+        self.fields['reasons'].label = ""
 
         # Set the layout for the form using crispy-forms
         self.helper = FormHelper()
@@ -47,7 +47,19 @@ class ReportForm(forms.ModelForm):
             'latitude',
             'longitude',
             'classification',
-            'reasons',        
+            # Custom layout for the reasons field, required to force col-md-4 and col-md-8 classes on choices.js field
+            HTML("""
+                <div class="row">
+                    <div class="col-12 col-md-4">
+                        <label for="id_reasons" class="col-form-label">Reasons*</label>
+                    </div>
+                    <div class="col-12 col-md-8">
+            """),
+            Field('reasons'), 
+            HTML("""
+                    </div>
+                </div>
+            """),       
             'comments',
             'photo',
             # Display the current photo
@@ -64,6 +76,7 @@ class ReportForm(forms.ModelForm):
                 {% endif %}
             """),
             Submit('submit', 'Submit', css_class='btn btn-green', css_id='submit-btn'),
+            # Cancel button
             HTML("""
                 {% if is_map_reports %}
                     <a href="javascript:void(0);" class="btn close-btn btn-mango">Cancel</a>

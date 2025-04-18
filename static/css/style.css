@@ -4,6 +4,9 @@
 /* Bootstrap icons */
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
 
+/* Choices CSS */
+@import "choices.js/src/styles/choices";
+
 :root {
     /* Fonts */
     --primary-font: 'Open Sans', sans-serif;
@@ -332,8 +335,20 @@ label, .reasons-help-text {
 }
 
 .col-form-label {
-    font-size: 1rem;
+    font-size: 1.25rem;
     font-weight: 600;
+}
+
+#map-report-form input,
+#map-report-form select,
+#map-report-form select option {
+    font-size: 1.25rem;
+}
+
+/* Reasons list items */
+.choices__list--dropdown .choices__item,
+.choices__list--multiple .choices__item {
+    font-size: 1.25rem !important;
 }
 
 #reasons .form-check {
@@ -408,6 +423,10 @@ label, .reasons-help-text {
     width: 300px;
 }
 
+#div_id_reasons > div {
+    width: 100% !important;
+}
+
 @media (max-width: 360px) {
     /* Make the logo smaller so the menu toggler can fit on the same line on tiny screens */
     #logo {
@@ -448,7 +467,8 @@ label, .reasons-help-text {
 /* Add a left margin to the main content for medium screens and larger */
 @media (min-width: 768px) {
     main,
-    footer {
+    footer,
+    .map-report-form-container {
         margin-right: 250px; /* width of the menu panel */
     }
 
