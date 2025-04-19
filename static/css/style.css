@@ -514,10 +514,3 @@ label, .reasons-help-text {
     }
 
 }
-
-@media (min-width: 1200px) {
-    .dkm-container {
-        max-width: 800px;
-    }
-    
-}

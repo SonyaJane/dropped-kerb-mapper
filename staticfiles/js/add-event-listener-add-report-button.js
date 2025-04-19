@@ -18,6 +18,11 @@ export default function addEventListenerAddReportButton() {
             } else {
             // If the button is not active, enable "add report" mode
             addReportButton.classList.add('add-report-active'); // Add the active class
+            // enable the submit button
+            const submitBtn = document.getElementById("report-submit-btn");
+            submitBtn.disabled = false;
+            submitBtn.value = "Submit";
+            // turn the cursor to crosshair
             DKM.map.getCanvas().style.cursor = 'crosshair'; // Change the cursor to crosshair
             DKM.map.on('click', handleMapClick) // Add a click event listener to the map
             // remove popup event listener from all the markers

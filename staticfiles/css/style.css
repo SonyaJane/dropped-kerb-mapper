@@ -450,6 +450,15 @@ label, .reasons-help-text {
     padding-bottom: 0.75rem;
 }
 
+.fixed-table {
+    table-layout: fixed;
+}
+
+/* Table */
+/* th.la-width, td.la-width { 
+    width: 300px !important; 
+} */
+
 @media (max-width: 360px) {
     /* Make the logo smaller so the menu toggler can fit on the same line on tiny screens */
     #logo {
@@ -513,11 +522,4 @@ label, .reasons-help-text {
         display: block;
     }
 
-}
-
-@media (min-width: 1200px) {
-    .dkm-container {
-        max-width: 800px;
-    }
-    
 }

@@ -10,6 +10,7 @@ import addExistingReportsToMap from './add-existing-reports-to-map.js';
 import addEventListenerFormCloseButtons from "./add-event-listener-form-close-buttons.js";
 import toggleReasonsFieldVisibility from "./toggle-reasons-field-visibility.js";
 import removeCrispyClassesFromForm from "./remove-crispy-classes-from-form.js";
+import addEventListenerReportSubmitButton from "./add-event-listener-report-submit-button.js";
 
 document.addEventListener('DOMContentLoaded', () => { 
     
@@ -25,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     addEventListenerOnWindowResize();
     addEventListenerToggleMapStyle();
     addEventListenerAddReportButton();
+    addEventListenerReportSubmitButton();
     initialiseReasonsChoices();
     addEventListenerConditionField(); 
     addExistingReportsToMap();

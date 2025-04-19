@@ -117,7 +117,7 @@ class Report(models.Model):
         get_latest_by = "created_at" # Retrieve the latest report by creation date.
         indexes = [
             models.Index(fields=['condition']), # Index the condition field for faster lookups.
-            models.Index(fields=['user']),           # Index the user field for faster lookups.
+            models.Index(fields=['user']),      # Index the user field for faster lookups.
         ]
         
     def clean(self):

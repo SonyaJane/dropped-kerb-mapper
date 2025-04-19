@@ -1,7 +1,9 @@
-{% load i18n %}{% autoescape off %}{% blocktrans with site_name=current_site.name %}Hello from {{ site_name }}!{% endblocktrans %}
+{% autoescape off %}
+Hello from Dropped Kerb Mapper!
 
-{% block content %}{% endblock content %}
+{% block content %}
+{% endblock content %}
 
-{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}Thank you for using {{ site_name }}!
-{{ site_domain }}{% endblocktrans %}
+Thank you for using Dropped Kerb Mapper (a tool created by Mobility Mapper: https://www.mobilitymapper.co.uk/)
+
 {% endautoescape %}

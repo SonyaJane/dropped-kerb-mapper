@@ -4,7 +4,6 @@ document.addEventListener('htmx:afterSwap', (e) => {
     // get the new report data
     const reportData = document.getElementById('report-data');
     const report = JSON.parse(reportData.textContent);
-    console.log('Adding marker for report:', report);
     addMarkerForReport(report);
     // remove the report data from the DOM
     reportData.remove();

@@ -28,21 +28,17 @@ def home(request):
  
 class ReportList(SingleTableView):
     model = Report
-    table_class = ReportTable
     template_name = "mapper/reports.html"
     # paginate_by = 24
    
-def get_table(self, **kwargs):
-        table = super().get_table(**kwargs)
+    def get_table(self, **kwargs):
+        qs = self.get_queryset()
+        # Dynamically exclude columns based on the current user
+        if self.request.user.is_superuser:
+            table = ReportTable(qs, exclude=('user_report_number',))
+        else:
+            table = ReportTable(qs, exclude=('created_at',))
         RequestConfig(self.request).configure(table)
-        # If not a superuser, remove columns
-        if not self.request.user.is_superuser:
-            # Remove column by name if it exists
-            if 'created_at' in table.base_columns:
-                del table.base_columns['created_at']
-                # Also remove from instance columns if needed
-                if 'created_at' in table.columns:
-                    del table.columns['created_at']
         return table 
    
 def report_detail(request, pk):

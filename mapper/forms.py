@@ -87,7 +87,7 @@ class ReportForm(forms.ModelForm):
                     </div>
                 {% endif %}
             """),
-            Submit('submit', 'Submit', css_class='btn btn-green', css_id='submit-btn'),
+            Submit('submit', 'Submit', css_class='btn btn-green', css_id='report-submit-btn'),
             # Cancel button
             HTML("""
                 {% if is_map_reports %}
