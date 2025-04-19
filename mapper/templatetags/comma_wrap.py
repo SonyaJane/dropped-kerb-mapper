@@ -11,4 +11,4 @@ def comma_wrap(value):
     """
     if not isinstance(value, str):
         value = str(value)
-    return mark_safe(value.replace(',', ',<wbr>'))
+    return mark_safe(value.replace(',', ',<br>'))
