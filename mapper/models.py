@@ -109,7 +109,6 @@ class Report(models.Model):
     )
     
     username = models.CharField(max_length=150, blank=True, null=True)  # Store the username as a string
-
     
     class Meta:
         ordering = ['-created_at'] # Sort reports by creation date, newest first.

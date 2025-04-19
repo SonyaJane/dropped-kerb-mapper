@@ -7,11 +7,11 @@ from allauth.account.views import ConfirmEmailView
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import render, get_object_or_404, reverse
-from django.views import generic
+from django_tables2 import SingleTableView, RequestConfig
 from .forms import ReportForm, ContactForm
 from .models import Report
+from .tables import ReportTable
 from django.contrib.auth import login
-from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.conf import settings
 import os
@@ -26,22 +26,24 @@ def home(request):
     return render(request, 'mapper/home.html')
  
  
-class ReportList(generic.ListView):
-   template_name = "mapper/reports.html"
-   paginate_by = 24
+class ReportList(SingleTableView):
+    model = Report
+    table_class = ReportTable
+    template_name = "mapper/reports.html"
+    # paginate_by = 24
    
-   def get_queryset(self):
-        """
-        Return reports created by the logged-in user.
-        If the user is a superuser, return all reports.
-        """
-        if self.request.user.is_superuser:
-            # Superuser sees all reports
-            return Report.objects.all()
-        else:
-            # Regular users see only their own reports
-            return Report.objects.filter(user=self.request.user)
-   
+def get_table(self, **kwargs):
+        table = super().get_table(**kwargs)
+        RequestConfig(self.request).configure(table)
+        # If not a superuser, remove columns
+        if not self.request.user.is_superuser:
+            # Remove column by name if it exists
+            if 'created_at' in table.base_columns:
+                del table.base_columns['created_at']
+                # Also remove from instance columns if needed
+                if 'created_at' in table.columns:
+                    del table.columns['created_at']
+        return table 
    
 def report_detail(request, pk):
     """

@@ -502,6 +502,10 @@ label, .reasons-help-text {
         margin-right: 250px; /* width of the menu panel */
     }
 
+    #report-table{
+        overflow-x: auto;
+    }
+
 }
 
 @media (min-width: 992px) {
