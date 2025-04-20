@@ -76,7 +76,7 @@
 
   <h3 class="mt-4">What would you like to do next?</h3>
   <div class="what-next mb-4">
-  {% if user.is_authenticated and report.user == user %}
+  {% if user.is_authenticated and report.user == user or user.is_superuser %}
   <a href="{% url 'edit-report' report.id %}" class="btn btn-edit btn-orange my-2 d-block">Edit this report</a>
   <button type="button" class="btn btn-red my-2 d-block w-100" data-bs-toggle="modal" data-bs-target="#delete-modal">
     Delete this report

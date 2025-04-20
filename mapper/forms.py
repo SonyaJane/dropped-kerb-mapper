@@ -94,9 +94,9 @@ class ReportForm(forms.ModelForm):
                     <a href="javascript:void(0);" class="btn close-btn btn-mango">Cancel</a>
                 {% else %} 
                     {% if report.id %}
-                        <a href="{% url 'report-detail' report.id %}" class="btn btn-secondary">Cancel</a>
+                        <a href="{% url 'report-detail' report.id %}" class="btn btn-mango">Cancel</a>
                     {% else %}
-                        <a href="{% url 'reports-list' %}" class="btn btn-secondary">Cancel</a>
+                        <a href="{% url 'reports-list' %}" class="btn btn-mango">Cancel</a>
                     {% endif %}   
                 {% endif %}          
                 """),   
@@ -160,6 +160,15 @@ class ReportForm(forms.ModelForm):
             except Exception as e:
                 raise forms.ValidationError(f"Error processing image: {str(e)}")
         return photo
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        condition = cleaned_data.get('condition')
+        reasons = cleaned_data.get('reasons')
+        # If condition is red or orange, ensure that at least one reason is selected.
+        if condition in ['red', 'orange'] and (not reasons or len(reasons) == 0):
+            self.add_error('reasons', "At least one reason must be selected when condition is red or orange.")
+        return cleaned_data
     
 
 class CustomSignupForm(SignupForm):

@@ -4,12 +4,17 @@
 
 {% block content %}
 
-<div>
-    <h1>Edit Report</h1>
+<div class="dkm-container">
+    <h2>Edit Report</h2>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% crispy form %}
     </form>
 </div>
+
+<script type="module">
+    import removeCrispyClassesFromForm from "{% static 'js/remove-crispy-classes-from-form.js' %}";
+    removeCrispyClassesFromForm()
+</script>
 
 {% endblock %}

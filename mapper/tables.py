@@ -14,6 +14,9 @@ class ReportTable(tables.Table):
         ''',
         orderable=False
     )
+    user_report_number = tables.Column(
+        verbose_name="Report",   
+    )
     place_name = tables.TemplateColumn(
         template_code='''{% load comma_wrap %}{{ record.place_name|comma_wrap }}''',
         attrs={"td": {"style": "white-space: nowrap;"}}
@@ -31,9 +34,6 @@ class ReportTable(tables.Table):
         template_code='''{% load comma_wrap %}{{ record.reasons|comma_wrap }}''',
         attrs={"td": {"style": "white-space: nowrap;"}}
     )
-    comments = tables.Column(
-        attrs={"td": {"class": "la-width"}, "th": {"class": "la-width"}}  # increase width for the column
-    )
     created_at = tables.Column(
         verbose_name="Created",
         attrs={"td": {"style": "white-space: nowrap;"}}
@@ -41,6 +41,12 @@ class ReportTable(tables.Table):
     updated_at = tables.Column(
         verbose_name="Updated",
         attrs={"td": {"style": "white-space: nowrap;"}}
+    )
+    # New column edit link
+    edit = tables.TemplateColumn(
+        verbose_name="",
+        template_code='''<a href="{% url 'report-detail' record.id %}">edit</a>''',
+        orderable=False
     )
     
     def render_created_at(self, value):
@@ -59,6 +65,7 @@ class ReportTable(tables.Table):
         model = Report
         template_name="django_tables2/bootstrap5-responsive.html"
         fields = (
+            'edit',
             'id',
             'user',
             'user_report_number',

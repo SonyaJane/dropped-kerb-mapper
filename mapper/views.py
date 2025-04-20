@@ -30,6 +30,12 @@ class ReportList(SingleTableView):
     model = Report
     template_name = "mapper/reports.html"
     # paginate_by = 24
+    
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if not self.request.user.is_superuser:
+            qs = qs.filter(user=self.request.user)
+        return qs
    
     def get_table(self, **kwargs):
         qs = self.get_queryset()
@@ -37,7 +43,7 @@ class ReportList(SingleTableView):
         if self.request.user.is_superuser:
             table = ReportTable(qs, exclude=('user_report_number',))
         else:
-            table = ReportTable(qs, exclude=('created_at',))
+            table = ReportTable(qs, exclude=('id', 'user','la','created_at',))
         RequestConfig(self.request).configure(table)
         return table 
    
