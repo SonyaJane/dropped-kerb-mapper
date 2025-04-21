@@ -103,16 +103,17 @@ def edit_report(request, pk):
     """
     Edit an existing report
     """
-    # Get the report object based on the primary key (pk) from the URL
-    queryset = Report.objects.all()
-    report = get_object_or_404(queryset, pk=pk)
+    # Allow superuser to grab any report; others only their own
+    if request.user.is_superuser:
+        report = get_object_or_404(Report, pk=pk)
+    else:
+        report = get_object_or_404(Report, pk=pk, user=request.user)
     
     # For when the form is submitted:
     if request.method == "POST":
-        print("POST data:", request.POST)
         # Bind the form to the POST data and files
         form = ReportForm(request.POST, request.FILES, instance=report)
-        if form.is_valid() and report.user == request.user:
+        if form.is_valid() and (report.user == request.user or request.user.is_superuser):
             form.save()
             messages.add_message(request, messages.SUCCESS, 'Report updated successfully!')
             return HttpResponseRedirect(reverse('report-detail', args=[pk]))

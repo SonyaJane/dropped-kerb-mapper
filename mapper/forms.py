@@ -175,7 +175,7 @@ class ReportForm(forms.ModelForm):
         if self.instance.pk and self.current_user:
             if self.instance.user != self.current_user and not self.current_user.is_superuser:
                 raise forms.ValidationError("You do not have permission to edit this report.")
-            
+
         return cleaned_data
     
 

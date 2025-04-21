@@ -1,16 +1,17 @@
 {% extends 'base.html' %} 
 {% block content %}
 {% load static %}
+{% load comma_wrap %}
 
-<div class="m-2 md-3">
+<div class="mt-4 dkm-container report-detail">
 
   {% if user.is_superuser %}
-  <h2 class="fw-bold">Details for Report Number {{ report.id }}</h2>
+  <h2 class="underline-orange mb-4">Report Number {{ report.id }}</h2>
   {% else %}
-  <h2 class="fw-bold">Details for your report number {{ report.user_report_number }}</h2>
+  <h2 class="underline-orange mb-4">Report Number {{ report.user_report_number }}</h2>
   {% endif %}
 
-  <table>
+  <table class="table">
     <tr>
       <th>Latitude</th>
       <td>{{ report.latitude }}</td>
@@ -35,7 +36,7 @@
       <th>Reasons</th>
       <td>
         {% if report.reasons %}
-          {{ report.get_reasons_display }}
+          {{ report.get_reasons_display |comma_wrap}}
         {% else %}
           None
         {% endif %}
@@ -60,12 +61,12 @@
     </tr>
     {% endif %}
     <tr>
-      <th>Created on</th>
-      <td>{{ report.created_at|date:"d-m-Y H:i" }}</td>
+      <th>Created</th>
+      <td>{{ report.created_at|date:"j F Y H:i" }}</td>
     </tr>
     <tr>
-      <th>Updated on</th>
-      <td>{{ report.updated_at|date:"d-m-Y H:i" }}</td>
+      <th>Updated</th>
+      <td>{{ report.updated_at|date:"j F Y H:i" }}</td>
     </tr>
   </table>
 
@@ -77,17 +78,32 @@
     <p class="my-2">No photo available for this report.</p>
   {% endif %}
 
-  <h3 class="mt-4">What would you like to do next?</h3>
+  <h3 class="mt-4 mb-3">What would you like to do next?</h3>
 
-  <div class="what-next mb-4">
+  <div class="what-next mb-4 row">
+    
     {% if user.is_authenticated and report.user == user or user.is_superuser %}
-    <a href="{% url 'edit-report' report.id %}" class="btn btn-edit btn-orange my-2 d-block">Edit this report</a>
-    <button type="button" class="btn btn-red my-2 d-block w-100" data-bs-toggle="modal" data-bs-target="#delete-modal">
-      Delete this report
-    </button>
+    <div class="col-12 col-sm-auto">
+      <a href="{% url 'edit-report' report.id %}" class="btn btn-edit btn-orange my-2 d-block">
+        Edit this report
+      </a>
+    </div>
+    <div class="col-12 col-sm-auto">
+      <button type="button" class="btn btn-red my-2" data-bs-toggle="modal" data-bs-target="#delete-modal">
+        Delete this report
+      </button>
+    </div>
     {% endif %}
-    <a href="{% url 'reports-list' %}" class="btn btn-mango my-2 d-block">Go to your reports list</a>
-    <a href="{% url 'map-reports' %}" class="btn btn-green my-2 d-block">Create new report</a>
+    <div class="col-12 col-sm-auto">
+      <a href="{% url 'reports-list' %}" class="btn btn-mango my-2 d-block">
+        Go to reports list
+      </a>
+    </div>
+    <div class="col-12 col-sm-auto">
+      <a href="{% url 'map-reports' %}" class="btn btn-green my-2 d-block">
+        Create new report
+      </a>
+    </div>
   </div>
 
 </div>

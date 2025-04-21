@@ -2,38 +2,52 @@
 {% block content %}
 {% load static %}
 
-<div class="dkm-container">
-<h2>Welcome to Dropped-Kerb Mapper</h2>
-<p>
-    The purpose of Dropped-Kerb Mapper is to record the location and condition of dropped kerbs in the UK. 
-    This data contributes to creating accessible routes for wheeled mobility device users in the web application <a href="https://www.mobilitymapper.com" target="_blank" rel="noopener noreferrer">Mobility Mapper</a>. 
-    Please note that Mobility Mapper is a work in progress, and we will keep all contributers up-to-date on its progress.
-</p>
-<p>
-    The data collected will also be used to raise the awareness of the need for well designed and maintained dropped kerbs in the UK, 
-    and to help local councils and authorities to understand where they are needed most.
-</p>
+<div class="dkm-container my-4 home-container">
 
-<div>
-    <h2>How to Contribute</h2>
-    <p>When you have created an account and signed in, you can</p>
-    <ul>
-        <li>Create new dropped kerb reports by clicking on our map.</li>
-        <li>View your existing dropped kerb reports.</li>
-    </ul>
+    <h2 class="underline-orange mb-2">Welcome</h2>
     <p>
-        When you create an account, we ask if you use a wheeled mobility device.
+        The purpose of Dropped Kerb Mapper is to record the location 
+        and condition of dropped kerbs in the UK. 
+    </p>
+    <p>
+        This data is fed into <a href="https://www.mobilitymapper.com" target="_blank" rel="noopener noreferrer" class="custom-link">Mobility Mapper</a>,
+        which is a free app that generates accessible routes for users of wheeled mobility devices.
+        Mobility Mapper is currently in development, and we will keep contributers to Dropped Kerb Mapper up-to-date on its progress.
+    </p>
+    <p>
+        The data collected will also be used to raise the awareness of the need for well designed and maintained dropped kerbs in the UK, 
+        and to help local councils and authorities to understand where they are needed most.
+    </p>
+
+    <h2 class="underline-orange mt-3 mb-2">How to Contribute</h2>
+
+    <p>When you have created an account and signed in, you can</p>
+
+    <ul>
+        <li>Create a new dropped kerb report by clicking on its location on a map.</li>
+        <li>Upload a photo of the dropped kerb (optional).</li>
+        <li>Note the condition of the dropped kerb.</li>
+        <li>View a list of your reports.</li>
+        <li>Edit your reports.</li>
+    </ul>
+
+    <p>
+        We have made this app intuitive to use, but also provide <a href="{% url 'instructions' %}" class="custom-link">instructions</a> on how to create reports.
+    </p>
+
+    <p>
+        Please note that when you create an account, we ask if you use a wheeled mobility device.
         This is to help us better understand the data we collect, and how it can be used to improve the accessibility of the UK.
         We will not share your personal information with anyone else.
     </p>
-</div>  
 
-{% if not user.is_authenticated %}
-<div class="mb-4" id="not-logged-in">
-    <p>Sign in or create an account to start contributing!</p>
-    <a href="{% url 'account_login' %}" class="btn btn-green">Sign In</a>
-    <a href="{% url 'account_signup' %}" class="btn btn-green">Create Account</a>
-</div>
-{% endif %}
+    {% if not user.is_authenticated %}
+    <div class="mb-4" id="not-logged-in">
+        <p>Sign in or create an account to start contributing!</p>
+        <a href="{% url 'account_login' %}" class="btn btn-green">Sign In</a>
+        <a href="{% url 'account_signup' %}" class="btn btn-green">Create Account</a>
+    </div>
+    {% endif %}
+
 </div>
 {% endblock content %}

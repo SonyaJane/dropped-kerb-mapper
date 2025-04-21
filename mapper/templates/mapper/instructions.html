@@ -1,15 +1,32 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <h2>Instructions for using Dropped Kerb Mapper</h2>
-    <h3>To create a report</h3>
+<div class="dkm-container my-4">
+    <h2 class="underline-orange mb-2">Instructions</h2>
+        
+    <p class="para-wide">
+        You can find the links to all the pages of this app in the menu, which is in
+        the yellow panel on the right hand side of the screen. 
+    </p>
+
+    <p class="para-narrow">
+        You can find the links to all the pages of this app in the menu, which 
+        can be revealed by clicking the hamburger icon (three horizontal lines) 
+        in the top right of the screen. 
+    </p>
+
+    <h3>How to create a report</h3>
     <ol>
-        <li>Go to the <a href="{% url 'map-reports' %}">Map Reports</a> page.</li>
+        <li>In the menu, click Add Report. A map will load. The first time 
+            it loads, you will need to allow the app to access your location.
+            If you do not allow this, the map will be centred on the UK.</li>
+        </li>
+
         <li>Find the location of the dropped kerb on the map. 
             You can zoom in, pan, and toggle between the map view and satellite view to help you locate the dropped kerb.
             Notice that in map-view you can see the outline of paths and roads.
         </li>
+        
         <li>Click on the button in the top left of the map to activate report mode. 
             The button will turn orange and your cursor will turn into a + (crosshair), which means you can now click on the location of the dropped kerb on the map.</li>
         <li>Optional: Select the condition of the dropped kerb, where:
@@ -23,7 +40,7 @@
         You many also leave a comment to further clarify your reason for selecting the condition.</li>
     </ol>
     
-    <h3>To view your reports</h3>
+    <h3>View your reports</h3>
     <ol>
         <li>Go to the <a href="{% url 'reports-list' %}">List Reports</a> page.</li>
         <li>Here you can see all your submitted reports.</li>

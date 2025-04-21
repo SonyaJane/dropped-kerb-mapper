@@ -6,7 +6,9 @@ export default function addEventListenerConditionField() {
     condition.addEventListener('change', () => {
         toggleReasonsFieldVisibility();
         // Change the marker colour to the new condition value
-        let newMarker = DKM.newMarker.getElement();
-        setMarkerColour(newMarker, condition.value); 
+        if (DKM.newMarker){
+            let newMarker = DKM.newMarker.getElement();
+            setMarkerColour(newMarker, condition.value);
+        }
     });
 }

@@ -182,7 +182,8 @@ a {
     color: black;
 }
 
-label, .reasons-help-text {
+label, 
+.reasons-help-text {
     font-family: var(--primary-font), sans-serif;
     font-size: 1rem;
     font-weight: 600;
@@ -200,6 +201,7 @@ label, .reasons-help-text {
 .maplibregl-user-location-dot {
     transition: none !important;
   }
+
 /* Disable the pulse animation on the location dot */
 .maplibregl-user-location-dot::after,
 .maplibregl-user-location-dot::before {
@@ -322,6 +324,11 @@ label, .reasons-help-text {
     z-index: 1000;
 }
 
+.home-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
 #close-form {
     position: absolute;
     top: 0;
@@ -434,10 +441,6 @@ label, .reasons-help-text {
     height: auto;
 }
 
-.what-next {
-    width: 300px;
-}
-
 /* Create new report form */
 
 #div_id_reasons > div {
@@ -469,7 +472,56 @@ label, .reasons-help-text {
     margin-left: auto;
 }
 
+.report-detail {
+    max-width: 800px;
+    width: fit-content;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.report-detail th {
+    font-weight: 400;
+}
+
+.report-detail th {
+    padding-left: 0;
+}
+
+.report-detail table.table {
+    width: auto;      /* allow table to shrink to content */
+}
+
+.report-detail .btn {
+    width: 210px;
+}
+
+.what-next {
+    max-width: 510px;
+}
+
+.what-next.row .col-md-auto {
+    padding-right: 0;
+}
+
+.custom-link {
+    color: var(--color-orange-4);
+    text-decoration: underline;
+}
+
+.para-wide {
+    display: none;
+}
+.para-narrow {
+    display: block;
+}
+
 @media (max-width: 360px) {
+    /* reduce all font sizes by 10% on very small screens  */
+
+    html {
+        font-size: 90%;
+    }
+
     /* Make the logo smaller so the menu toggler can fit on the same line on tiny screens */
     #logo {
         height: 22px;
@@ -484,6 +536,7 @@ label, .reasons-help-text {
         height: 20px;  
         width: 20px;  
     }
+
 }
 
 /* Allow wrapping for small screens */
@@ -523,6 +576,13 @@ label, .reasons-help-text {
 
     #report-table{
         overflow-x: auto;
+    }
+
+    .para-wide {
+        display: block;
+    }
+    .para-narrow {
+        display: none;
     }
 
 }

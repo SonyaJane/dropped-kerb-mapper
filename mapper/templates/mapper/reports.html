@@ -4,44 +4,16 @@
 
 {% block content %}
 
-<div class="dkm-container">
+<div class="dkm-container my-4">
 {% if user.is_superuser %}
-    <h2>All Reports</h2>
+    <h2 class="underline-orange">All Reports</h2>
 {% else %}
-    <h2>Your Reports</h2>
+    <h2 class="underline-orange">Your Reports</h2>
 {% endif %}
 </div>
 
 <div id="report-table" class="dkm-container">
     {% render_table table %}
 </div>
-
-{% comment %} 
-<a href="{% url 'report-detail' report.id %}" class="report-link">
-{{ report.id }}
-<td>{{ report.user }}</td>
-{% endif %}
-{% if not user.is_superuser %}
-<td>{{ report.user_report_number }}</td>
-{% endif %}
-</td>
-<td>{{ report.latitude }}</td>
-<td>{{ report.longitude }}</td>
-<td>{{ report.place_name }}</td>
-<td>{{ report.get_county_display }}</td>
-<td>{{ report.get_condition_display }}</td>
-<td>{{ report.get_reasons_display }}</td>
-<td>{{ report.comments }}</td>
-<td>
-    {% if report.photo %}
-        <a href="{{ report.photo.url }}" target="_blank" rel="noopener noreferrer">Photo</a>
-    {% endif %}
-</td>
-<td>{{ report.created_at|date:"d-m-Y" }}</td>
-<td>{{ report.updated_at|date:"d-m-Y" }}</td>
-No reports available.</td>
-    
-    {% endcomment %}
-   
 
 {% endblock %}
