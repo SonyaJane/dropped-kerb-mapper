@@ -31,6 +31,8 @@ class ReportForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        # Pop the current user from kwargs and assign to an instance variable
+        self.current_user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         
         # Make latitude and longitude uneditable
@@ -168,6 +170,12 @@ class ReportForm(forms.ModelForm):
         # If condition is red or orange, ensure that at least one reason is selected.
         if condition in ['red', 'orange'] and (not reasons or len(reasons) == 0):
             self.add_error('reasons', "At least one reason must be selected when condition is red or orange.")
+            
+        # Check permissions: allow edit only if the current user is the original owner or a superuser.
+        if self.instance.pk and self.current_user:
+            if self.instance.user != self.current_user and not self.current_user.is_superuser:
+                raise forms.ValidationError("You do not have permission to edit this report.")
+            
         return cleaned_data
     
 

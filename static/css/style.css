@@ -80,6 +80,10 @@ main {
     flex-grow: 1;
 }
 
+nav {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
 p, li, td {
     font-size: 1.25rem;
     font-weight: 400;
@@ -123,6 +127,12 @@ a {
 
 .hidden {
     display: none !important;
+}
+
+.underline-orange {
+    display: inline-block;
+    border-bottom: 5px solid var(--color-orange-2);
+    padding-bottom: 5px;
 }
 
 /* Buttons */
@@ -340,7 +350,10 @@ label, .reasons-help-text {
 
 #map-report-form input,
 #map-report-form select,
-#map-report-form select option {
+#map-report-form select option,
+.edit-report input,
+.edit-report select,
+.edit-report select option {
     font-size: 1.25rem;
 }
 
@@ -448,6 +461,12 @@ label, .reasons-help-text {
 
 #div_id_photo {
     padding-bottom: 0.75rem;
+}
+
+.edit-report {
+    max-width: 540px;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 @media (max-width: 360px) {
