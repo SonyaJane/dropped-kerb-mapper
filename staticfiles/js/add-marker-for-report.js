@@ -87,18 +87,36 @@ export default function addMarkerForReport(report) {
 
 }
 function generatePopupHTML(report, latitude, longitude, placeName, county) {
+    // If the user who created the report is a superuser, show the report id.
+    // Otherwise, show the user_report_number.
+    const reportNumber = (report.user && report.user_is_superuser) ? report.id : report.user_report_number;
+    // Only include the reasons line if condition is red or orange.
+    let reasons = '';
+    if ((report.condition === 'red' || report.condition === 'orange')) {
+        reasons = `<p><span class="orange-font">${report.reasons}</span></p>`;
+    }
+    // Only include the comments line if there are comments.
+    let comments = ''
+    if (report.comments) {
+        comments = `<p><span class="orange-font">${report.comments}</span></p>`;
+    }
     return `
-        <strong>Report ID:</strong> ${report.id}<br>
-        <strong>Latitude:</strong><span id="latitude-${report.id}"> ${latitude} </span><br>
-        <strong>Longitude:</strong><span id="longitude-${report.id}"> ${longitude}</span><br>
-        <strong>Place:</strong><span id="place_name-${report.id}"> ${placeName || 'Unknown'}</span><br>
-        <strong>County:</strong><span id="county-${report.id}"> ${county || 'Unknown'}</span><br>
-        <strong>Condition:</strong> ${report.condition}<br>
-        <strong>Reasons:</strong> ${report.reasons}<br>
-        <strong>Comments:</strong> ${report.comments}<br>
+        <p>
+            <span class="orange-font">Report ${reportNumber}</span>
+            <span>&nbsp;</span>
+            <a href="/reports/${report.id}/" class="custom-link">view</a>
+            <span>&nbsp;</span>
+            <a href="/reports/${report.id}/edit/" class="custom-link">edit</a>
+        </p>
+        <p>
+            <span class="orange-font" id="latitude-${report.id}"> ${latitude}, </span>
+            <span class="orange-font" id="longitude-${report.id}"> ${longitude}</span>
+        </p>
+        <p><span class="orange-font" id="place_name-${report.id}"> ${placeName || 'Unknown'}</span></p>
+        <p><span class="orange-font" id="county-${report.id}"> ${county}</span></p>
+        ${reasons}
+        ${comments}
         ${report.photoUrl ? `<img src="${report.photoUrl}" alt="Photo of dropped kerb" style="max-width: 100%; height: auto;">` : ''}
-        <br>
-        <a href="/reports/${report.id}/edit/" class="btn btn-primary btn-sm" style="margin-top: 10px;">Edit</a>
     `;
 }
 

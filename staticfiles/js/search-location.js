@@ -1,7 +1,7 @@
 //  Add click event listener to button for "Search for place or address" text input
 // (Magnifying glass icon)
 export default function addSearchLocationListener(outputDivId) {
-    document.getElementById("text-search-submit").addEventListener('click', async e => {
+    document.getElementById("search-icon").addEventListener('click', async e => {
 
         const locationText = document.getElementById("text-search-input").value;
         // Regular expression to check if the input contains at least one word (letters)

@@ -88,6 +88,9 @@ def serialise_report(report):
     Serialise a Report object into a dictionary.
     """
     return {
+        'user': report.user.username if report.user else None,
+        'user_report_number': report.user_report_number,
+        'user_is_superuser': report.user.is_superuser if report.user else False,
         'id': report.id,
         'latitude': report.latitude,
         'longitude': report.longitude,

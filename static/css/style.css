@@ -84,6 +84,10 @@ nav {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.navbar-toggler {
+    width: 60px; /* match width of map action buttons */
+}
+
 p, li, td {
     font-size: 1.25rem;
     font-weight: 400;
@@ -217,25 +221,26 @@ label,
     position: absolute;
     top: 10px;
     left: 10px;
-    z-index: 1000;
+    padding-right: 10px;
+    z-index: 2;
 }
 
 #text-search-input {
     font-size: 1.25rem;
-    flex-grow: 1;       /* Makes the input take the remaining space */
-    margin-right: 5px;
-    height: 47px;      /* Ensures consistent height */
+    height: 60px;
+    border: 2px solid var(--color-orange-4);
+    border-right: none;
+    background: rgb(246, 245, 241) !important;
+}
+
+#text-search .input-group {
+    padding-right: 10px;
 }
 
 #text-search-submit {
-    height: 47px;    /* Matches input height */
-    width: 47px;    /* Ensures it's a square */
-    padding: 0;
-    display: flex;    /* Centers the icon */
-    justify-content: center;
-    align-items: center;
-    border-radius: 5px;
-    flex-shrink: 0;    /* Prevents the button from shrinking */
+    width: 60px;
+    border: 2px solid var(--color-orange-4);
+    background: rgb(246, 245, 241) !important;
 }
 
 /* User location button */
@@ -248,21 +253,21 @@ label,
 }
 
 .maplibregl-ctrl-geolocate {
-    width: 47px !important;
-    height: 47px !important;
+    width: 60px !important;
+    height: 60px !important;
     border: 2px solid var(--color-orange-4) !important;
     border-radius: 4px !important;
     background: none !important;
-    background-color: var(--color-orange-1) !important;
+    background-color: rgb(246, 245, 241) !important;
 }
 
 /* Toggle map style button */
 #toggle-satellite {
     position: absolute; /* Set the container to relative positioning */
     right: 10px; 
-    top: 67px; 
-    width: 47px;
-    height: 47px;
+    top: 85px; 
+    width: 60px;
+    height: 60px;
     padding: 0;
     margin: 0;
     cursor: pointer;
@@ -281,15 +286,15 @@ label,
 /* Add report button */
 #add-report {
     position: absolute;
-    top: 120px;
+    top: 160px;
     right: 10px;
     background: rgb(246, 245, 241);
     border-radius: 4px;
     border: 2px solid var(--color-orange-4);
     cursor: pointer;
     z-index: 2;
-    width: 47px;
-    height: 47px; 
+    width: 60px;
+    height: 60px; 
 }
 
 #add-report img {
@@ -297,7 +302,7 @@ label,
     vertical-align: middle;
 }
 
-.add-report-active {
+.button-active {
     background: #F7CE9D !important;
     border: 1px solid #bd582c !important;
 }
@@ -386,7 +391,11 @@ label,
 }
 
 .maplibregl-popup {
-    max-width: 320px;
+    max-width: 300px !important;
+}
+
+.maplibregl-popup p {
+    margin-bottom: 0.7rem;
 }
 
 .col-form-label {
@@ -555,6 +564,12 @@ label,
     display: block;
 }
 
+.orange-font {
+    color: var(--color-orange-6)
+}
+
+
+
 @media (max-width: 360px) {
     /* reduce all font sizes by 10% on very small screens  */
 
@@ -568,6 +583,7 @@ label,
     }
 
     .navbar-toggler {
+        width: auto;
         height: 30px;
         padding: 2px 8px; 
     }
@@ -575,6 +591,92 @@ label,
     .navbar-toggler-icon {
         height: 20px;  
         width: 20px;  
+    }
+
+    /* Map controls */
+
+    /* Location search bar */
+    #text-search {
+        width: 100%;
+    }
+
+    #text-search-input {
+        height: 50px;
+    }
+
+    #text-search-submit {
+        width: 50px;
+    }
+
+    .maplibregl-ctrl-top-right {
+        margin-top: 64px !important;
+    }
+    
+    /* User location button */
+    .maplibregl-ctrl-geolocate {
+        width: 50px !important;
+        height: 50px !important;
+    }
+
+    /* Toggle map style button */
+    
+    #toggle-satellite { 
+        top: 75px; 
+        width: 50px;
+        height: 50px;
+        top: 135px;
+    }
+
+    #satellite-icon {
+        width: 25px;
+        height: 25px; 
+    }
+
+    /* Add report button */
+    #add-report {
+        top: 195px;
+        width: 50px;
+        height: 50px; 
+    }
+
+    #add-report img {
+        height: 30px; 
+        vertical-align: middle;
+    }
+
+    /* map marker popup */
+    .maplibregl-popup {
+        width: 80vw !important;
+        max-width: 80vw !important;
+    }
+
+    .maplibregl-popup p {
+        margin-bottom: 0.6rem;
+    }
+}
+
+@media (min-width: 361px) and (max-width: 422px) {
+
+    /* Map controls */
+
+    /* Location search bar */
+    #text-search {
+        width: 100%;
+    }
+
+    .maplibregl-ctrl-top-right {
+        margin-top: 75px !important;
+    }
+
+    /* Toggle map style button */
+    
+    #toggle-satellite { 
+        top: 155px; 
+    }
+
+    /* Add report button */
+    #add-report {
+        top: 225px;
     }
 
 }

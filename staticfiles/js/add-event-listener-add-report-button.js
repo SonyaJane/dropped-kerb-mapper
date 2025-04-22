@@ -6,9 +6,9 @@ export default function addEventListenerAddReportButton() {
     const addReportButton = document.getElementById('add-report');
 
     addReportButton.addEventListener('click', () => {
-        if (addReportButton.classList.contains('add-report-active')) {
+        if (addReportButton.classList.contains('button-active')) {
             // If the button is active, disable "add report" mode
-            addReportButton.classList.remove('add-report-active'); // Remove the active class
+            addReportButton.classList.remove('button-active'); // Remove the active class
             DKM.map.getCanvas().style.cursor = ''; // Reset the cursor to default
             DKM.map.off('click', handleMapClick) // Remove click event listener to the map   
             // reenable popup event listener for all the markers
@@ -17,7 +17,7 @@ export default function addEventListenerAddReportButton() {
               });     
             } else {
             // If the button is not active, enable "add report" mode
-            addReportButton.classList.add('add-report-active'); // Add the active class
+            addReportButton.classList.add('button-active'); // Add the active class
             // enable the submit button
             const submitBtn = document.getElementById("report-submit-btn");
             submitBtn.disabled = false;

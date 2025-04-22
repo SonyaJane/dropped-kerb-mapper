@@ -6,6 +6,16 @@
 <div>    
     <div id="map">
 
+        <!-- Search location input -->
+        <div id="text-search" class="py-1">
+            <div class="input-group">
+                <input type="text" id="text-search-input" placeholder="Search for location" class="form-control">
+                <button class="btn btn-outline-secondary" type="button" id="text-search-submit">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </div>
+
         <!-- Toggle map style button -->
         <button id="toggle-satellite">
             <img id="satellite-icon" src="{% static 'images/satellite.png' %}" alt="Satellite Icon">
@@ -15,14 +25,6 @@
         <button id="add-report">
             <img src="{% static 'images/marker-bw.png' %}" alt="Add Report Icon">
         </button>
-
-        <!-- Search location input -->
-        <div class="d-flex align-items-center py-1" id="text-search">
-            <input type="text" id="text-search-input" placeholder="Search for location" class="form-control">
-            <button id="text-search-submit" class="btn btn-secondary d-flex justify-content-center align-items-center">
-                <i class="bi bi-search"></i>
-            </button>
-        </div>
 
         <!-- Google Logo -->
         <div id="google-logo">
