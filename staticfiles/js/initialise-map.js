@@ -62,6 +62,7 @@ export default function initialiseMap() {
         fitBoundsOptions: {
             animate: true
         }
+        
     });
     DKM.map.addControl(geolocateControl);
 
@@ -70,17 +71,10 @@ export default function initialiseMap() {
         geolocateControl.trigger(); // Automatically zoom to user's location
     });
 
-    // Add navigation controls to the map
-    DKM.map.addControl(new maplibregl.NavigationControl());
-
     // Add a custom AttributionControl with compact mode enabled.
     const attributionControl = new maplibregl.AttributionControl({
         compact: true
     });
     DKM.map.addControl(attributionControl, 'bottom-right');
 
-    // Log zoom level when it changes
-    // DKM.map.on('zoom', () => {
-    //     console.log(`Current zoom level: ${DKM.map.getZoom().toFixed(2)}`);
-    // });
 }
