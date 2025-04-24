@@ -11,7 +11,7 @@ import addEventListenerFormCloseButtons from "./add-event-listener-form-close-bu
 import toggleReasonsFieldVisibility from "./toggle-reasons-field-visibility.js";
 import removeCrispyClassesFromForm from "./remove-crispy-classes-from-form.js";
 import addEventListenerReportSubmitButton from "./add-event-listener-report-submit-button.js";
-import addSearchLocationListener from "./search-location.js";
+import searchLocationListener from "./search-location.js";
 
 document.addEventListener('DOMContentLoaded', () => { 
     
@@ -28,7 +28,10 @@ document.addEventListener('DOMContentLoaded', () => {
     addEventListenerToggleMapStyle();
     addEventListenerAddReportButton();
     addEventListenerReportSubmitButton();
-    addSearchLocationListener();
+
+    const searchSubmitBtn = document.getElementById("text-search-submit");
+    searchSubmitBtn.addEventListener('click', searchLocationListener);
+    
     initialiseReasonsChoices();
     addEventListenerConditionField(); 
     addExistingReportsToMap();
