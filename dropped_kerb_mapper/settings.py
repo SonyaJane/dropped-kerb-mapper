@@ -85,17 +85,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'dropped_kerb_mapper.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
@@ -104,13 +93,12 @@ DATABASES = {
 DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 
 CSRF_TRUSTED_ORIGINS = [
+    "https://*.droppedkerbmapper.com",
+    "http://*.droppedkerbmapper.com",
     "https://*.azurewebsites.net",
     "https://*.herokuapp.com",
     "http://127.0.0.1:8000"
 ]
-
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -155,9 +143,6 @@ ACCOUNT_FORMS = {
     'signup': 'mapper.forms.CustomSignupForm',
 }
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -165,7 +150,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
