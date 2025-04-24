@@ -23,6 +23,7 @@ def home(request):
     """
     Render the home page
     """
+    print("Home page accessed")
     return render(request, 'mapper/home.html')
  
  
