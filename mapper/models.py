@@ -157,7 +157,6 @@ class Report(models.Model):
             location = geolocator.reverse(f"{lat},{lon}", zoom=17, addressdetails=True)
             # Extract all values from location.raw['address'] until the key 'county'
             address = location.raw.get('address', {})
-            print(address)
             values_until_county = []
             for key, value in address.items():
                 if key in ['county', 'state', 'country', 'postode', 'country_code', 'province'] or key.startswith('ISO'):

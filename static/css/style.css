@@ -214,15 +214,19 @@ label,
 
 /* Map controls */
 
+#search-location {
+    z-index: 3; /* Ensure the results are above the map controls */
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
 /* Location search bar */
 #text-search {
     display: flex;
     align-items: center;
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    padding-right: 10px;
-    z-index: 2;
+    position: relative;
+    z-index: 3; /* Ensure the results are above the map controls */
 }
 
 #text-search-input {
@@ -233,14 +237,20 @@ label,
     background: rgb(246, 245, 241) !important;
 }
 
-#text-search .input-group {
-    padding-right: 10px;
-}
-
 #text-search-submit {
     width: 60px;
     border: 2px solid var(--color-orange-4);
     background: rgb(246, 245, 241) !important;
+}
+
+
+/* Location search results */
+#location-search-results {
+    position: relative;
+    /* background-color: rgb(246, 245, 241); */
+    background-color: var(--color-mango-1);
+    z-index: 3; /* Ensure the results are above the map controls */
+    padding: 5px 12px;
 }
 
 /* User location button */
@@ -286,7 +296,7 @@ label,
 /* Add report button */
 #add-report {
     position: absolute;
-    top: 160px;
+    top: 156px;
     right: 10px;
     background: rgb(246, 245, 241);
     border-radius: 4px;
@@ -698,6 +708,12 @@ label,
     /* when #map exists in the doc hide the footer for small screens */
     html:has(#map) footer {
         display: none;
+    }
+}
+
+@media (min-width: 423px) {
+    #search-location {
+        max-width: 330px;
     }
 }
 
