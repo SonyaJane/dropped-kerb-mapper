@@ -6,7 +6,7 @@
 <div class="container">
 
   <h3>Create an account to report the locations of dropped kerbs in the UK.</h3>
-  <p>If you already have an account, please <a class="link" href="{{ login_url }}">sign in</a> instead.</p>
+  {% comment %} <p>If you already have an account, please <a class="link" href="{{ login_url }}">sign in</a> instead.</p> {% endcomment %}
 
   {% comment %} <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
     {% csrf_token %}
