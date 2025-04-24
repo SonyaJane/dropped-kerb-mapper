@@ -14,5 +14,4 @@ urlpatterns = [
     path('google_satellite_tiles/<int:z>/<int:x>/<int:y>/', views.get_google_satellite_tiles, name='google-satellite-tiles'),
     path('reports/<int:pk>/update-location/', views.update_report_location, name='update-report-location'),
     path('email-confirmation-success/', views.email_confirmation_success, name='email-confirmation-success'),
-
 ]
