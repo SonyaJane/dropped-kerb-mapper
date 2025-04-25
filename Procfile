@@ -1,1 +1,1 @@
-web: gunicorn dropped_kerb_mapper.wsgi --log-file - --log-level debug
+web: bin/fixie-wrench 6000:34.142.57.115:5432 & gunicorn dropped_kerb_mapper.wsgi --log-file - --log-level debug
