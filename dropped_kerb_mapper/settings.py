@@ -6,6 +6,20 @@ from pathlib import Path
 import os
 import dj_database_url
 
+if os.environ.get("FIXIE_SOCKS_HOST"):
+    import socks
+    import socket
+
+    socks.setdefaultproxy(
+        socks.SOCKS5,
+        os.environ["FIXIE_SOCKS_HOST"],
+        int(os.environ["FIXIE_SOCKS_PORT"]),
+        username=os.environ.get("FIXIE_SOCKS_USERNAME"),
+        password=os.environ.get("FIXIE_SOCKS_PASSWORD"),
+    )
+    # replace the real socket.socket with a SOCKS‐aware one
+    socket.socket = socks.socksocket
+    
 if os.path.isfile('env.py'):
     import env
    
