@@ -12,13 +12,15 @@ if os.path.isfile('env.py'):
 # Fixie Socks settings
 # This app is hosted on Heroku and uses Fixie for proxying requests
 # If Fixie is bound, configure PySocks so all new sockets go through it
-if os.environ.get("FIXIE_SOCKS_HOST"):
-    import socks
-    import socket
+if os.environ.get("FIXIE_SOCKS_HOST") and os.environ.get("FIXIE_SOCKS_PORT"):
+    import socks, socket
 
     socks.setdefaultproxy(
         socks.SOCKS5,
         os.environ["FIXIE_SOCKS_HOST"],
+        int(os.environ["FIXIE_SOCKS_PORT"]),
+        username=os.environ.get("FIXIE_SOCKS_USERNAME"),
+        password=os.environ.get("FIXIE_SOCKS_PASSWORD"),
     )
     socket.socket = socks.socksocket
     
