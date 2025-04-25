@@ -19,9 +19,6 @@ if os.environ.get("FIXIE_SOCKS_HOST"):
     socks.setdefaultproxy(
         socks.SOCKS5,
         os.environ["FIXIE_SOCKS_HOST"],
-        int(os.environ["FIXIE_SOCKS_PORT"]),
-        username=os.environ.get("FIXIE_SOCKS_USERNAME"),
-        password=os.environ.get("FIXIE_SOCKS_PASSWORD"),
     )
     socket.socket = socks.socksocket
     
