@@ -8,7 +8,7 @@ import dj_database_url
 
 if os.path.isfile('env.py'):
     import env
-    
+   
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
@@ -86,6 +86,12 @@ DATABASES = {
     'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
 
+# When we’re on Heroku (i.e. FIXIE_SOCKS_HOST is set), override the host to localhost
+if os.environ.get("FIXIE_SOCKS_HOST"):
+    DATABASES['default']['HOST'] = '127.0.0.1'
+    DATABASES['default']['PORT'] = '5432'
+ 
+ 
 # Override the engine to use GeoDjango's PostGIS backend
 DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 
