@@ -5,20 +5,6 @@ Django settings for dropped_kerb_mapper project.
 from pathlib import Path
 import os
 import dj_database_url
-
-if os.environ.get("FIXIE_SOCKS_HOST"):
-    import socks
-    import socket
-
-    socks.setdefaultproxy(
-        socks.SOCKS5,
-        os.environ["FIXIE_SOCKS_HOST"],
-        int(os.environ["FIXIE_SOCKS_PORT"]),
-        username=os.environ.get("FIXIE_SOCKS_USERNAME"),
-        password=os.environ.get("FIXIE_SOCKS_PASSWORD"),
-    )
-    # replace the real socket.socket with a SOCKS‐aware one
-    socket.socket = socks.socksocket
     
 if os.path.isfile('env.py'):
     import env
@@ -100,12 +86,6 @@ DATABASES = {
     'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
 
-# When we’re on Heroku (i.e. FIXIE_SOCKS_HOST is set), override the host to localhost
-if os.environ.get("FIXIE_SOCKS_HOST"):
-    DATABASES['default']['HOST'] = '127.0.0.1'
-    DATABASES['default']['PORT'] = '5432'
- 
- 
 # Override the engine to use GeoDjango's PostGIS backend
 DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 
