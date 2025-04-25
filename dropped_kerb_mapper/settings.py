@@ -8,13 +8,26 @@ import dj_database_url
 
 if os.path.isfile('env.py'):
     import env
+
+# Fixie Socks settings
+# This app is hosted on Heroku and uses Fixie for proxying requests
+# If Fixie is bound, configure PySocks so all new sockets go through it
+if os.environ.get("FIXIE_SOCKS_HOST"):
+    import socks
+    import socket
+
+    socks.setdefaultproxy(
+        socks.SOCKS5,
+        os.environ["FIXIE_SOCKS_HOST"],
+        int(os.environ["FIXIE_SOCKS_PORT"]),
+        username=os.environ.get("FIXIE_SOCKS_USERNAME"),
+        password=os.environ.get("FIXIE_SOCKS_PASSWORD"),
+    )
+    socket.socket = socks.socksocket
     
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
