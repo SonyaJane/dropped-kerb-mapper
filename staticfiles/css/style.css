@@ -248,6 +248,9 @@ label,
     background: rgb(246, 245, 241) !important;
 }
 
+.bi-search {
+    color: black;
+}
 
 /* Location search results */
 #location-search-results {
