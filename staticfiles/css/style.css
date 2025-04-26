@@ -202,6 +202,37 @@ label,
     height: 25px;
 }
 
+header.container {
+	--bs-gutter-x: 0; /* Remove Bootstrap gutter for the header */
+	padding: 0;
+}
+
+/* Visibility */
+.invisible {
+	display: none;
+}
+
+/* hero image */
+.hero {
+	width: 100%;
+	height: 25vh; /* Set height to 25% of the viewport height */
+	background-size: cover;
+	background-repeat: no-repeat;
+	position: relative; /* For adding hero text relative to the hero image */
+}
+
+/* Home page hero image */
+#hero-home {
+	background-image: url("../images/dropped_kerb_hero.webp");
+	background-position: 50% 100%;
+}
+
+/* Container for cover text title for small screens */
+.cover-title-sm {
+	position: absolute;
+	width: 180px;
+}
+
 #map {
     width: 100%;
     height: calc(100vh - 56px); /* Full height minus navbar height */
@@ -726,6 +757,9 @@ label,
 }
 
 @media (min-width: 576px) {
+    .container {
+        max-width: none; /* Remove the max-width for larger screens */
+    }
     /* Crispy applies mb-3 to div that contains form elements */
     .map-report-form-container .row.mb-3 {
         margin-bottom: 0.5rem !important; /* Reduce the margin between form groups */
@@ -739,6 +773,12 @@ label,
     .map-report-form-container {
         margin-right: 250px; /* width of the menu panel */
     }
+
+    /* Home page hero image */
+    /* #hero-home { */
+	/* background-image: url("../images/dropped_kerb_hero.webp"); */
+	/* background-position: 95% 100%; */
+    /* } */
 
     #report-table{
         overflow-x: auto;
@@ -756,6 +796,10 @@ label,
 @media (min-width: 992px) {
     .hide-sm {
         display: block;
+    }
+
+    .container {
+        max-width: 800px;
     }
 
 }
