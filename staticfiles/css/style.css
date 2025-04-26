@@ -176,6 +176,17 @@ a {
     color: black;
 }
 
+.btn-mango-cover {
+    background-color: #f7ce9db8;
+    color: black;
+}
+
+.button-mango-cover:hover {
+    background-color: var(--color-mango-3-a);
+    color: black;
+}
+
+
 .btn-orange {
     background-color: var(--color-orange-2);
     color: black;
@@ -215,7 +226,7 @@ header.container {
 /* hero image */
 .hero {
 	width: 100%;
-	height: 25vh; /* Set height to 25% of the viewport height */
+	height: 600px;
 	background-size: cover;
 	background-repeat: no-repeat;
 	position: relative; /* For adding hero text relative to the hero image */
@@ -223,22 +234,50 @@ header.container {
 
 /* Home page hero image */
 #hero-home {
-	background-image: url("../images/dropped_kerb_hero.webp");
-	background-position: 50% 70%;
+	background-image: url("../images/dropped_kerb_tall.jpg");
+	background-position: 50% 50%;
 }
 
-/* Container for cover text title */
+/* Cover content - cover title and call-to-action butons */
+#cover-content {
+    position: absolute;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    align-content: center;
+    text-align: center;
+    width: 95%;
+    max-width: 355px;
+}
+
+/* cover title */
 .cover-title {
-	position: absolute;
-    top: 5px;
-	width: 275px;
     background-color: var(--color-orange-4-b);
+    text-align: center;
+    border-radius: 5px;
 }
 
 .cover-title > h2 {
     color: white;
     font-size: 1.2rem;
     font-weight: 500;
+}
+
+/* Call-to-action buttons */
+#call-to-action .btn {  
+    font-size: 1.1rem;
+}
+
+#map-marker {
+    position: absolute;
+    top: 37%;   /* Adjust the top value as needed */
+    left: 50%;  /* Adjust the left value as needed */
+    transform: translate(-50%, -100%); /* Centers horizontally and places the bottom of the marker at the center */
+    width: 50px;    /* Set your marker width */
+    height: 50px;   /* Set your marker height */
+    background-image: url('../images/marker-green.png');  /* Path to your marker icon */
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
 #map {
@@ -651,9 +690,9 @@ header.container {
     }
 
     /* Home page hero cover title  */
-    .cover-title {
-        width: 250px;
-    }
+    /* .cover-title { */
+        /* width: 250px; */
+    /* } */
 
     /* Map controls */
 
@@ -808,9 +847,9 @@ header.container {
 
 @media (min-width: 791px)  {
     /* Home page hero cover title  */
-    .cover-title {
-        width: 486px;
-    }
+    /* .cover-title { */
+        /* width: 486px; */
+    /* } */
 }
 
 @media (min-width: 992px) {
