@@ -13,7 +13,7 @@
         <div id="cover-content" class="text-center">
 
             <!-- Cover title  -->
-            <div class="cover-title p-2 mb-2">
+            <div class="cover-title p-2 mb-4">
                 <h2 class="mx-1 mt-2">Help us make the UK accessible.<br>For everyone.</h2>  
             </div>
 
@@ -60,15 +60,16 @@
     <p>When you have created an account and signed in, you can</p>
 
     <ul>
-        <li>Create a new dropped kerb report by clicking on its location on a map.</li>
+        <li>Report the location of a dropped kerb by clicking on a map.</li>
         <li>Upload a photo of the dropped kerb (optional).</li>
-        <li>Note the condition of the dropped kerb.</li>
+        <li>Note the condition of the dropped kerb (optional).</li>
         <li>View a list of your reports.</li>
         <li>Edit your reports.</li>
     </ul>
 
     <p>
-        We have made this app intuitive to use, but also provide <a href="{% url 'instructions' %}" class="custom-link">instructions</a> on how to create reports.
+        We have made this app intuitive to use, but also provide <a href="{% url 'instructions' %}" class="custom-link">instructions</a>. 
+        Please contact us if you have any questions or suggestions.
     </p>
 
     <p>
@@ -80,8 +81,10 @@
     {% if not user.is_authenticated %}
     <div class="mb-4" id="not-logged-in">
         <p>Sign in or create an account to start contributing!</p>
-        <a href="{% url 'account_login' %}" class="btn btn-green">Sign In</a>
-        <a href="{% url 'account_signup' %}" class="btn btn-green">Create Account</a>
+        <div id="not-logged-in-buttons">
+            <a href="{% url 'account_login' %}" class="btn btn-mango mx-2">Sign In</a>
+            <a href="{% url 'account_signup' %}" class="btn btn-mango mx-2">Create Account</a>
+        </div>
     </div>
     {% endif %}
 

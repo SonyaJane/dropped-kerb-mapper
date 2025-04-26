@@ -280,6 +280,11 @@ header.container {
     background-repeat: no-repeat;
 }
 
+#not-logged-in-buttons {
+    display: flex;
+    justify-content: center;  
+}
+
 #map {
     width: 100%;
     height: calc(100vh - 56px); /* Full height minus navbar height */
@@ -826,11 +831,10 @@ header.container {
         margin-right: 250px; /* width of the menu panel */
     }
 
-    /* Home page hero image */
-    /* #hero-home { */
-	/* background-image: url("../images/dropped_kerb_hero.webp"); */
-	/* background-position: 95% 100%; */
-    /* } */
+    #map-marker {
+        width: 60px;
+        height: 60px;
+    }
 
     #report-table{
         overflow-x: auto;
