@@ -4,5 +4,4 @@ __pycache__/
 .drawio
 .bkp
 env.py
-fixtures/
 .json
