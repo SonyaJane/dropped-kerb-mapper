@@ -93,7 +93,7 @@ class ReportForm(forms.ModelForm):
             # Cancel button
             HTML("""
                 {% if is_map_reports %}
-                    <a href="javascript:void(0);" class="btn close-btn btn-mango">Cancel</a>
+                    <a href="javascript:void(0);" class="btn close-btn btn-mango id="report-cancel-btn">Cancel</a>
                 {% else %} 
                     {% if report.id %}
                         <a href="{% url 'report-detail' report.id %}" class="btn btn-mango">Cancel</a>
