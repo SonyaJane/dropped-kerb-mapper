@@ -227,10 +227,18 @@ header.container {
 	background-position: 50% 70%;
 }
 
-/* Container for cover text title for small screens */
-.cover-title-sm {
+/* Container for cover text title */
+.cover-title {
 	position: absolute;
-	width: 180px;
+    top: 5px;
+	width: 275px;
+    background-color: var(--color-orange-4-b);
+}
+
+.cover-title > h2 {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 500;
 }
 
 #map {
@@ -642,6 +650,11 @@ header.container {
         width: 20px;  
     }
 
+    /* Home page hero cover title  */
+    .cover-title {
+        width: 250px;
+    }
+
     /* Map controls */
 
     /* Location search bar */
@@ -791,6 +804,13 @@ header.container {
         display: none;
     }
 
+}
+
+@media (min-width: 791px)  {
+    /* Home page hero cover title  */
+    .cover-title {
+        width: 486px;
+    }
 }
 
 @media (min-width: 992px) {
