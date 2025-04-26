@@ -1,0 +1,2 @@
+mapper/fixtures/counties/* filter=lfs diff=lfs merge=lfs -text
+mapper/fixtures/local_authorities/* filter=lfs diff=lfs merge=lfs -text
