@@ -186,6 +186,11 @@ a {
     color: black;
 }
 
+.button-disabled {
+    background-color: grey;
+    cursor: not-allowed;
+}
+
 label, 
 .reasons-help-text {
     font-family: var(--primary-font), sans-serif;

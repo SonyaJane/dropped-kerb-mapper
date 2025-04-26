@@ -1,3 +1,5 @@
+import resetForm from './reset-form.js';
+
 // This script is added to map_reports.html
 // This script listens for the htmx:afterSwap event and adds a marker to the map for the new report.
 // It also hides the report form and shows a success message after the report is submitted.
@@ -38,10 +40,15 @@ document.addEventListener('htmx:afterSwap', (e) => {
     //reenable the submit and cancel buttons
     const submitBtn = document.getElementById("report-submit-btn");
     const cancelBtn = document.getElementById("report-cancel-btn");
-    if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.value = "Submit";
-        cancelBtn.disabled = false;
-    }
+
+    submitBtn.disabled = false;
+    submitBtn.value = "Submit";
+    submitBtn.classList.remove("button-disabled");
+
+    cancelBtn.disabled = false;
+    cancelBtn.classList.remove("button-disabled");
+    
+    // reset the form
+    resetForm();
 
 });

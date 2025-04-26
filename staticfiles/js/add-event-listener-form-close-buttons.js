@@ -1,3 +1,5 @@
+import resetForm from './reset-form.js';
+
 export default function addEventListenerFormCloseButtons(formcontainer) {
     // Add event listener to the close buttons
     const closeButtons = document.querySelectorAll('.close-btn');
@@ -5,6 +7,7 @@ export default function addEventListenerFormCloseButtons(formcontainer) {
         button.addEventListener('click', function () {
             DKM.newMarker.remove();                // Remove the marker
             formcontainer.style.display = 'none';  // Hide the form
+            resetForm();                           // Reset the form
         });
     });
 }
