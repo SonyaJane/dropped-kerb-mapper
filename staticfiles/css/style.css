@@ -7,6 +7,7 @@
 :root {
     /* Fonts */
     --primary-font: 'Open Sans', sans-serif;
+ 	--secondary-font: 'Bitter', serif;
     --bs-body-font-size: 1.4rem;
 
     /* Colours */
@@ -98,18 +99,34 @@ tr {
 }
 
 h2 {
+    font-family: var(--secondary-font), sans-serif;
     font-size: 1.4rem;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 h3 {
+    font-family: var(--secondary-font), sans-serif;
     font-size: 1.3rem;
-    font-weight: 400;
+    font-weight: 500;
+    margin-top: 1.6rem;
+}
+
+h4 {
+    font-family: var(--secondary-font), sans-serif;
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-top: 1.5rem;
+}
+
+.bold-font {
+    font-weight: 600;
 }
 
 .dkm-container {
+    max-width: 800px;
     padding-left: 12px;
     padding-right: 12px;
+    margin: 0 auto;
 }
 
 .offcanvas.offcanvas-end {
@@ -259,13 +276,56 @@ header.container {
 
 .cover-title > h2 {
     color: white;
-    font-size: 1.2rem;
-    font-weight: 500;
+    font-size: 1.25rem;
+    font-weight: 600;
 }
 
 /* Call-to-action buttons */
 #call-to-action .btn {  
     font-size: 1.1rem;
+}
+
+/* Instructions */
+#instructions-container ol {
+    padding-left: 1.5rem;
+}
+
+#instructions-container li {
+    margin-bottom: 1rem;
+}
+
+/* Instructions images */
+.instructions-img {
+    width: 450px;
+    max-width: 100%;
+    margin-bottom: 1.5rem;
+    /* Center image */
+    display: block;
+    margin: 0 auto 1.5rem auto;
+}
+
+#big-plus::before {
+    font-size: 2rem;
+    color: blue;
+    vertical-align: -.25em;
+}
+
+.map-button-inline {
+    display: inline;
+    width: 3rem;
+    height: 3rem;
+}
+
+.bullet-green::marker {
+    color: green; /* change red to your desired colour */
+}
+
+.bullet-orange::marker {
+    color: orange; /* change red to your desired colour */
+}
+
+.bullet-red::marker {
+    color: red; /* change red to your desired colour */
 }
 
 #map-marker {
@@ -405,7 +465,6 @@ header.container {
 
 .button-active {
     background: #F7CE9D !important;
-    border: 1px solid #bd582c !important;
 }
 
 .hide-os .os-api-branding {
@@ -665,6 +724,17 @@ header.container {
     display: block;
 }
 
+.para-sm,
+.para-422 {
+    display: inline;
+}
+
+.para-lg,
+.para-1200,
+.para-423 {
+    display: none;
+}
+
 .orange-font {
     color: var(--color-orange-6)
 }
@@ -796,11 +866,6 @@ header.container {
 }
 
 @media (max-width: 575px) {
-    /* Hide longitude and latitude on small screens */
-    #div_id_latitude, #div_id_longitude {
-        display: none;
-    }
-    
     /* when #map exists in the doc hide the footer for small screens */
     html:has(#map) footer {
         display: none;
@@ -810,6 +875,14 @@ header.container {
 @media (min-width: 423px) {
     #search-location {
         max-width: 330px;
+    }
+
+    .para-422 {
+        display: none;
+    }
+    
+    .para-423 {
+        display: inline;
     }
 }
 
@@ -840,20 +913,13 @@ header.container {
         overflow-x: auto;
     }
 
-    .para-wide {
+    .para-768 {
         display: block;
     }
     .para-narrow {
         display: none;
     }
 
-}
-
-@media (min-width: 791px)  {
-    /* Home page hero cover title  */
-    /* .cover-title { */
-        /* width: 486px; */
-    /* } */
 }
 
 @media (min-width: 992px) {
@@ -863,6 +929,14 @@ header.container {
 
     .container {
         max-width: 800px;
+    }
+
+    .para-sm {
+        display: none;
+    }
+    
+    .para-lg {
+        display: inline;
     }
 
 }

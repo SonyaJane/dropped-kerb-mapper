@@ -40,26 +40,36 @@ class ReportForm(forms.ModelForm):
         self.fields['longitude'].widget.attrs['readonly'] = True
         self.fields['latitude'].required = False
         self.fields['longitude'].required = False
+        self.fields['latitude'].label = ""
+        self.fields['longitude'].label = ""
         
         self.fields['condition'].empty_label = None  # Remove the default '-------' option
         self.fields['condition'].choices = [choice for choice in self.fields['condition'].choices if choice[0]]  # Remove empty choice        
         self.fields['condition'].initial = 'green'
         self.fields['condition'].label = ""
         self.fields['reasons'].label = ""
+        self.fields['comments'].label = ""
+        self.fields['photo'].label = ""
 
         # Set the layout for the form using crispy-forms
         self.helper = FormHelper()
         self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-12 col-sm-4' # Labels in 4/12 of the row
-        self.helper.field_class = 'col-12 col-sm-8' # Fields in 8/12 of the row
-    
+
         self.helper.layout = Layout(
-            'latitude',
-            'longitude',
+            Div(
+                HTML('<label for="id_latitude" class="col-4 col-form-label">Latitude</label>'),
+                Field('latitude', wrapper_class='col-8'),
+                css_class='row mt-2 mt-sm-0'
+            ),
+            Div(
+                HTML('<label for="id_longitude" class="col-4 col-form-label">Longitude</label>'),
+                Field('longitude', wrapper_class='col-8'),
+                css_class='row mt-2 mt-sm-0'
+            ),
             Div(
                 HTML('<label for="id_condition" class="col-4 col-form-label">Condition</label>'),
-                Field('condition', wrapper_class='pe-0 col-8'),
-                css_class='row'
+                Field('condition', wrapper_class='col-8'),
+                css_class='row mt-2 mt-sm-0'
             ),
             # Custom layout for the reasons field, required to force col-md-4 and col-md-8 classes on choices.js field
             HTML("""
@@ -74,8 +84,18 @@ class ReportForm(forms.ModelForm):
                     </div>
                 </div>
             """),       
-            'comments',
-            'photo',
+            # Comments field with custom label class
+            Div(
+                HTML('<label for="id_comments" class="col-12 col-sm-4 col-form-label">Comments</label>'),
+                Field('comments', wrapper_class='col-12 col-sm-8'),
+                css_class='row'
+            ),
+            # Photo field with custom label class
+            Div(
+                HTML('<label for="id_photo" class="col-12 col-sm-4 col-form-label">Photo</label>'),
+                Field('photo', wrapper_class='col-12 col-sm-8'),
+                css_class='row'
+            ),
             # Display the current photo
             HTML("""
                 {% if report.photo %}
