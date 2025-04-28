@@ -54,6 +54,7 @@ class LocalAuthority(geomodels.Model):
 
 class Report(models.Model):
     TRAFFIC_LIGHT_CHOICES = [
+        ('none', 'None'),     # No condition reported
         ('green', 'Green'),   # Usable and in good condition
         ('orange', 'Orange'), # Usable but needs improvement
         ('red', 'Red'),       # Dangerous or unusable
