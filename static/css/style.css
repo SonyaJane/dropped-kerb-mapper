@@ -129,15 +129,9 @@ h4 {
     margin: 0 auto;
 }
 
-.offcanvas.offcanvas-end {
-    background-color: #FBE6CE;
-    width: 250px;
-}
-
-.sidepanel {
-    background-color: #FBE6CE;
-    width: 250px; 
-    z-index: 1045;
+.custom-link {
+    color: var(--color-orange-4);
+    text-decoration: underline;
 }
 
 a {
@@ -150,10 +144,27 @@ a {
     display: none !important;
 }
 
+.align-right {
+    position: relative;
+    right: 0;
+}
+
 .underline-orange {
     display: inline-block;
     border-bottom: 5px solid var(--color-orange-2);
     padding-bottom: 5px;
+}
+
+/* SIDEPANEL MENU FOR XL SCREENS */
+.offcanvas.offcanvas-end {
+    background-color: #FBE6CE;
+    width: 250px;
+}
+
+.sidepanel {
+    background-color: #FBE6CE;
+    width: 250px; 
+    z-index: 1045;
 }
 
 /* Buttons */
@@ -235,10 +246,17 @@ header.container {
 	padding: 0;
 }
 
+.home-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
 /* Visibility */
 .invisible {
 	display: none;
 }
+
+/* HOME PAGE */
 
 /* hero image */
 .hero {
@@ -249,10 +267,22 @@ header.container {
 	position: relative; /* For adding hero text relative to the hero image */
 }
 
-/* Home page hero image */
 #hero-home {
 	background-image: url("../images/dropped_kerb_tall.jpg");
 	background-position: 50% 50%;
+}
+
+/* 2ND IMAGE ON HERO */
+#map-marker {
+    position: absolute;
+    top: 37%;   /* Adjust the top value as needed */
+    left: 50%;  /* Adjust the left value as needed */
+    transform: translate(-50%, -100%); /* Centers horizontally and places the bottom of the marker at the center */
+    width: 50px;    /* Set your marker width */
+    height: 50px;   /* Set your marker height */
+    background-image: url('../images/marker-green.png');  /* Path to your marker icon */
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
 /* Cover content - cover title and call-to-action butons */
@@ -285,7 +315,26 @@ header.container {
     font-size: 1.1rem;
 }
 
-/* Instructions */
+/* INSTRUCTIONS PAGE */
+.para-wide {
+    display: none;
+}
+
+.para-narrow {
+    display: block;
+}
+
+.para-sm,
+.para-422 {
+    display: inline;
+}
+
+.para-lg,
+.para-1200,
+.para-423 {
+    display: none;
+}
+
 #instructions-container ol {
     padding-left: 1.5rem;
 }
@@ -299,7 +348,6 @@ header.container {
     width: 450px;
     max-width: 100%;
     margin-bottom: 1.5rem;
-    /* Center image */
     display: block;
     margin: 0 auto 1.5rem auto;
 }
@@ -328,40 +376,20 @@ header.container {
     color: red; /* change red to your desired colour */
 }
 
-#map-marker {
-    position: absolute;
-    top: 37%;   /* Adjust the top value as needed */
-    left: 50%;  /* Adjust the left value as needed */
-    transform: translate(-50%, -100%); /* Centers horizontally and places the bottom of the marker at the center */
-    width: 50px;    /* Set your marker width */
-    height: 50px;   /* Set your marker height */
-    background-image: url('../images/marker-green.png');  /* Path to your marker icon */
-    background-size: contain;
-    background-repeat: no-repeat;
-}
 
 #not-logged-in-buttons {
     display: flex;
     justify-content: center;  
 }
 
+/* MAP: Create new report page*/
+
 #map {
     width: 100%;
     height: calc(100vh - 56px); /* Full height minus navbar height */
 }
 
-.maplibregl-user-location-dot {
-    transition: none !important;
-  }
-
-/* Disable the pulse animation on the location dot */
-.maplibregl-user-location-dot::after,
-.maplibregl-user-location-dot::before {
-    display: none !important;
-}
-
-/* Map controls */
-
+/* Location search bar */
 #search-location {
     z-index: 3; /* Ensure the results are above the map controls */
     margin-left: 10px;
@@ -369,7 +397,6 @@ header.container {
     margin-right: 10px;
 }
 
-/* Location search bar */
 #text-search {
     display: flex;
     align-items: center;
@@ -391,6 +418,7 @@ header.container {
     background: rgb(246, 245, 241) !important;
 }
 
+/* search submit icon */
 .bi-search {
     color: black;
 }
@@ -422,6 +450,19 @@ header.container {
     background-color: rgb(246, 245, 241) !important;
 }
 
+/* User location indicator */
+.maplibregl-user-location-dot {
+    transition: none !important;
+  }
+
+/* Disable the pulse animation on the location dot */
+.maplibregl-user-location-dot::after,
+.maplibregl-user-location-dot::before {
+    display: none !important;
+}
+
+/* Map controls */
+
 /* Toggle map style button */
 #toggle-satellite {
     position: absolute; /* Set the container to relative positioning */
@@ -442,7 +483,6 @@ header.container {
     width: 35px;
     height: 35px; 
 }
-
 
 /* Add report button */
 #add-report {
@@ -467,9 +507,7 @@ header.container {
     background: #F7CE9D !important;
 }
 
-.hide-os .os-api-branding {
-    display: none !important;
-}
+/* ATTRIBUTION */
 
 /* Custom Google attribution elements */
 #google-logo {
@@ -500,22 +538,38 @@ header.container {
     margin: 0;
 }
 
+/* Ordnance Survey branding */
+.hide-os .os-api-branding {
+    display: none !important;
+}
+
 .hide-os .maplibregl-ctrl.maplibregl-ctrl-attrib.maplibregl-compact,
 .hide-os .maplibregl-ctrl.maplibregl-ctrl-attrib.maplibregl-compact a {
     background: rgba(255, 255, 255, 0);
     color: white; 
 }
 
+/* Location of Maplibre attribution */
 .maplibregl-ctrl-bottom-right {
     width: calc(100% - 120px);
     /* position to the right */
     right: 0px;
 }
 
+/* Cursor style in new report mode */
 .cursor-crosshair {
     cursor: crosshair;
 }
 
+/* Map marker popup */
+.maplibregl-popup {
+    max-width: 300px !important;
+}
+.maplibregl-popup p {
+    margin-bottom: 0.7rem;
+}
+
+/* NEW REPORT FORM */
 .map-report-form-container {
     display: none; /* Initially hidden */
     position: absolute;
@@ -528,47 +582,13 @@ header.container {
     z-index: 1000;
 }
 
-.home-container {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-#close-form {
-    position: absolute;
-    top: 0;
-    right: 15px;
-    padding: 0;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #333;
-    cursor: pointer;
-}
-
-#close-form:hover {
-    color: #ff0000;
-}
-
-.maplibregl-popup {
-    max-width: 300px !important;
-}
-
-.maplibregl-popup p {
-    margin-bottom: 0.7rem;
-}
-
 .col-form-label {
     font-size: 1.25rem;
     font-weight: 400;
 }
 
-#map-report-form input,
-#map-report-form select,
-#map-report-form select option,
-.edit-report input,
-.edit-report select,
-.edit-report select option {
+.font-size-125rem *,
+.font-size-125rem {
     font-size: 1.25rem;
 }
 
@@ -591,6 +611,7 @@ header.container {
     display: none;
 }
 
+/* LIST REPORTS PAGE */
 .table-responsive {
     overflow-x: auto; /* Enable horizontal scrolling */
     -webkit-overflow-scrolling: touch; /* Smooth scrolling for touch devices */
@@ -606,22 +627,17 @@ header.container {
     white-space: nowrap; 
 }
 
-/* Used in footer */
-.background-orange-1 {
-	background-color: var(--color-orange-1);
+/* REPORT DETAILS PAGE */
+.report-photo-container{
+    width: 300px;
 }
 
-/* Blusky icon */
-.bi-bluesky::before {
-    content: "";
-    background-color: currentColor;
-    -webkit-mask: url("../images/icons/bluesky.svg") no-repeat 50% 50%;
-    mask: url("../images/bluesky.svg") no-repeat 50% 50%;
-    -webkit-mask-size: cover;
-    mask-size: cover;
-    height: 22px;
-    width: 22px;
+.report-photo {
+    width: 100%; 
+    height: auto;
 }
+
+
 
 /* Show the successful report submission message in the centre of the map */
 .success-message {
@@ -637,16 +653,6 @@ header.container {
     border: 1px solid var(--color-brown-4);
     z-index: 1001;
     width: 300px;
-}
-
-/* Report details page */
-.report-photo-container{
-    width: 300px;
-}
-
-.report-photo {
-    width: 100%; 
-    height: auto;
 }
 
 /* Create new report form */
@@ -711,32 +717,41 @@ header.container {
     padding-right: 0;
 }
 
-.custom-link {
-    color: var(--color-orange-4);
-    text-decoration: underline;
-}
-
-.para-wide {
-    display: none;
-}
-
-.para-narrow {
-    display: block;
-}
-
-.para-sm,
-.para-422 {
-    display: inline;
-}
-
-.para-lg,
-.para-1200,
-.para-423 {
-    display: none;
-}
-
 .orange-font {
     color: var(--color-orange-6)
+}
+
+/* SIGNUP PAGE */
+#id_is_carer,
+#id_uses_mobility_device {
+    max-width: 131px;
+}
+
+#id_mobility_device_type_caree,
+#id_mobility_device_type {
+    max-width: 277px;
+}
+
+.btn-container {
+    text-align: right;
+  }
+
+/* FOOTER */
+
+.background-orange-1 {
+	background-color: var(--color-orange-1);
+}
+
+/* Blusky icon */
+.bi-bluesky::before {
+    content: "";
+    background-color: currentColor;
+    -webkit-mask: url("../images/icons/bluesky.svg") no-repeat 50% 50%;
+    mask: url("../images/bluesky.svg") no-repeat 50% 50%;
+    -webkit-mask-size: cover;
+    mask-size: cover;
+    height: 22px;
+    width: 22px;
 }
 
 

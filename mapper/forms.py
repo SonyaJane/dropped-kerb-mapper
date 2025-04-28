@@ -199,6 +199,7 @@ class ReportForm(forms.ModelForm):
         return cleaned_data
     
 
+# SIGNUP FORM
 class CustomSignupForm(SignupForm):
     first_name = forms.CharField(max_length=30, label="First Name", required=True)
     last_name = forms.CharField(max_length=30, label="Last Name", required=True) 
@@ -206,7 +207,7 @@ class CustomSignupForm(SignupForm):
     uses_mobility_device = forms.TypedChoiceField(
         label="Do you use a wheeled mobility device?",
         required=False,
-        choices=((True, 'Yes'), (False, 'No')),
+        choices=((False, 'No'),(True, 'Yes')),
         coerce=lambda x: x == 'True',  # converts the posted value to boolean
         widget=forms.Select,
     )
@@ -227,6 +228,31 @@ class CustomSignupForm(SignupForm):
         choices=MOBILITY_DEVICE_CHOICES,
         required=False,
     )
+      
+    is_carer = forms.TypedChoiceField(
+        label="Do you care for someone who uses a wheeled mobility device?",
+        required=False,
+        choices=((False, 'No'),(True, 'Yes')),
+        coerce=lambda x: x == 'True',  # converts the posted value to boolean
+        widget=forms.Select,
+    )
+    
+    mobility_device_type_caree = forms.ChoiceField(
+        label="Please select the mobility device used by the person you care for:",
+        choices=MOBILITY_DEVICE_CHOICES,
+        required=False,
+    )
+    
+    # Existing fields for mobility devices, etc.
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Create FormHelper for styling
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        # Apply custom classes to labels and fields
+        self.helper.label_class = 'col-12 col-sm-4'
+        self.helper.field_class = 'col-12 col-sm-8'
     
     def clean(self):
         cleaned_data = super().clean()

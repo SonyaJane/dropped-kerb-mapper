@@ -30,6 +30,17 @@ class CustomUser(AbstractUser):
         null=True,
         verbose_name="Mobility Device Type"
     )
+    is_carer = models.BooleanField(
+        default=False,
+        verbose_name="Uses a wheeled mobility device"
+    )
+    mobility_device_type_caree = models.CharField(
+        max_length=50,
+        choices=MOBILITY_DEVICE_CHOICES,
+        blank=True,
+        null=True,
+        verbose_name="Carees Mobility Device Type"
+    )
     
 class County(geomodels.Model):
     county = models.CharField(max_length=100)
