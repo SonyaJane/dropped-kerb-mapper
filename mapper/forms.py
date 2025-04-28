@@ -312,7 +312,11 @@ class ContactForm(forms.Form):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)  # Get the user from the kwargs
         super().__init__(*args, **kwargs)
-
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-12 col-sm-4'
+        self.helper.field_class = 'col-12 col-sm-8'
+        
         if user and user.is_authenticated:
             # Pre-fill fields with user data and make them read-only
             self.fields['first_name'].initial = user.first_name
