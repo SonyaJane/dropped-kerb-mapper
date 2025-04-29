@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <h1>Email Confirmed</h1>
+<div class="dkm-container my-4">
+    <h2 class="underline-orange">Email Confirmed</h2>
     <p>Thank you for confirming your email address! You can now report the locations of dropped kerbs in the UK.</p>
     <p>Please visit the <a href="{% url 'instructions' %}">Instructions</a> page to learn how to create reports.</p>
     <a href="{% url 'instructions' %}" class="btn btn-primary">Take me to the Instructions!</a>

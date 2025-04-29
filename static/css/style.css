@@ -261,26 +261,26 @@ header.container {
 /* hero image */
 .hero {
 	width: 100%;
-	height: 600px;
+	height: 500px;
 	background-size: cover;
 	background-repeat: no-repeat;
 	position: relative; /* For adding hero text relative to the hero image */
 }
 
 #hero-home {
-	background-image: url("../images/dropped_kerb_tall.jpg");
+	background-image: url("../images/dropped_kerb_medium.jpg");
 	background-position: 50% 50%;
 }
 
 /* 2ND IMAGE ON HERO */
 #map-marker {
     position: absolute;
-    top: 37%;   /* Adjust the top value as needed */
-    left: 50%;  /* Adjust the left value as needed */
+    top: 43%;   
+    left: 50%; 
     transform: translate(-50%, -100%); /* Centers horizontally and places the bottom of the marker at the center */
-    width: 50px;    /* Set your marker width */
-    height: 50px;   /* Set your marker height */
-    background-image: url('../images/marker-green.png');  /* Path to your marker icon */
+    width: 50px;
+    height: 50px;
+    background-image: url('../images/marker-green.png'); 
     background-size: contain;
     background-repeat: no-repeat;
 }
@@ -288,7 +288,7 @@ header.container {
 /* Cover content - cover title and call-to-action butons */
 #cover-content {
     position: absolute;
-    bottom: 100px;
+    bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
     align-content: center;

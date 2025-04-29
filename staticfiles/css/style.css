@@ -261,14 +261,14 @@ header.container {
 /* hero image */
 .hero {
 	width: 100%;
-	height: 600px;
+	height: 500px;
 	background-size: cover;
 	background-repeat: no-repeat;
 	position: relative; /* For adding hero text relative to the hero image */
 }
 
 #hero-home {
-	background-image: url("../images/dropped_kerb_tall.jpg");
+	background-image: url("../images/dropped_kerb_medium.jpg");
 	background-position: 50% 50%;
 }
 
@@ -288,7 +288,7 @@ header.container {
 /* Cover content - cover title and call-to-action butons */
 #cover-content {
     position: absolute;
-    bottom: 100px;
+    bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
     align-content: center;
