@@ -204,17 +204,6 @@ a {
     color: black;
 }
 
-.btn-mango-cover {
-    background-color: #f7ce9db8;
-    color: black;
-}
-
-.button-mango-cover:hover {
-    background-color: var(--color-mango-3-a);
-    color: black;
-}
-
-
 .btn-orange {
     background-color: var(--color-orange-2);
     color: black;
