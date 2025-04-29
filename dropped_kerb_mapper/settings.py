@@ -138,6 +138,7 @@ AUTHENTICATION_BACKENDS = (
 
 ACCOUNT_FORMS = {
     'signup': 'mapper.forms.CustomSignupForm',
+    'login': 'mapper.forms.CustomLoginForm',
 }
 
 LANGUAGE_CODE = 'en-us'

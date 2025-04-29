@@ -1,34 +1,31 @@
 {% extends "base.html" %}
-
-{% load i18n %}
 {% load account %}
-
-{% block head_title %}
-    {% trans "Sign In" %}
-{% endblock head_title %}
+{% load crispy_forms_tags %}
+{% load static %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 mt-3 offset-md-2">
-            <h3>{% trans "Sign In" %}</h3>
-            <p>{% blocktrans %}Welcome to Dropped Kerb Mapper. To report the location of a dropped kerb, 
-				please log in. If you have not created an account yet, then please
-				<a class="link" href="{{ signup_url }}">sign up</a> first.
-			   {% endblocktrans %}</p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-8 mt-3 offset-md-2">
-            <form class="login" method="POST" action="{% url 'account_login' %}">
-                {% csrf_token %}
-                {{ form.as_p }}
-                {% if redirect_field_value %}
-                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-                {% endif %}
-                <button class="btn right" type="submit">{% trans "Sign In" %}</button>
-            </form>
-        </div>
+<div class="dkm-container my-3">
+
+    <h2 class="underline-orange">Sign In</h2>
+    <p>Welcome to Dropped Kerb Mapper. To report the location of a dropped kerb, 
+        please sign in. If you have not created an account yet, then please
+        <a class="custom-link" href="{{ signup_url }}">create an account</a> to get started.
+    </p>
+
+    <div class="my-4">
+        <form class="login font-size-125rem" method="POST" action="{% url 'account_login' %}">
+            {% csrf_token %}
+            {% crispy form %}
+            {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+            {% endif %}
+            <div class="btn-container">
+                <button class="btn btn-mango" type="submit">Sign In</button>
+            </div>
+        </form>
     </div>
 </div>
+
+{% comment %} Add CSS class to forgo password help text link {% endcomment %}
+<script src="{% static 'js/login.js' %}"></script>
 {% endblock %}

@@ -10,7 +10,7 @@ from django import forms
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image
-from allauth.account.forms import SignupForm
+from allauth.account.forms import SignupForm, LoginForm
 from django.contrib.auth import get_user_model
 
 class ReportForm(forms.ModelForm):
@@ -325,3 +325,14 @@ class ContactForm(forms.Form):
             self.fields['last_name'].widget.attrs['readonly'] = True
             self.fields['email'].initial = user.email
             self.fields['email'].widget.attrs['readonly'] = True
+            
+class CustomLoginForm(LoginForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Remove the "Remember Me" field
+        self.fields.pop('remember', None)
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-12 col-sm-4'
+        self.helper.field_class = 'col-12 col-sm-8'
+        
