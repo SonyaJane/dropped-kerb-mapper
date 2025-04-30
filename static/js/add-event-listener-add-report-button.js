@@ -11,7 +11,6 @@ export default function addEventListenerAddReportButton() {
     </svg>`;
     const encodedSvg = encodeURIComponent(svg);
     const dataUrl = `url("data:image/svg+xml;charset=UTF-8,${encodedSvg}") 16 16, crosshair`;
-    console.log(dataUrl);
 
     addReportButton.addEventListener('click', () => {
         if (addReportButton.classList.contains('button-active')) {

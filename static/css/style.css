@@ -618,7 +618,8 @@ header.container {
 }
 
 .bi-eye-fill, 
-.bi-camera-fill {
+.bi-camera-fill,
+.bi-pencil-fill {
     color: var(--color-orange-4);
 }
 
@@ -639,12 +640,13 @@ header.container {
     gap: 1rem;           /* space between them */
   }
 
-/* Show the successful report submission message in the centre of the map */
+/* Show the successful report submission message in 
+the top centre of the map */
 .success-message {
     position: absolute;
-    top: 50%; 
+    top: 75px; 
     left: 50%;
-    transform: translate(-50%, -50%); 
+    transform: translate(-50%); 
     background-color: var(--color-mango-1);
     color: var(--color-brown-6);
     font-size: 1.25rem;
@@ -869,7 +871,6 @@ header.container {
     #add-report {
         top: 225px;
     }
-
 }
 
 /* Allow wrapping for small screens */
@@ -887,6 +888,16 @@ header.container {
     }
 }
 
+@media (min-width: 360px) {
+    /* Move success message down */
+    .success-message {
+        position: absolute;
+        top: 100px; 
+        left: 50%;
+        transform: translate(-50%);
+    }
+}
+
 @media (min-width: 423px) {
     #search-location {
         max-width: 330px;
@@ -899,6 +910,7 @@ header.container {
     .para-423 {
         display: inline;
     }
+    
 }
 
 @media (min-width: 576px) {

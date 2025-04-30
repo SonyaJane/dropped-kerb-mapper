@@ -73,7 +73,7 @@ def map_reports(request):
             report.user = request.user
             report.save()
             # POST requests are always HTMX request, so render the partial template
-            return render(request, 'mapper/partials/new_report.html', 
+            return render(request, 'mapper/partials/new_report.html',
                           {'report': serialise_report(report)})
         else:
             # Return errors for invalid form submissions
@@ -282,9 +282,7 @@ def update_report_location(request, pk):
 
             # get the new place_name and county
             updated_place_name = report.place_name
-            print(f"Updated place name: {updated_place_name}")
             updated_county = report.county.county if report.county else None
-            print(f"Updated county: {updated_county}")
 
             return JsonResponse({'success': True,
                                  'message': 'Location updated successfully!',

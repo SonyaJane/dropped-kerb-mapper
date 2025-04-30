@@ -139,7 +139,8 @@ class ReportForm(forms.ModelForm):
 
     def clean_photo(self):
         """
-        Custom clean method converts a new image to webp, and compresses it if the result exceeds a certain size.
+        Custom clean method converts a new image to webp, and compresses 
+        it if the result exceeds a certain size.
         """
         photo = self.cleaned_data.get('photo')
 
@@ -155,10 +156,10 @@ class ReportForm(forms.ModelForm):
                 image = Image.open(photo)
                 print('opened photo')
                 # Convert to RGB as webp does not support RGBA
-                image = image.convert("RGB") 
+                image = image.convert("RGB")
                 print('converted photo to RGB')
                 # Create a BytesIO object to save the image
-                output = BytesIO() 
+                output = BytesIO()
                 image.save(output, format='WEBP')
                 output.seek(0) # Reset the pointer to the start of the BytesIO object
                 

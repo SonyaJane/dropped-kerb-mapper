@@ -32,10 +32,10 @@ document.addEventListener('htmx:afterSwap', (e) => {
     const mapContainer = document.getElementById('map');
     mapContainer.appendChild(successMessage);
 
-    // Automatically remove the success message after 3 seconds
+    // Automatically remove the success message after 1.5 seconds
     setTimeout(() => {
         successMessage.remove();
-    }, 3000);
+    }, 1500);
 
     //reenable the submit and cancel buttons
     const submitBtn = document.getElementById("report-submit-btn");

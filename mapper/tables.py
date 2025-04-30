@@ -48,6 +48,11 @@ class ReportTable(tables.Table):
         template_code='''<a href="{% url 'report-detail' record.id %}"><i class="bi bi-eye-fill"></i></a>''',
         orderable=False
     )
+    edit = tables.TemplateColumn(
+        verbose_name="Edit",
+        template_code='''<a href="{% url 'edit-report' record.id %}"><i class="bi bi-pencil-fill"></i></a>''',
+        orderable=False
+    )
 
     def render_created_at(self, value):
         # Format the date as "day, month (name), year" e.g. "1 September 2025"
@@ -66,6 +71,7 @@ class ReportTable(tables.Table):
         template_name="django_tables2/bootstrap5-responsive.html"
         fields = (
             'view',
+            'edit',
             'id',
             'user',
             'user_report_number',

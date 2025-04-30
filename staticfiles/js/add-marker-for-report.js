@@ -10,6 +10,34 @@ export default function addMarkerForReport(report) {
             generatePopupHTML(report, report.latitude, report.longitude, report.place_name, report.county)
         ))
         .addTo(DKM.map);
+    
+
+    // Intercept multi‐clicks in the capture phase and swallow them:
+    const el = marker.getElement();
+
+    // remove the default click→popup listener:
+    el.removeEventListener('click', marker._markerClickListener);
+
+        // now install your own click handler that waits a bit:
+        let clickTimer = null;
+        el.addEventListener('click', e => {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+
+        // if there's already a pending click, that means this is the 2nd click
+        if (clickTimer) {
+            clearTimeout(clickTimer);
+            clickTimer = null;
+            return; // swallow the 2nd click so no popup opens
+        }
+
+        // otherwise schedule a popup on a short delay
+        clickTimer = setTimeout(() => {
+            marker.togglePopup();
+            clickTimer = null;
+        }, 300); // 300ms is typical dblclick threshold
+    }, { capture: true });
+
 
     // Add a double-click event listener to make marker draggable
     marker.getElement().addEventListener('dblclick', (e) => {
@@ -19,8 +47,10 @@ export default function addMarkerForReport(report) {
         if (marker.getPopup()) {
             marker.getPopup().remove();
         }
-        marker.setDraggable(true); // Enable dragging
-        setMarkerColour(marker.getElement(), 'white'); //change the marker colour to white
+        // Enable dragging
+        marker.setDraggable(true); 
+        // Change the marker colour to purple when in dragging mode
+        setMarkerColour(marker.getElement(), 'purple');
     });
 
     // Add an event listener to capture the new position when the marker is dragged
@@ -58,7 +88,23 @@ export default function addMarkerForReport(report) {
                 // Refresh the popup content with updated data
                 marker.setPopup(new maplibregl.Popup().setHTML(
                     generatePopupHTML(report, newLngLat.lat, newLngLat.lng, data.place_name, data.county)
-                )).togglePopup();
+                ));
+            })
+            // then display a meesage to the user saying the location has been updated  
+            .then(() => {
+                // Create a success message in a new div
+                const successMessage = document.createElement('div');
+                successMessage.className = 'success-message';
+                successMessage.textContent = 'Location changed successfully!';
+                
+                // Append the success message to the map container
+                const mapContainer = document.getElementById('map');
+                mapContainer.appendChild(successMessage);
+
+                // Automatically remove the success message after 1.5 seconds
+                setTimeout(() => {
+                    successMessage.remove();
+                }, 1500);
             })
             .catch(error => {
                 console.error('Error updating report location:', error);
@@ -127,7 +173,7 @@ async function updateReportLocation(reportId, latitude, longitude) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken // Ensure you include the CSRF token for security
+            'X-CSRFToken': csrfToken
         },
         body: JSON.stringify({ latitude, longitude })
     });
@@ -136,7 +182,7 @@ async function updateReportLocation(reportId, latitude, longitude) {
         throw new Error('Failed to update location. Please try again.');
     }
 
-    return await response.json(); // Parse the JSON response.
+    return await response.json();
 }
 
 // Function to get the CSRF token from the cookie
