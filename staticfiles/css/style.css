@@ -204,17 +204,6 @@ a {
     color: black;
 }
 
-.btn-mango-cover {
-    background-color: #f7ce9db8;
-    color: black;
-}
-
-.button-mango-cover:hover {
-    background-color: var(--color-mango-3-a);
-    color: black;
-}
-
-
 .btn-orange {
     background-color: var(--color-orange-2);
     color: black;
@@ -593,7 +582,8 @@ header.container {
 }
 
 /* Reasons list items */
-.choices__list--dropdown .choices__item {
+.choices__list--dropdown .choices__item,
+.choices__input {
     font-size: 1.25rem !important;
 }
 
@@ -627,6 +617,11 @@ header.container {
     white-space: nowrap; 
 }
 
+.bi-eye-fill, 
+.bi-camera-fill {
+    color: var(--color-orange-4);
+}
+
 /* REPORT DETAILS PAGE */
 .report-photo-container{
     width: 300px;
@@ -637,7 +632,12 @@ header.container {
     height: auto;
 }
 
-
+/* make the delete_photo radios sit side by side */
+#id_delete_photo {
+    display: flex;
+    align-items: center; /* vertically center radios & labels */
+    gap: 1rem;           /* space between them */
+  }
 
 /* Show the successful report submission message in the centre of the map */
 .success-message {

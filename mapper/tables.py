@@ -5,9 +5,9 @@ class ReportTable(tables.Table):
     # Show a link to the photo if it exists, otherwise show a dash
     photo = tables.TemplateColumn(
         verbose_name="Photo",
-        template_code='''            
+        template_code=''' 
             {% if record.photo %}
-                <a href="{{ record.photo.url }}" target="_blank" rel="noopener noreferrer">Photo</a>
+                <a href="{{ record.photo.url }}" target="_blank" rel="noopener noreferrer"><i class="bi bi-camera-fill"></i></a>
             {% else %}
                 —
             {% endif %}
@@ -15,7 +15,7 @@ class ReportTable(tables.Table):
         orderable=False
     )
     user_report_number = tables.Column(
-        verbose_name="Report",   
+        verbose_name="Report",
     )
     place_name = tables.TemplateColumn(
         template_code='''{% load comma_wrap %}{{ record.place_name|comma_wrap }}''',
@@ -42,19 +42,19 @@ class ReportTable(tables.Table):
         verbose_name="Updated",
         attrs={"td": {"style": "white-space: nowrap;"}}
     )
-    # New column edit link
-    edit = tables.TemplateColumn(
-        verbose_name="",
-        template_code='''<a href="{% url 'report-detail' record.id %}">edit</a>''',
+    # New column - link to view the report details (eye icon)
+    view = tables.TemplateColumn(
+        verbose_name="View",
+        template_code='''<a href="{% url 'report-detail' record.id %}"><i class="bi bi-eye-fill"></i></a>''',
         orderable=False
     )
-    
+
     def render_created_at(self, value):
         # Format the date as "day, month (name), year" e.g. "1 September 2025"
         # Note: on Windows use "%#d" instead of "%-d" if leading zeros become an issue.
         return value.strftime("%#d %B %Y %H:%M")
         # return value.strftime("%-d %B %Y %H:%M") #  non-windows
-    
+
     def render_updated_at(self, value):
         # Format the date as "day, month (name), year" e.g. "1 September 2025"
         # Note: on Windows use "%#d" instead of "%-d" if leading zeros become an issue.
@@ -65,7 +65,7 @@ class ReportTable(tables.Table):
         model = Report
         template_name="django_tables2/bootstrap5-responsive.html"
         fields = (
-            'edit',
+            'view',
             'id',
             'user',
             'user_report_number',
@@ -77,6 +77,6 @@ class ReportTable(tables.Table):
             'condition',
             'reasons',
             'comments',
-            'photo',
             'created_at',
-            'updated_at')
+            'updated_at',
+            'photo')

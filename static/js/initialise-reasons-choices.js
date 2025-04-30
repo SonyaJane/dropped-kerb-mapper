@@ -6,9 +6,9 @@ export default function initialiseReasonsChoices() {
     if (reasonsSelect) {
         DKM.reasonsChoices = new Choices(reasonsSelect, {
             removeItemButton: true, // Allows removal of selected options via an "x"
-            placeholderValue: "Add reasons for condition",
+            placeholderValue: 'click to show options',
             shouldSort: true,
-            itemSelectText: "",
+            itemSelectText: ""
         });
     }
 }

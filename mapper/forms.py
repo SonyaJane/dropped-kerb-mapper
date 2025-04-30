@@ -2,22 +2,30 @@
 # When creating your form or view, you can further customize the reasons field so that the checkboxes dynamically change based on the user's condition choice. For example, in a custom ModelForm, you might override the __init__ method to filter the reasons queryset based on an initial value for the condition field.
 #This design keeps the reasons for condition as a field on the DroppedKerbReport, while still allowing you to have a distinct set of reasons available for each traffic light option.
 
-from .models import Report
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, HTML, Field, Div
-from django import forms
-# for image size reduction
 from io import BytesIO
+from django import forms
+from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image
 from allauth.account.forms import SignupForm, LoginForm
-from django.contrib.auth import get_user_model
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Submit, HTML, Field, Div
+from cloudinary import uploader
+from .models import Report
 
 class ReportForm(forms.ModelForm):
-    delete_photo = forms.BooleanField(
+    delete_photo = forms.TypedChoiceField(
+        label="Delete current photo?",
         required=False,
-        label="Delete current photo",
-        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+        choices=(
+            ('False', 'No'),
+            ('True', 'Yes'),
+        ),
+        coerce=lambda val: val == 'True',
+        initial='False',
+        widget=forms.RadioSelect(attrs={
+            'class': 'form-check-inline',
+        }),
     )
     class Meta:
         model = Report
@@ -34,7 +42,7 @@ class ReportForm(forms.ModelForm):
         # Pop the current user from kwargs and assign to an instance variable
         self.current_user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        
+
         # Make latitude and longitude uneditable
         self.fields['latitude'].widget.attrs['readonly'] = True
         self.fields['longitude'].widget.attrs['readonly'] = True
@@ -42,7 +50,6 @@ class ReportForm(forms.ModelForm):
         self.fields['longitude'].required = False
         self.fields['latitude'].label = ""
         self.fields['longitude'].label = ""
-        
         self.fields['condition'].empty_label = None  # Remove the default '-------' option
         self.fields['condition'].choices = [choice for choice in self.fields['condition'].choices if choice[0]]  # Remove empty choice        
         self.fields['condition'].initial = 'green'
@@ -79,36 +86,42 @@ class ReportForm(forms.ModelForm):
                     </div>
                     <div class="col-12 col-sm-8">
             """),
-            Field('reasons'), 
+            Field('reasons'),
             HTML("""
                     </div>
                 </div>
-            """),       
+            """),
             # Comments field with custom label class
             Div(
                 HTML('<label for="id_comments" class="col-12 col-sm-4 col-form-label">Comments</label>'),
                 Field('comments', wrapper_class='col-12 col-sm-8'),
                 css_class='row'
             ),
-            # Photo field with custom label class
-            Div(
-                HTML('<label for="id_photo" class="col-12 col-sm-4 col-form-label">Photo</label>'),
-                Field('photo', wrapper_class='col-12 col-sm-8'),
-                css_class='row'
-            ),
             # Display the current photo
             HTML("""
                 {% if report.photo %}
                     <div class="form-group">
-                        <label class = 'col-12 col-md-4'>Current Photo</label>
+                        <label class = 'col-12 col-md-4 fw-normal mb-2'>Current Photo</label>
                         <img src="{{ report.photo.url }}" alt="Current Photo" style="max-width: 200px; height: auto;" class='col-12 col-md-8'>
                     </div>
-                    <div class="form-group">
-                        {{ form.delete_photo.label_tag }}
+                    <div class="row my-2 align-items-center">
+                        <label for="id_delete_photo"
+                            class="fw-normal col-12 col-sm-5 col-form-label">
+                        Delete Current Photo?
+                        </label>
+                        <div class="col-12 col-sm-7">
                         {{ form.delete_photo }}
+                        </div>
                     </div>
+                    <p>Uploading a new photo replaces the existing photo.</p>
                 {% endif %}
             """),
+            # Photo field with custom label class
+            Div(
+                HTML('<label for="id_photo" class="col-12 col-sm-4 col-form-label">New Photo</label>'),
+                Field('photo', wrapper_class='col-12 col-sm-8'),
+                css_class='row'
+            ),
             Submit('submit', 'Submit', css_class='btn btn-green', css_id='report-submit-btn'),
             # Cancel button
             HTML("""
@@ -121,27 +134,20 @@ class ReportForm(forms.ModelForm):
                         <a href="{% url 'reports-list' %}" class="btn btn-mango">Cancel</a>
                     {% endif %}   
                 {% endif %}          
-                """),   
+                """),
         )
-                
+
     def clean_photo(self):
         """
-        Custom clean method converts the image format to webp, and compresses it if the result exceeds a certain size.
+        Custom clean method converts a new image to webp, and compresses it if the result exceeds a certain size.
         """
         photo = self.cleaned_data.get('photo')
-        delete_photo = self.data.get('delete_photo')  # Check if the delete_photo checkbox is checked
-        print(f"delete_photo: {delete_photo}")
-        
-        # Skip processing if delete_photo is checked
-        if delete_photo == 'on':
-            print("Photo deletion requested, skipping photo processing.")
-            return None
-    
-        # Skip processing if the photo is a CloudinaryResource (already uploaded)
+
+        # Skip processing if the photo is not new (e.g., if it's a CloudinaryResource)
         if photo and not hasattr(photo, 'read'):
             print("Photo is a CloudinaryResource, skipping processing.")
             return photo
-    
+
         if photo:
             # convert image to webp format:
             try:
@@ -166,10 +172,9 @@ class ReportForm(forms.ModelForm):
                         output = BytesIO()  # Reset the in-memory buffer
                         image.save(output, format="WEBP", quality=quality)
                         output.seek(0)
-                
+
                 # Update the filename to have a .webp extension
                 new_filename = photo.name.rsplit('.', 1)[0] + '.webp'
-                print("Photo converted to webp format")
                 # Create a new InMemoryUploadedFile with the converted WebP image
                 photo = InMemoryUploadedFile(
                     output,
@@ -179,15 +184,23 @@ class ReportForm(forms.ModelForm):
                     output.getbuffer().nbytes,
                     None
                 )
+                print('New photo added to cleaned_data')
             except Exception as e:
                 raise forms.ValidationError(f"Error processing image: {str(e)}")
         return photo
-    
+
     def clean(self):
+        """
+        Custom clean method to enforce that reasons are only provided 
+        if the condition is red or orange.
+        Also checks if the user has permission to edit the report.
+        """
+        # Call the parent clean method to get cleaned data
         cleaned_data = super().clean()
+        # Get the condition and reasons from cleaned data
         condition = cleaned_data.get('condition')
         reasons = cleaned_data.get('reasons')
-        # If condition is red or orange, ensure that at least one reason is selected.
+        # Check if condition is red or orange, then ensure at least one reason is selected.
         if condition in ['red', 'orange'] and (not reasons or len(reasons) == 0):
             self.add_error('reasons', "At least one reason must be selected when condition is red or orange.")
             
@@ -197,7 +210,50 @@ class ReportForm(forms.ModelForm):
                 raise forms.ValidationError("You do not have permission to edit this report.")
 
         return cleaned_data
-    
+
+
+    def handle_delete_photo(self, instance):
+        """
+        Deletes the existing photo file and clears the field
+        if the delete_photo flag was set to True.
+        """
+        if self.cleaned_data.get('delete_photo') and instance.photo:
+            # delete (destroy) CloudinaryResource by public_id
+            public_id = getattr(instance.photo, 'public_id', None)
+            if public_id:
+                try:
+                    uploader.destroy(public_id, invalidate=True)
+                except Exception:
+                    # print exception to console for debugging
+                    print(f"Error deleting photo with public_id: {public_id}")
+            instance.photo = None
+            print("Deleted existing photo.")
+
+
+    def save(self, commit=True):
+        """
+        Overrides save to:
+          1. Delete current photo if requested.=
+          2. Get new photo upload
+          3. Save the instance
+        """
+        # Get an unsaved instance first
+        instance = super().save(commit=False)
+
+        # Delete existing photo if requested
+        self.handle_delete_photo(instance)
+
+        # Get the new photo from cleaned_data if one was uploaded
+        # and assign it to the instance
+        new_photo = self.cleaned_data.get('photo')
+        if 'photo' in self.changed_data:
+            instance.photo = new_photo
+
+        if commit:
+            instance.save()
+            self.save_m2m()
+        return instance
+
 
 # SIGNUP FORM
 class CustomSignupForm(SignupForm):

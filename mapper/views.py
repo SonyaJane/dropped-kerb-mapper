@@ -1,67 +1,70 @@
-from django.http import HttpResponseRedirect
+import os
+import time
+import json
+import requests
+
+from django.http import HttpResponseRedirect, HttpResponse, Http404, JsonResponse
+from django.conf import settings
 from django.contrib import messages
-from django.http import HttpResponse, Http404
+from django.contrib.auth import login
 from django.core.cache import cache
-from django.http import JsonResponse
-from allauth.account.views import ConfirmEmailView
-from django.shortcuts import redirect
+from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_protect
-from django.shortcuts import render, get_object_or_404, reverse
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django_tables2 import SingleTableView, RequestConfig
+from allauth.account.views import ConfirmEmailView
 from .forms import ReportForm, ContactForm
 from .models import Report
 from .tables import ReportTable
-from django.contrib.auth import login
-from django.core.mail import send_mail
-from django.conf import settings
-import os
-import json
-import requests
-import time
 
+# HOME PAGE
 def home(request):
     """
     Render the home page
     """
     return render(request, 'mapper/home.html')
- 
- 
+
+
+# LIST OF REPORTS
 class ReportList(SingleTableView):
     model = Report
     template_name = "mapper/reports.html"
     # paginate_by = 24
-    
+
     def get_queryset(self):
         qs = super().get_queryset()
         if not self.request.user.is_superuser:
             qs = qs.filter(user=self.request.user)
         return qs
-   
+
     def get_table(self, **kwargs):
         qs = self.get_queryset()
         # Dynamically exclude columns based on the current user
         if self.request.user.is_superuser:
-            table = ReportTable(qs, exclude=('user_report_number',))
+            table = ReportTable(qs, exclude=('user_report_number','latitude','longitude','local_authority'))
         else:
-            table = ReportTable(qs, exclude=('id', 'user','la','created_at',))
+            table = ReportTable(qs, exclude=('id', 'user','latitude','longitude','local_authority','created_at'))
         RequestConfig(self.request).configure(table)
-        return table 
-   
+        return table
+
+
+# REPORT DETAILS
 def report_detail(request, pk):
     """
     Retrieves a single report from the database and displays it on the page.
     """
     queryset = Report.objects.all()
     report = get_object_or_404(queryset, pk=pk)
-    
+
     # Check if the request is an AJAX or HTMX request
     if request.headers.get('HX-Request') or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return JsonResponse(serialise_report(report))
-    
+
     # Render the report detail page for non-AJAX requests
     return render(request, "mapper/report_detail.html", {"report": report})
 
 
+# ADD NEW REPORT
 def map_reports(request):
     if request.method =="POST":
         report_form = ReportForm(data=request.POST, files=request.FILES)
@@ -70,17 +73,21 @@ def map_reports(request):
             report.user = request.user
             report.save()
             # POST requests are always HTMX request, so render the partial template
-            return render(request, 'mapper/partials/new_report.html', {'report': serialise_report(report)})
+            return render(request, 'mapper/partials/new_report.html', 
+                          {'report': serialise_report(report)})
         else:
             # Return errors for invalid form submissions
             return JsonResponse({'success': False, 'errors': report_form.errors}, status=400)
-        
+
     # For GET requests, render the map_reports template
     report_form = ReportForm()        
     # Get all reports for the map view    
     reports = Report.objects.all()
     reports_data = [serialise_report(report) for report in reports]
-    return render(request, 'mapper/map_reports.html', {'form': report_form, 'reports': reports_data, 'is_map_reports': True})
+    return render(request, 'mapper/map_reports.html',
+                  {'form': report_form,
+                   'reports': reports_data,
+                   'is_map_reports': True})
 
 
 def serialise_report(report):
@@ -111,7 +118,7 @@ def edit_report(request, pk):
         report = get_object_or_404(Report, pk=pk)
     else:
         report = get_object_or_404(Report, pk=pk, user=request.user)
-    
+
     # For when the form is submitted:
     if request.method == "POST":
         # Bind the form to the POST data and files
@@ -122,7 +129,8 @@ def edit_report(request, pk):
             return HttpResponseRedirect(reverse('report-detail', args=[pk]))
         else:
             messages.add_message(request, messages.ERROR, 'Error updating report.')
-    else:
+    else: # GET request
+        # Create a new form instance with the existing report data
         # Prepopulate the form with the existing report data
         form = ReportForm(instance=report)
     return render(request, 'mapper/edit_report.html', {'form': form, 'report': report})    
@@ -141,25 +149,25 @@ def delete_report(request, pk):
         return HttpResponseRedirect(reverse('reports-list'))
     else:
         messages.add_message(request, messages.ERROR, 'You do not have permission to delete this report.')
-    
+
 
 def get_os_map_tiles(request, z, x, y):
     """
     Proxy view to fetch map tiles securely using the API key.
     """
     # Limit the maximum zoom level to 20
-    MAX_ZOOM = 20
-    if z > MAX_ZOOM:
-        z = min(z, MAX_ZOOM)
-    
+    max_zoom = 20
+    if z > max_zoom:
+        z = min(z, max_zoom)
+
     api_key = os.environ.get("OS_MAPS_API_KEY")
 
     # Construct the Ordnance Survey tile URL
     tile_url = f"https://api.os.uk/maps/raster/v1/zxy/Light_3857/{z}/{x}/{y}.png?key={api_key}"
-    
+
     # Make a GET request to fetch the tile image
     response = requests.get(tile_url)
-    
+
     if response.status_code == 200:
         # Return the image content with appropriate content-type
         return HttpResponse(response.content, content_type="image/png")
@@ -178,13 +186,13 @@ def get_google_session_token():
     token_data = cache.get('google_tile_session_token')
     if token_data:
         return token_data.get('session')
-    
+
     # If no token is cached, request a new one
     api_key = os.environ.get('GOOGLE_MAPS_API_KEY')
-    
+
     # Set up the createSession endpoint URL
     create_session_url = f"https://tile.googleapis.com/v1/createSession?key={api_key}"
-    
+
     # Define the required payload
     payload = {
         "mapType": "satellite",
@@ -220,18 +228,26 @@ def get_google_satellite_tiles(request, z, x, y):
         session_token = get_google_session_token()
     except Exception as e:
         raise Http404("Could not obtain session token: " + str(e))
-    
+
     api_key = os.environ.get("GOOGLE_MAPS_API_KEY")
     # Construct the Google Maps tile URL
     tile_url = f"https://tile.googleapis.com/v1/2dtiles/{z}/{x}/{y}?session={session_token}&key={api_key}"
-    
+
+    # tile_url = "{}/{}/{}/{}?session={}&key={}".format(
+    #     "https://tile.googleapis.com/v1/2dtiles",
+    #     z,
+    #     x,
+    #     y,
+    #     session_token,
+    #     api_key
+    # ) 
     # Make a GET request to fetch the tile image
     response = requests.get(tile_url)
-    
+
     if response.status_code == 200:
         # Return the image content with appropriate content-type
         return HttpResponse(response.content, content_type="image/png")
-    elif response.status_code == 404: # Tile not found at requested zoom level
+    if response.status_code == 404: # Tile not found at requested zoom level
         # Return a 404 response with caching headers
         return HttpResponse(
             status=404,
@@ -241,8 +257,8 @@ def get_google_satellite_tiles(request, z, x, y):
         )
     else:
         raise Http404("Tile not found.")
-    
-    
+
+
 @csrf_protect
 def update_report_location(request, pk):
     if request.method == 'POST':
@@ -254,7 +270,7 @@ def update_report_location(request, pk):
 
             # Validate the data
             if latitude is None or longitude is None:
-                return JsonResponse({'success': False, 
+                return JsonResponse({'success': False,
                                      'error': 'Invalid data'}, 
                                     status=400)
 
@@ -263,14 +279,14 @@ def update_report_location(request, pk):
             report.latitude = latitude
             report.longitude = longitude
             report.save()
-            
+
             # get the new place_name and county
             updated_place_name = report.place_name
             print(f"Updated place name: {updated_place_name}")
             updated_county = report.county.county if report.county else None
             print(f"Updated county: {updated_county}")
-            
-            return JsonResponse({'success': True, 
+
+            return JsonResponse({'success': True,
                                  'message': 'Location updated successfully!',
                                  'place_name': updated_place_name,
                                  'county': updated_county})
@@ -278,6 +294,7 @@ def update_report_location(request, pk):
             print(f"Error: {e}")
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
+
 
 class CustomConfirmEmailView(ConfirmEmailView):
     def get(self, *args, **kwargs):
@@ -289,10 +306,10 @@ class CustomConfirmEmailView(ConfirmEmailView):
         user = confirmation.email_address.user
         user.backend = 'django.contrib.auth.backends.ModelBackend'
         login(self.request, user)
-        
+
         # Redirect to a success page or login the user
         return redirect('email-confirmation-success')
-    
+
 
 def email_confirmation_success(request):
     """
@@ -301,6 +318,7 @@ def email_confirmation_success(request):
     return render(request, 'mapper/email_confirmation_success.html')
 
 
+# INSTRUCTIONS PAGE
 def instructions(request):
     """
     Render the instructions page.
@@ -308,13 +326,15 @@ def instructions(request):
     return render(request, 'mapper/instructions.html')
 
 
+# CONTACT PAGE
 def contact(request):
     """
     Render the contact page and handle form submissions.
     """
     message_sent = False
     if request.method == 'POST':
-        form = ContactForm(request.POST, user=request.user if request.user.is_authenticated else None)
+        form = ContactForm(request.POST,
+                           user=request.user if request.user.is_authenticated else None)
         if form.is_valid():
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
@@ -338,11 +358,11 @@ def contact(request):
                 "Kind regards,\n"
                 "Mobility Mapper"
             )
-            
+
             send_mail(
                 subject="Thank you for contacting Mobility Mapper",
                 message=confirmation_message,
-                from_email=settings.EMAIL_HOST_USER, 
+                from_email=settings.EMAIL_HOST_USER,
                 recipient_list=[email],
             )
 
@@ -351,5 +371,5 @@ def contact(request):
             message_sent = True
     else:
         form = ContactForm(user=request.user if request.user.is_authenticated else None)
-        
+
     return render(request, 'mapper/contact.html', {'form': form, 'message_sent': message_sent})

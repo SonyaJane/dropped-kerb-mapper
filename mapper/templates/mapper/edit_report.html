@@ -4,9 +4,14 @@
 
 {% block content %}
 
-<div class="dkm-container .font-size-125rem mt-4">
-    <h2 class="underline-orange mb-4">Edit Report</h2>
-    <form method="post" enctype="multipart/form-data">
+<div class="dkm-container mt-4">
+    {% if user.is_superuser %}
+    <h2 class="underline-orange mb-4">Editing Report Number {{ report.id }}</h2>
+    {% else %}
+    <h2 class="underline-orange mb-4">Editing Report Number {{ report.user_report_number }}</h2>
+    {% endif %}
+    
+    <form method="post" enctype="multipart/form-data" class="font-size-125rem mb-3">
         {% csrf_token %}
         {% crispy form %}
     </form>
