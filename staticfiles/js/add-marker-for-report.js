@@ -1,12 +1,7 @@
 import setMarkerColour from "./set-marker-colour.js";
 
 export default function addMarkerForReport(report) {
-    // marker colour: choose white when condition is 'none'
-    const markerColor =
-        report.condition === 'none' ? 'blue' : report.condition;
-
     const marker = new maplibregl.Marker({
-        color: markerColor, // Set the marker colour
         draggable: false
     })
         .setLngLat([report.longitude, report.latitude]) // Set marker position
@@ -14,10 +9,11 @@ export default function addMarkerForReport(report) {
             generatePopupHTML(report, report.latitude, report.longitude, report.place_name, report.county)
         ))
         .addTo(DKM.map);
+    
+    const markerElement = marker.getElement();
+    setMarkerColour(markerElement, report.condition)
 
     // Intercept multi‐clicks in the capture phase and swallow them:
-    const markerElement = marker.getElement();
-
     // remove the default click-popup listener:
     markerElement.removeEventListener('click', marker._markerClickListener);
 
