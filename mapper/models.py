@@ -72,7 +72,7 @@ class Report(models.Model):
         ('green', 'Green'),   # Usable and in good condition
         ('orange', 'Orange'), # Usable but needs improvement
         ('red', 'Red'),       # Dangerous or unusable
-        ('blue', 'Blue'),     # Dropped kerb missing or preventing access
+        ('white', 'White'),   # Dropped kerb missing or preventing access
     ]
 
     ALLOWED_REASONS = [

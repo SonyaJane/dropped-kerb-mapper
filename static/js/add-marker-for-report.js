@@ -3,7 +3,7 @@ import setMarkerColour from "./set-marker-colour.js";
 export default function addMarkerForReport(report) {
     // marker colour: choose white when condition is 'none'
     const markerColor =
-        report.condition === 'none' ? 'white' : report.condition;
+        report.condition === 'none' ? 'blue' : report.condition;
 
     const marker = new maplibregl.Marker({
         color: markerColor, // Set the marker colour
