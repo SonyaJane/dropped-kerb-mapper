@@ -1,9 +1,21 @@
 {% extends 'base.html' %} 
-{% block content %}
 {% load static %}
 {% load comma_wrap %}
 
+{% block content %}
+
+
 <div class="mt-4 dkm-container report-detail">
+
+  {% comment %} Show any success messages here {% endcomment %}
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} mb-3" role="alert">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
   {% if user.is_superuser %}
   <h2 class="underline-orange mb-4">Report Number {{ report.id }}</h2>
   {% else %}

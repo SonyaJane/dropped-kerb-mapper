@@ -41,7 +41,7 @@ class CustomUser(AbstractUser):
         null=True,
         verbose_name="Carees Mobility Device Type"
     )
-    
+
 class County(geomodels.Model):
     county = models.CharField(max_length=100)
     polygon = geomodels.MultiPolygonField(srid=4326)
@@ -53,6 +53,10 @@ class County(geomodels.Model):
 
 
 class LocalAuthority(geomodels.Model):
+    '''
+    Model to store local authority geographic areas.
+    Each local authority is represented by a polygon.
+    '''
     local_authority = models.CharField(max_length=100)
     polygon = geomodels.MultiPolygonField(srid=4326)  # stores the county geometry, target CRS is WGS84 (lat/long)
 

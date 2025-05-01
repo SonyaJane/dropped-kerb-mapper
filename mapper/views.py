@@ -30,7 +30,7 @@ def home(request):
 # LIST OF REPORTS
 class ReportList(LoginRequiredMixin, SingleTableView):
     login_url = 'account_login' # where to redirect if not logged in
-    redirect_field_name = 'next' 
+    redirect_field_name = 'next'
     
     model = Report
     template_name = "mapper/reports.html"
@@ -140,7 +140,7 @@ def edit_report(request, pk):
         # Create a new form instance with the existing report data
         # Prepopulate the form with the existing report data
         form = ReportForm(instance=report)
-    return render(request, 'mapper/edit_report.html', {'form': form, 'report': report})    
+    return render(request, 'mapper/edit_report.html', {'form': form, 'report': report})  
 
 
 def delete_report(request, pk):

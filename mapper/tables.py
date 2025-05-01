@@ -7,7 +7,7 @@ class ReportTable(tables.Table):
         verbose_name="Photo",
         # Superusers see the external link (URL revealed)
         # Non‑superusers opens a modal popup showing the image, without exposing the URL in an <a> tag.
-        template_code=''' 
+        template_code='''
             {% if record.photo %}
                 {% if table.request.user.is_superuser %}
                     <a href="{{ record.photo.url }}" target="_blank" rel="noopener noreferrer">

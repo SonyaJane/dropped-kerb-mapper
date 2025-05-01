@@ -24,6 +24,7 @@ admin.site.register(LocalAuthority, geo_admin.ModelAdmin)
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
+    
     fieldsets = UserAdmin.fieldsets + (
         (None, {'fields': ('uses_mobility_device', 'mobility_device_type')}),
     )

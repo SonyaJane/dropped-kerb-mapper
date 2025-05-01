@@ -26,7 +26,7 @@ export default function addEventListenerAddReportButton() {
             // If the button is not active, enable "add report" mode
             addReportButton.classList.add('button-active'); // Add the active class
             // enable the submit button
-            const submitBtn = document.getElementById("report-submit-btn");
+            const submitBtn = document.querySelector(".report-submit-btn");
             submitBtn.disabled = false;
             submitBtn.value = "Submit";
             // turn the cursor to custom crosshair

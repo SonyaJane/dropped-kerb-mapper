@@ -63,6 +63,8 @@
 	--color-mango-4: #E48312;
 	--color-mango-5: #AB620E;
 	--color-mango-6: #724209;
+
+    
 }
 
 /* Ensure the body and html take up the full height */
@@ -94,6 +96,10 @@ p, li, td {
     font-weight: 400;
 }
 
+th {
+    font-weight: 600;
+}
+
 tr {
     font-size: 1.25rem;
 }
@@ -118,6 +124,14 @@ h4 {
     margin-top: 1.5rem;
 }
 
+/* Message alerts */
+.alert-success {
+    /* Override Bootstrap variables */
+    --bs-alert-color: black !important;
+    --bs-alert-bg: var(--color-green-1) !important;
+    --bs-alert-border-color: var(--color-green-2) !important;
+}
+
 .bold-font {
     font-weight: 600;
 }
@@ -130,7 +144,7 @@ h4 {
 }
 
 .list-reports-container {
-    padding-left: 12px;
+    padding-left: 4px;
     padding-right: 12px;
 }
 

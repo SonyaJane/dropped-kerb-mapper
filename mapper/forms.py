@@ -122,16 +122,16 @@ class ReportForm(forms.ModelForm):
                 Field('photo', wrapper_class='col-12 col-sm-8'),
                 css_class='row'
             ),
-            Submit('submit', 'Submit', css_class='btn btn-green', css_id='report-submit-btn'),
+            Submit('submit', 'Submit', css_class='btn btn-green report-submit-btn'),
             # Cancel button
             HTML("""
                 {% if is_map_reports %}
-                    <a href="javascript:void(0);" class="btn close-btn btn-mango" id="report-cancel-btn">Cancel</a>
+                    <a href="javascript:void(0);" class="btn close-btn btn-mango report-cancel-btn">Cancel</a>
                 {% else %} 
                     {% if report.id %}
-                        <a href="{% url 'report-detail' report.id %}" class="btn btn-mango">Cancel</a>
+                        <a href="{% url 'report-detail' report.id %}" class="btn btn-mango report-cancel-btn">Cancel</a>
                     {% else %}
-                        <a href="{% url 'reports-list' %}" class="btn btn-mango">Cancel</a>
+                        <a href="{% url 'reports-list' %}" class="btn btn-mango report-cancel-btn">Cancel</a>
                     {% endif %}   
                 {% endif %}          
                 """),

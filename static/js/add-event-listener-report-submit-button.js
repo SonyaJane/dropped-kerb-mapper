@@ -1,14 +1,13 @@
 export default function addEventListenerReportSubmitButton() {
     // reset the form when submit is clicked
     // get the form element
-    const form = document.getElementById("map-report-form");
+    const form = document.querySelector(".report-form");
 
     form.addEventListener("submit", e => {
         const condition = document.getElementById('condition');
         const reasons = document.querySelector('.choices__list');
         let nReasons = 0;
         if (reasons) {
-            console.log(reasons.childElementCount);
             nReasons = reasons.childElementCount;
         }
         // clear any prior inline error next to condition
@@ -35,11 +34,11 @@ export default function addEventListenerReportSubmitButton() {
 
         // If validation passed
         // Disable the submit button to prevent multiple submissions
-        const submitBtn = document.getElementById("report-submit-btn");
+        const submitBtn = document.querySelector(".report-submit-btn");
         submitBtn.disabled = true;
         submitBtn.value = "Submitting...";
         // Disable the cancel button to prevent it from being clicked while the form is submitting.                
-        const cancelBtn = document.getElementById("report-cancel-btn");
+        const cancelBtn = document.querySelector(".report-cancel-btn");
         cancelBtn.disabled = true;
         // add a css class to the submit button to indicate that it is disabled
         submitBtn.classList.add("button-disabled");

@@ -38,8 +38,8 @@ document.addEventListener('htmx:afterSwap', (e) => {
     }, 1500);
 
     //reenable the submit and cancel buttons
-    const submitBtn = document.getElementById("report-submit-btn");
-    const cancelBtn = document.getElementById("report-cancel-btn");
+    const submitBtn = document.querySelector(".report-submit-btn");
+    const cancelBtn = document.querySelector(".report-cancel-btn");
 
     submitBtn.disabled = false;
     submitBtn.value = "Submit";

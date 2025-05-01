@@ -11,7 +11,7 @@
     <h2 class="underline-orange mb-4">Editing Report Number {{ report.user_report_number }}</h2>
     {% endif %}
     
-    <form method="post" enctype="multipart/form-data" class="font-size-125rem mb-3">
+    <form method="post" enctype="multipart/form-data" class="report-form font-size-125rem mb-3">
         {% csrf_token %}
         {% crispy form %}
     </form>
