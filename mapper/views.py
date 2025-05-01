@@ -67,7 +67,7 @@ def report_detail(request, pk):
 # ADD NEW REPORT
 def map_reports(request):
     if request.method =="POST":
-        report_form = ReportForm(data=request.POST, files=request.FILES)
+        report_form = ReportForm(data=request.POST, files=request.FILES, user=request.user)
         if report_form.is_valid():
             report = report_form.save(commit=False)
             report.user = request.user
@@ -76,8 +76,8 @@ def map_reports(request):
             return render(request, 'mapper/partials/new_report.html',
                           {'report': serialise_report(report)})
         else:
-            # Return errors for invalid form submissions
-            return JsonResponse({'success': False, 'errors': report_form.errors}, status=400)
+            # Client‐side will handle showing errors, so just no‐content
+            return HttpResponse(status=204)
 
     # For GET requests, render the map_reports template
     report_form = ReportForm()        

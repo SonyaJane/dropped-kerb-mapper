@@ -52,7 +52,7 @@ class ReportForm(forms.ModelForm):
         self.fields['longitude'].label = ""
         self.fields['condition'].empty_label = None  # Remove the default '-------' option
         self.fields['condition'].choices = [choice for choice in self.fields['condition'].choices if choice[0]]  # Remove empty choice        
-        self.fields['condition'].initial = 'green'
+        self.fields['condition'].initial = 'none'
         self.fields['condition'].label = ""
         self.fields['reasons'].label = ""
         self.fields['comments'].label = ""
@@ -202,9 +202,11 @@ class ReportForm(forms.ModelForm):
         condition = cleaned_data.get('condition')
         reasons = cleaned_data.get('reasons')
         # Check if condition is red or orange, then ensure at least one reason is selected.
-        if condition in ['red', 'orange'] and (not reasons or len(reasons) == 0):
-            self.add_error('reasons', "At least one reason must be selected when condition is red or orange.")
-            
+        if condition in ['red', 'orange'] and not reasons:
+            self.add_error(
+                'reasons', 
+                "At least one reason must be selected when condition is red or orange."
+                )
         # Check permissions: allow edit only if the current user is the original owner or a superuser.
         if self.instance.pk and self.current_user:
             if self.instance.user != self.current_user and not self.current_user.is_superuser:
@@ -387,9 +389,12 @@ class CustomLoginForm(LoginForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Remove the "Remember Me" field
-        self.fields.pop('remember', None)
+        self.fields['remember'].widget = forms.HiddenInput()
+        self.fields['remember'].initial = False
         self.helper = FormHelper()
+        # disable Crispy’s <form> wrapper so we can use our own cubmit button
+        self.helper.form_tag = False
         self.helper.form_class = 'form-horizontal'
         self.helper.label_class = 'col-12 col-sm-4'
         self.helper.field_class = 'col-12 col-sm-8'
-        
+     

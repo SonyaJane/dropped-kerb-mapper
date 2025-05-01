@@ -10,17 +10,16 @@ export default function addMarkerForReport(report) {
             generatePopupHTML(report, report.latitude, report.longitude, report.place_name, report.county)
         ))
         .addTo(DKM.map);
-    
 
     // Intercept multi‐clicks in the capture phase and swallow them:
-    const el = marker.getElement();
+    const markerElement = marker.getElement();
 
     // remove the default click→popup listener:
-    el.removeEventListener('click', marker._markerClickListener);
+    markerElement.removeEventListener('click', marker._markerClickListener);
 
         // now install your own click handler that waits a bit:
         let clickTimer = null;
-        el.addEventListener('click', e => {
+        markerElement.addEventListener('click', e => {
         e.stopImmediatePropagation();
         e.preventDefault();
 

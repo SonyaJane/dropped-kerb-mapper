@@ -5,9 +5,44 @@ class ReportTable(tables.Table):
     # Show a link to the photo if it exists, otherwise show a dash
     photo = tables.TemplateColumn(
         verbose_name="Photo",
+        # Superusers see the external link (URL revealed)
+        # Non‑superusers opens a modal popup showing the image, without exposing the URL in an <a> tag.
         template_code=''' 
             {% if record.photo %}
-                <a href="{{ record.photo.url }}" target="_blank" rel="noopener noreferrer"><i class="bi bi-camera-fill"></i></a>
+                {% if table.request.user.is_superuser %}
+                    <a href="{{ record.photo.url }}" target="_blank" rel="noopener noreferrer">
+                        <i class="bi bi-camera-fill"></i>
+                    </a>
+                {% else %}
+                    <!-- Button to trigger Bootstrap modal -->
+                    <button 
+                      type="button" 
+                      class="btn btn-link p-0" 
+                      data-bs-toggle="modal" 
+                      data-bs-target="#photoModal{{ record.id }}"
+                      aria-label="View photo"
+                    >
+                        <i class="bi bi-camera-fill"></i>
+                    </button>
+                    <!-- Modal -->
+                    <div 
+                      class="modal fade" 
+                      id="photoModal{{ record.id }}" 
+                      tabindex="-1" 
+                      aria-labelledby="photoModalLabel{{ record.id }}" 
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content bg-transparent border-0">
+                          <img 
+                            src="{{ record.photo.url }}" 
+                            class="img-fluid" 
+                            alt="Report {{ record.id }} photo"
+                          >
+                        </div>
+                      </div>
+                    </div>
+                {% endif %}
             {% else %}
                 —
             {% endif %}
