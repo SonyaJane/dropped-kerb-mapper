@@ -7,9 +7,11 @@ from django.http import HttpResponseRedirect, HttpResponse, Http404, JsonRespons
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.cache import cache
 from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_protect
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django_tables2 import SingleTableView, RequestConfig
 from allauth.account.views import ConfirmEmailView
@@ -26,7 +28,10 @@ def home(request):
 
 
 # LIST OF REPORTS
-class ReportList(SingleTableView):
+class ReportList(LoginRequiredMixin, SingleTableView):
+    login_url = 'account_login' # where to redirect if not logged in
+    redirect_field_name = 'next' 
+    
     model = Report
     template_name = "mapper/reports.html"
     # paginate_by = 24
@@ -49,6 +54,7 @@ class ReportList(SingleTableView):
 
 
 # REPORT DETAILS
+@login_required
 def report_detail(request, pk):
     """
     Retrieves a single report from the database and displays it on the page.
@@ -65,6 +71,7 @@ def report_detail(request, pk):
 
 
 # ADD NEW REPORT
+@login_required
 def map_reports(request):
     if request.method =="POST":
         report_form = ReportForm(data=request.POST, files=request.FILES, user=request.user)
