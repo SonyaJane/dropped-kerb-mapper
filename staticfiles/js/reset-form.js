@@ -9,4 +9,9 @@ export default function resetForm() {
     // set the condition to green
     const conditionSelect = document.getElementById('condition');
     conditionSelect.value = "green";
+
+    // clear any inline error next to condition
+    const existingError = document.querySelector('.text-danger.inline-error');
+    if (existingError) existingError.remove();
+
 }

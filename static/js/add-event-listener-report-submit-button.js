@@ -12,7 +12,7 @@ export default function addEventListenerReportSubmitButton() {
             nReasons = reasons.childElementCount;
         }
         // clear any prior inline error next to condition
-        const existingError = condition.parentElement.querySelector('.text-danger.inline-error');
+        const existingError = document.querySelector('.text-danger.inline-error');
         if (existingError) existingError.remove();
 
         // only validate if condition is red or orange
