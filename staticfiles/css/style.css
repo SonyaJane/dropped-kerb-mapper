@@ -132,6 +132,7 @@ h4 {
     --bs-alert-border-color: var(--color-green-2) !important;
 }
 
+
 .bold-font {
     font-weight: 600;
 }
@@ -183,7 +184,7 @@ a {
 .sidepanel {
     background-color: #FBE6CE;
     width: 250px; 
-    z-index: 1045;
+    z-index: 10;
 }
 
 /* Buttons */
@@ -520,6 +521,18 @@ header.container {
     background: #F7CE9D !important;
 }
 
+/* New reports map page messages container div */
+#message-container {
+    position: absolute;
+    top: 75px; 
+    left: 50%;
+    transform: translate(-50%); 
+    font-size: 1.25rem;
+    z-index: 1001;
+    /* width: 300px; */
+    max-width: 90%;
+}
+
 /* ATTRIBUTION */
 
 /* Custom Google attribution elements */
@@ -663,23 +676,6 @@ header.container {
     align-items: center; /* vertically center radios & labels */
     gap: 1rem;           /* space between them */
   }
-
-/* Show the successful report submission message in 
-the top centre of the map */
-.success-message {
-    position: absolute;
-    top: 75px; 
-    left: 50%;
-    transform: translate(-50%); 
-    background-color: var(--color-mango-1);
-    color: var(--color-brown-6);
-    font-size: 1.25rem;
-    padding: 10px 10px;
-    border-radius: 5px;
-    border: 1px solid var(--color-brown-4);
-    z-index: 1001;
-    width: 300px;
-}
 
 /* Create new report form */
 
@@ -913,8 +909,8 @@ the top centre of the map */
 }
 
 @media (min-width: 360px) {
-    /* Move success message down */
-    .success-message {
+    /* Move message container down */
+    #message-container {
         position: absolute;
         top: 100px; 
         left: 50%;

@@ -1,9 +1,11 @@
+from datetime import timedelta
 from django.contrib.gis.db import models as geomodels
 from django.contrib.auth.models import AbstractUser
 from django.contrib.gis.geos import Point
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 from multiselectfield import MultiSelectField
 from cloudinary.models import CloudinaryField
 from geopy import Nominatim
@@ -102,6 +104,8 @@ class Report(models.Model):
     local_authority = models.ForeignKey(LocalAuthority, null=True, blank=True, on_delete=models.SET_NULL)
     # place name (get via reverse geocoding)
     place_name = models.CharField(max_length=1000, blank=True, null=True)
+    # In case the geocode fails, store the last time the geocode was attempted
+    geocode_retry_at = models.DateTimeField(blank=True, null=True)
     # Uses a choices field to enforce the available traffic light ratings.
     condition = models.CharField(max_length=6, choices=TRAFFIC_LIGHT_CHOICES)
     # Each instance represents an option (checkbox) that explains why a particular
@@ -132,6 +136,27 @@ class Report(models.Model):
             models.Index(fields=['user']),      # Index the user field for faster lookups.
         ]
 
+    def _reverse_geocode(self, lat, lon):
+        """
+        Reverse geocode the latitude and longitude to get the place name.
+        """
+        try:
+            geolocator = Nominatim(user_agent="Dropped-Kerb-Mapper")
+            location = geolocator.reverse(f"{lat},{lon}", zoom=17, addressdetails=True)
+            address = location.raw.get('address', {})
+            values_until_county = []
+            for key, value in address.items():
+                if key in ['county', 'state', 'country', 'postode', 'country_code', 'province'] or key.startswith('ISO'):
+                    break
+                if value not in values_until_county:
+                    values_until_county.append(value) # Avoid duplicates in the place name
+            # Join the values into a single string
+            self.place_name = ", ".join(values_until_county) if values_until_county else None
+            return True
+        except Exception as e:
+            print(f"Error in reverse geocoding: {e}")
+            return False
+
     def clean(self):
         """
         Enforce that reasons are only provided if the condition is red or orange.
@@ -141,47 +166,43 @@ class Report(models.Model):
             raise ValidationError("Reasons can only be provided for red or orange conditions.")
 
     def save(self, *args, **kwargs):
-        # Automatically assign the next report number for the user
+        
+        # Assign the next report number for this specific user
         if self.user and not self.user_report_number:
             # Get the highest report number for this user and increment it
             last_report = Report.objects.filter(user=self.user).order_by('-user_report_number').first()
             self.user_report_number = (last_report.user_report_number + 1) if last_report else 1
-        # If latitude and longitude are provided, create a GeoDjango Point.
-        if self.latitude and self.longitude:
-            lon = round(self.longitude, 6)
-            lat = round(self.latitude, 6)
-            point = Point((lon, lat)) 
-            # Find the first County whose polygon contains the point.
-            # CRS is EPSG:4326.
-            matching_county = County.objects.filter(polygon__contains=point).first()
-            if matching_county:
-                self.county = matching_county
-            else:
-                self.county = None  # Or handle cases where no county matches.
-            # find the matching local authority
-            matching_local_authority = LocalAuthority.objects.filter(polygon__contains=point).first()
-            if matching_local_authority:
-                self.local_authority = matching_local_authority
-            else:
-                self.local_authority = None
-            # Reverse geocode the latitude and longitude to get the place name.
-            geolocator = Nominatim(user_agent="Dropped-Kerb-Mapper")
-            location = geolocator.reverse(f"{lat},{lon}", zoom=17, addressdetails=True)
-            # Extract all values from location.raw['address'] until the key 'county'
-            address = location.raw.get('address', {})
-            values_until_county = []
-            for key, value in address.items():
-                if key in ['county', 'state', 'country', 'postode', 'country_code', 'province'] or key.startswith('ISO'):
-                    break
-                if value not in values_until_county:
-                    # Avoid duplicates in the place name
-                    values_until_county.append(value)
-            # Join the values into a single string
-            self.place_name = ", ".join(values_until_county) if values_until_county else None
-            # Automatically set the username field if the user is set
-            if self.user and not self.username:
-                self.username = self.user.username
+        
+        # Create a GeoDjango Point
+        lon = round(self.longitude, 6)
+        lat = round(self.latitude, 6)
+        point = Point((lon, lat))
+
+        # Find the mataching County
+        matching_county = County.objects.filter(polygon__contains=point).first()
+        if matching_county:
+            self.county = matching_county
+        else:
+            self.county = None  # Or handle cases where no county matches.
+        
+        # Find the matching local authority
+        matching_local_authority = LocalAuthority.objects.filter(polygon__contains=point).first()
+        if matching_local_authority:
+            self.local_authority = matching_local_authority
+        else:
+            self.local_authority = None
+
+        # Reverse geocode the latitude and longitude to get the place name
+        success = self._reverse_geocode(self.latitude, self.longitude)
+        if not success:
+            self.geocode_retry_at = timezone.now() + timedelta(hours=1)
+
+        # Automatically set the username field if the user is set
+        if self.user and not self.username:
+            self.username = self.user.username
+      
         super().save(*args, **kwargs)
-    
+
     def __str__(self):
         return f"Report {self.id}: {self.condition} by {self.username or 'Unknown User'}"
+    

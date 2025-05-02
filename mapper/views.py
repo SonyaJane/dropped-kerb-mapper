@@ -79,12 +79,17 @@ def map_reports(request):
             report = report_form.save(commit=False)
             report.user = request.user
             report.save()
+            # Add a success message
+            messages.add_message(request, messages.SUCCESS, 'Report created successfully!')
             # POST requests are always HTMX request, so render the partial template
-            return render(request, 'mapper/partials/new_report.html',
+            return render(request, 'mapper/partials/new_report_created_successfully.html',
                           {'report': serialise_report(report)})
         else:
-            # Client‐side will handle showing errors, so just no‐content
-            return HttpResponse(status=204)
+            # Collect the form errors so the partial can display them
+            errors = report_form.errors  # a dict: field_name -> list of errors
+            print(errors)
+            return render(request, 'mapper/partials/new_report_submission_unsuccessful.html',
+                          {'errors': errors}, status=400)
 
     # For GET requests, render the map_reports template
     report_form = ReportForm()        
