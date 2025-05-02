@@ -1,11 +1,9 @@
-from datetime import timedelta
 from django.contrib.gis.db import models as geomodels
 from django.contrib.auth.models import AbstractUser
 from django.contrib.gis.geos import Point
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.utils import timezone
 from multiselectfield import MultiSelectField
 from cloudinary.models import CloudinaryField
 from geopy import Nominatim
@@ -104,8 +102,6 @@ class Report(models.Model):
     local_authority = models.ForeignKey(LocalAuthority, null=True, blank=True, on_delete=models.SET_NULL)
     # place name (get via reverse geocoding)
     place_name = models.CharField(max_length=1000, blank=True, null=True)
-    # In case the geocode fails, store the last time the geocode was attempted
-    geocode_retry_at = models.DateTimeField(blank=True, null=True)
     # Uses a choices field to enforce the available traffic light ratings.
     condition = models.CharField(max_length=6, choices=TRAFFIC_LIGHT_CHOICES)
     # Each instance represents an option (checkbox) that explains why a particular
@@ -136,7 +132,7 @@ class Report(models.Model):
             models.Index(fields=['user']),      # Index the user field for faster lookups.
         ]
 
-    def _reverse_geocode(self, lat, lon):
+    def reverse_geocode(self, lat, lon):
         """
         Reverse geocode the latitude and longitude to get the place name.
         """
@@ -192,16 +188,15 @@ class Report(models.Model):
         else:
             self.local_authority = None
 
-        # Reverse geocode the latitude and longitude to get the place name
-        success = self._reverse_geocode(self.latitude, self.longitude)
-        if not success:
-            self.geocode_retry_at = timezone.now() + timedelta(hours=1)
-
         # Automatically set the username field if the user is set
         if self.user and not self.username:
             self.username = self.user.username
-      
+            
+        # Try reverse geocode the latitude and longitude to get the place name
+        self.reverse_geocode(self.latitude, self.longitude)
+
         super().save(*args, **kwargs)
+
 
     def __str__(self):
         return f"Report {self.id}: {self.condition} by {self.username or 'Unknown User'}"

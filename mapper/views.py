@@ -62,6 +62,11 @@ def report_detail(request, pk):
     queryset = Report.objects.all()
     report = get_object_or_404(queryset, pk=pk)
 
+    # check if the place_name is empty and reverse geocode if necessary
+    if not report.place_name:
+        report.reverse_geocode(report.latitude, report.longitude)
+        report.save(update_fields=['place_name'])
+
     # Check if the request is an AJAX or HTMX request
     if request.headers.get('HX-Request') or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return JsonResponse(serialise_report(report))
@@ -92,8 +97,8 @@ def map_reports(request):
                           {'errors': errors}, status=400)
 
     # For GET requests, render the map_reports template
-    report_form = ReportForm()        
-    # Get all reports for the map view    
+    report_form = ReportForm()
+    # Get all reports for the map view
     reports = Report.objects.all()
     reports_data = [serialise_report(report) for report in reports]
     return render(request, 'mapper/map_reports.html',
