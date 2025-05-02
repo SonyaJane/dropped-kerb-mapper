@@ -31,7 +31,7 @@ def home(request):
 class ReportList(LoginRequiredMixin, SingleTableView):
     login_url = 'account_login' # where to redirect if not logged in
     redirect_field_name = 'next'
-    
+
     model = Report
     template_name = "mapper/reports.html"
     # paginate_by = 24
@@ -64,8 +64,9 @@ def report_detail(request, pk):
 
     # check if the place_name is empty and reverse geocode if necessary
     if not report.place_name:
-        report.reverse_geocode(report.latitude, report.longitude)
-        report.save(update_fields=['place_name'])
+        success = report.reverse_geocode(report.latitude, report.longitude)
+        if success:
+            report.save(update_fields=['place_name'])
 
     # Check if the request is an AJAX or HTMX request
     if request.headers.get('HX-Request') or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -110,7 +111,14 @@ def map_reports(request):
 def serialise_report(report):
     """
     Serialise a Report object into a dictionary.
+    Reverses geocode the latitude and longitude if the place_name is empty. 
     """
+    # check if the place_name is empty and reverse geocode if necessary
+    if not report.place_name:
+        success = report.reverse_geocode(report.latitude, report.longitude)
+        if success:
+            report.save(update_fields=['place_name'])
+            
     return {
         'user': report.user.username if report.user else None,
         'user_report_number': report.user_report_number,
@@ -219,7 +227,7 @@ def get_google_session_token():
     headers = {
         "Content-Type": "application/json"
     }
-    
+
     # Request the session token
     response = requests.post(create_session_url, json=payload, headers=headers)
     if response.status_code == 200:
