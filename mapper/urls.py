@@ -1,11 +1,12 @@
-from . import views # import the views file 
 from django.urls import path
+from . import views # import the views file 
+from .views import MapReportsView
 
 urlpatterns = [
     path('', views.home, name='home'),  # Home page
     path('contact/', views.contact, name='contact'),
     path('instructions/', views.instructions, name='instructions'),
-    path('map/', views.map_reports, name='map-reports'),
+    path('map/', MapReportsView.as_view(), name='map-reports'),
     path('reports/', views.ReportList.as_view(), name='reports-list'),
     path('reports/<int:pk>/', views.report_detail, name='report-detail'),
     path('reports/<int:pk>/edit/', views.edit_report, name='edit-report'),

@@ -1,11 +1,23 @@
-import searchLocationListener from './search-location.js';
-
-export default function searchResultsEventListener(e) {
+import searchLocation from './search-location.js';
+/**
+ * Invoked when a user clicks on one of the Nominatim search results.
+ * - Removes the #location-search-results div containing the results.
+ * - Clears any existing results polygon layer or point marker from the map.
+ * - Populates the search input (#text-search-input) with the selected place name.
+ * - Toggles the search button icon from a magnifying glass to a clear ×.
+ * - Swaps the click handler on the search button from searchLocation() to clearSearchHandler().
+ * - If the result has GeoJSON geometry (Polygon or MultiPolygon):
+ *     • Adds it as a new source/layer on the map.
+ *     • Fits the map view to the geometry’s bounds with padding.
+ *   Otherwise (point result):
+ *     • Creates a new marker at the result’s coordinates.
+ *     • Centers and zooms the map to that marker.
+ */
+export default function handleLocationSelect(e) {
     
-    // actions for when a search result is clicked
+    // actions for when a Nominatim location search result is clicked
 
     // Remove the list of search results div
-    console.log("Removing search results div");
     document.querySelector('#location-search-results').remove();
 
     // remove any current geometry from the map
@@ -29,7 +41,7 @@ export default function searchResultsEventListener(e) {
     
     // remove the event listener from the search submit button
     console.log("Removing search location listener from search submit button");
-    searchSubmitBtn.removeEventListener('click', searchLocationListener);
+    searchSubmitBtn.removeEventListener('click', searchLocation);
 
     // Attach event listener for clearing search input
     console.log("Attaching clear search handler to search submit button");
@@ -127,7 +139,7 @@ function clearSearchHandler() {
 
     // Reattach the event listener for the search submit button
     console.log("Reattaching search location listener to search submit button");
-    searchSubmitBtn.addEventListener('click', searchLocationListener);
+    searchSubmitBtn.addEventListener('click', searchLocation);
 
     // remove the search results div if it exists
     const existingResultsDiv = document.querySelector('#location-search-results');

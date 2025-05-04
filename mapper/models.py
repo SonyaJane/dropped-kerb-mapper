@@ -92,6 +92,7 @@ class Report(models.Model):
         ('accessibility_barrier', 'Accessibility barrier'),
     ]
     
+    # Model fields and their types
     # Create a unique report number for each user
     user_report_number = models.PositiveIntegerField(null=True, blank=True)
     # Store location as latitude and longitude
@@ -191,7 +192,7 @@ class Report(models.Model):
         # Automatically set the username field if the user is set
         if self.user and not self.username:
             self.username = self.user.username
-            
+
         # Try reverse geocode the latitude and longitude to get the place name
         self.reverse_geocode(self.latitude, self.longitude)
 
@@ -200,4 +201,3 @@ class Report(models.Model):
 
     def __str__(self):
         return f"Report {self.id}: {self.condition} by {self.username or 'Unknown User'}"
-    

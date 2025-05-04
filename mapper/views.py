@@ -11,6 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.cache import cache
 from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_protect
+from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django_tables2 import SingleTableView, RequestConfig
@@ -25,6 +26,49 @@ def home(request):
     Render the home page
     """
     return render(request, 'mapper/home.html')
+
+
+# MAP REPORTS PAGE
+class MapReportsView(LoginRequiredMixin, View):
+    """
+    View to handle the map reports page.
+    GET: Display existing reports on the map.
+    POST: Create a new report via HTMX form submission.
+    """
+    def get(self, request):
+        """
+        Get existing reports and send them to the map_reports template.
+        """
+        form = ReportForm()
+        # Only show this user's reports (unless they're superuser)
+        if request.user.is_superuser:
+            reports = Report.objects.all()
+        else:
+            reports = Report.objects.filter(user=request.user)
+        data = [serialise_report(report) for report in reports]
+        return render(request, 'mapper/map_reports.html',
+                        {'form': form,
+                        'reports': data,
+                        # Indicate to the ReportForm that it is on the map_reports page
+                        'is_map_reports': True})
+
+    def post(self, request):
+        """
+        Create a new report via HTMX form submission.    
+        """
+        form = ReportForm(data=request.POST, files=request.FILES, user=request.user)
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.user = request.user
+            report.save()
+            messages.add_message(request, messages.SUCCESS, 'Report created successfully!')
+            return render(request,
+                        'mapper/partials/new_report_created_successfully.html',
+                        {'report': serialise_report(report)})
+        messages.add_message(request, messages.ERROR, 'Error creating report. Please try again later.')
+        return render(request,
+                        'mapper/partials/new_report_submission_unsuccessful.html',
+                        status=400)
 
 
 # LIST OF REPORTS
@@ -76,38 +120,6 @@ def report_detail(request, pk):
     return render(request, "mapper/report_detail.html", {"report": report})
 
 
-# ADD NEW REPORT
-@login_required
-def map_reports(request):
-    if request.method =="POST":
-        report_form = ReportForm(data=request.POST, files=request.FILES, user=request.user)
-        if report_form.is_valid():
-            report = report_form.save(commit=False)
-            report.user = request.user
-            report.save()
-            # Add a success message
-            messages.add_message(request, messages.SUCCESS, 'Report created successfully!')
-            # POST requests are always HTMX request, so render the partial template
-            return render(request, 'mapper/partials/new_report_created_successfully.html',
-                          {'report': serialise_report(report)})
-        else:
-            # Collect the form errors so the partial can display them
-            errors = report_form.errors  # a dict: field_name -> list of errors
-            print(errors)
-            return render(request, 'mapper/partials/new_report_submission_unsuccessful.html',
-                          {'errors': errors}, status=400)
-
-    # For GET requests, render the map_reports template
-    report_form = ReportForm()
-    # Get all reports for the map view
-    reports = Report.objects.all()
-    reports_data = [serialise_report(report) for report in reports]
-    return render(request, 'mapper/map_reports.html',
-                  {'form': report_form,
-                   'reports': reports_data,
-                   'is_map_reports': True})
-
-
 def serialise_report(report):
     """
     Serialise a Report object into a dictionary.
@@ -118,7 +130,7 @@ def serialise_report(report):
         success = report.reverse_geocode(report.latitude, report.longitude)
         if success:
             report.save(update_fields=['place_name'])
-            
+
     return {
         'user': report.user.username if report.user else None,
         'user_report_number': report.user_report_number,
@@ -306,7 +318,7 @@ def update_report_location(request, pk):
             report.save()
 
             # get the new place_name and county
-            updated_place_name = report.place_name
+            updated_place_name = report.place_name if report.place_name else None
             updated_county = report.county.county if report.county else None
 
             return JsonResponse({'success': True,

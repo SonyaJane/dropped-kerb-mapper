@@ -1,17 +1,17 @@
-import initialiseReasonsChoices from './initialise-reasons-choices.js';
 import initialiseMap from './initialise-map.js';
-import loadBoundary from './load-uk-boundary.js';
-import addEventListenerOnStyledata from './add-event-listener-on-map-styledata.js';
-import addEventListenerOnWindowResize from './add-event-listener-on-window-resize.js';
-import addEventListenerToggleMapStyle from './add-event-listener-toggle-map-style.js';
-import addEventListenerAddReportButton from './add-event-listener-add-report-button.js';
-import addEventListenerConditionField from "./add-event-listener-condition-field.js";
+import recreateCopyrightAttribution from './recreate-copyright-attribution.js';
+import initialiseReasonsChoices from './initialise-reasons-choices.js';
+import loadUKBoundary from './load-uk-boundary.js';
+import updateAttributionControl from './update-attribution-control.js';
+import toggleMapType from './toggle-map-type.js';
+import toggleNewReportMode from './toggle-new-report-mode.js';
+import handleConditionSelectionChange from "./handle-condition-selection-change.js";
 import addExistingReportsToMap from './add-existing-reports-to-map.js';
-import addEventListenerFormCloseButtons from "./add-event-listener-form-close-buttons.js";
-import toggleReasonsFieldVisibility from "./toggle-reasons-field-visibility.js";
 import removeCrispyClassesFromForm from "./remove-crispy-classes-from-form.js";
-import addEventListenerReportSubmitButton from "./add-event-listener-report-submit-button.js";
-import searchLocationListener from "./search-location.js";
+import submitNewReport from "./submit-new-report.js";
+import searchLocation from "./search-location.js";
+import processSuccessfulReportSubmission from "./process-successful-report-submission.js";
+import removeAllMessages from "./remove-all-messages.js";
 
 document.addEventListener('DOMContentLoaded', () => { 
     
@@ -21,25 +21,72 @@ document.addEventListener('DOMContentLoaded', () => {
     DKM.ukBoundary = null; // Initialise UK boundary variable
     DKM.markers = []; // Initialise markers array to store all markers on the map
     
-    initialiseMap();
-    addEventListenerOnStyledata();
-    loadBoundary();
-    addEventListenerOnWindowResize();
-    addEventListenerToggleMapStyle();
-    addEventListenerAddReportButton();
-    addEventListenerReportSubmitButton();
+    // create the map with OS tiles and set the view to the UK
+    initialiseMap(); 
 
-    const searchSubmitBtn = document.getElementById("text-search-submit");
-    searchSubmitBtn.addEventListener('click', searchLocationListener);
-    
-    initialiseReasonsChoices();
-    addEventListenerConditionField(); 
+    // Disable double-click zoom on the map
+    DKM.map.doubleClickZoom.disable();
+
+    // Load the UK boundary coordinates (GeoJSON)
+    loadUKBoundary(); 
+
+    // Add existing reports to the map. 
+    // If not superuser, only add users reports, otherwise add all reports
     addExistingReportsToMap();
-    // Call the function once to set the initial state
-    toggleReasonsFieldVisibility();
-    // Add event listener to the close buttons on the form
-    const formContainer = document.querySelector('.map-report-form-container');
-    addEventListenerFormCloseButtons(formContainer); 
+
+    // Map controls: Add event listeners
+
+    // Search location button (magnifying glass icon)
+    const searchSubmitBtn = document.getElementById("text-search-submit");
+    searchSubmitBtn.addEventListener('click', searchLocation);
+ 
+    // Map type button - toggles between Google Satellite and OS Map layer
+    const toggleSatelliteBtn = document.getElementById("toggle-satellite");
+    toggleSatelliteBtn.addEventListener('click', toggleMapType);
+    
+    // Add-report button - toggles 'new report mode'
+    // When active button is orange, cursor is blue crosshair and click 
+    // event listener selectNewReportLocation enabled on map
+    const addReportButton = document.getElementById('add-report');
+    addReportButton.addEventListener('click', () => {
+        toggleNewReportMode(addReportButton);
+    });
+   
+    // New report form
+    
+    // Attach event listener to condition field dropdown
+    const condition = document.getElementById('condition');
+    condition.addEventListener('change', handleConditionSelectionChange);
+
+    // Turn reasons field into a Choices.js multi‑select widget
+    initialiseReasonsChoices();
+
+    // Add event listener to the new report form submit button to valdate the form 
+    // and disable buttons if valid
+    const form = document.querySelector(".report-form");
+    form.addEventListener('submit', e => {
+            submitNewReport(e)
+        }, { capture: true });
+    // capture: true enables e.preventDefault() to block the submit before HTMX sees it.
+
     // remove selected crispy classes from the form
     removeCrispyClassesFromForm()
+
+    // Responsive attribution control
+    // Responsive to map tiles or tile source changes 
+    DKM.map.on('styledata', recreateCopyrightAttribution);
+    // Rresponsive to screen size
+    window.addEventListener('resize', updateAttributionControl); 
+
+    // Remove all messages after 5 seconds
+    removeAllMessages();
+
+    //Add event listener for any HTMX swap into #message-container
+    document.body.addEventListener('htmx:afterSwap', e => {
+        processSuccessfulReportSubmission();
+        // If the swap is into the message container, remove all messages after 5 seconds
+        if (e.detail.target.id === 'new-report-container') {
+            removeAllMessages();
+        }
+    });
 });

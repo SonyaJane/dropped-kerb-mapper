@@ -40,7 +40,7 @@
 
     </div>
 
-    <div class="map-report-form-container">
+    <div id="map-report-form-container" class="hidden">  <!-- Initially hidden -->
         <form method="post" enctype="multipart/form-data" id="map-report-form" class="report-form font-size-125rem"
             action="{% url 'map-reports' %}" 
             hx-post="{% url 'map-reports' %}" 
@@ -51,7 +51,12 @@
         </form>
     </div>
 
-    <!-- Embed the reports data safely using json_script -->
+    {% comment %} 
+    Embed the reports data safely using json_script
+    The json_script filter is a built‑in Django template filter 
+    (from django.utils.html) that lets you safely dump a Python 
+    object as JSON into your page. 
+    {% endcomment %}
     {{ reports|json_script:"reports-data" }}
 
     <!-- Container for new report data -->
@@ -71,6 +76,4 @@
     const markerUrl = "{% static 'images/marker_32_48.png' %}";
 </script>
 <script type="module" src="{% static 'js/map-reports.js' %}"></script>
-<script type="module" src="{% static 'js/add-event-listener-new-report-marker.js' %}"></script>
-<script src="{% static 'js/remove-success-messages.js' %}"></script>
 {% endblock %}

@@ -1,7 +1,13 @@
-import toggleReasonsFieldVisibility from "./toggle-reasons-field-visibility.js";
-import addEventListenerFormCloseButtons from "./add-event-listener-form-close-buttons.js";
+/**
+ * Checks if the clicked location is within the boundary of the UK.
+ * If it is, it adds a new marker at the clicked location and shows the report form.
+ * Populates the latitude and longitude fields in the form.
+ * If a new marker already exists, it removes it before adding the new one, allowing the user to select a new location.
+ * Adds an event listener to the form cancel button to close and reset the form when clicked.
+ */
+import closeForm from "./close-form.js";
 
-export default function handleMapClick(e) {
+export default function selectNewReportLocation(e) {
 
     // check if the clicked location is within the boundary of the UK
     const { lng, lat } = e.lngLat;
@@ -36,15 +42,16 @@ export default function handleMapClick(e) {
         .addTo(DKM.map);
 
     // Show report form
-    const formContainer = document.querySelector('.map-report-form-container');
-    formContainer.style.display = 'block';
+    const formContainer = document.getElementById('map-report-form-container');
+    formContainer.classList.remove('hidden');
 
     // Populate the latitude and longitude fields in the form
     document.getElementById('latitude').value = lat.toFixed(6);
     document.getElementById('longitude').value = lng.toFixed(6);
 
-    // Call the function once to set the initial state
-    toggleReasonsFieldVisibility();
-    // Add event listener to the close buttons
-    addEventListenerFormCloseButtons(formContainer); 
-};
+    // Add event listener to the form cancel button
+    const cancelButton = document.querySelector('.report-cancel-btn');
+    cancelButton.addEventListener('click', () => {
+        closeForm();
+    });
+}

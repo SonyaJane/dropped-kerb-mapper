@@ -26,7 +26,7 @@ export default function addEventListenerReportSubmitButton() {
 
             // build the error element
             const msg = document.createElement('div');
-            msg.className = 'text-danger inline-error';
+            msg.className = 'text-danger inline-error mb-2';
             msg.textContent = 'Please select at least one reason when condition is red or orange.';
 
             // insert it immediately after the condition's parent wrapper
@@ -45,7 +45,7 @@ export default function addEventListenerReportSubmitButton() {
 
             // build the error element
             const msg = document.createElement('div');
-            msg.className = 'text-danger inline-error';
+            msg.className = 'text-danger inline-error mb-2';
             msg.textContent = 'Please provide comments when condition is white.';
 
             // insert it immediately after the condition's parent wrapper

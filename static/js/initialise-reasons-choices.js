@@ -1,3 +1,11 @@
+/**
+* Turn reasons field into a Choices.js multi‑select widget and 
+* store the instance on the global DKM namespace as reasonsChoices.
+* - Enables removal of selected options via an "×" button. 
+* - Uses a placeholder text "click to show options".
+* - Sorts the items alphabetically.
+* - Hides the default item select text.
+ */
 export default function initialiseReasonsChoices() {
     window.DKM = window.DKM || {}; // || {} ensures that if the namespace already exists, it won't be overwritten
 

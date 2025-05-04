@@ -1,3 +1,8 @@
+/**
+ * This function creates a map of the UK using MapLibre GL JS 
+ * Sets up the map style, geolocation control, and zooms to user's location.
+ * Adds custom, collapsable attribution to the bottom right of the map.
+ */ 
 export default function initialiseMap() {
 
     // Create a map style object using the ZXY service.

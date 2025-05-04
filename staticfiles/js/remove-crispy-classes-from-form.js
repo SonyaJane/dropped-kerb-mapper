@@ -1,3 +1,11 @@
+/** 
+* Removes default crispy-forms CSS classes from the report form elements 
+* to allow custom styling:
+*  - Strips .btn-primary from the submit button
+*  - Strips .pt-0 from all .col-form-label elements
+*  - Strips .row from the wrapper divs for latitude, longitude, condition,
+*    comments, and photo fields
+*/
 export default function removeCrispyClassesFromForm() {
    // Remove .btn-primary class from the submit button
     const submitButton = document.querySelector('.report-submit-btn');

@@ -533,6 +533,25 @@ header.container {
     max-width: 90%;
 }
 
+/* Location updated success message div */
+/* Show the successful report submission message in 
+the top centre of the map */
+.success-message {
+    position: absolute;
+    top: 75px; 
+    left: 50%;
+    transform: translate(-50%); 
+    background-color: var(--color-mango-1);
+    color: var(--color-brown-6);
+    font-size: 1.25rem;
+    padding: 10px 10px;
+    border-radius: 5px;
+    border: 1px solid var(--color-brown-4);
+    z-index: 1001;
+    width: 300px;
+}
+
+
 /* ATTRIBUTION */
 
 /* Custom Google attribution elements */
@@ -596,8 +615,7 @@ header.container {
 }
 
 /* NEW REPORT FORM */
-.map-report-form-container {
-    display: none; /* Initially hidden */
+#map-report-form-container {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -606,6 +624,8 @@ header.container {
     background-color: #f5ddd2;
     padding: 10px;
     z-index: 1000;
+    max-height: 80vh;    /* Adjust based on how tall you want the form */
+    overflow-y: auto;    /* Enable vertical scrolling */
 }
 
 .col-form-label {
@@ -684,7 +704,7 @@ header.container {
 }
 
 /* Crispy applies mb-3 to div that contains form elements */
-.map-report-form-container .row.mb-3 {
+#map-report-form-container .row.mb-3 {
     margin-bottom: 0.25rem !important; /* Reduce the margin between form groups */
 }
 
@@ -693,10 +713,6 @@ header.container {
     width: 100% !important;
 }
 
-.map-report-form-container {
-    max-height: 80vh;    /* Adjust based on how tall you want the form */
-    overflow-y: auto;    /* Enable vertical scrolling */
-}
 
 #div_id_photo {
     padding-bottom: 0.75rem;
@@ -776,6 +792,16 @@ header.container {
     width: 22px;
 }
 
+@media (min-width: 360px) {
+    /* Success message for dragging marker on map */
+    /* Move success message down */
+    .success-message {
+        position: absolute;
+        top: 100px; 
+        left: 50%;
+        transform: translate(-50%);
+    }
+}
 
 
 @media (max-width: 360px) {
@@ -938,7 +964,7 @@ header.container {
         max-width: none; /* Remove the max-width for larger screens */
     }
     /* Crispy applies mb-3 to div that contains form elements */
-    .map-report-form-container .row.mb-3 {
+    #map-report-form-container .row.mb-3 {
         margin-bottom: 0.5rem !important; /* Reduce the margin between form groups */
     }
 }
@@ -947,7 +973,7 @@ header.container {
 @media (min-width: 768px) {
     main,
     footer,
-    .map-report-form-container {
+    #map-report-form-container {
         margin-right: 250px; /* width of the menu panel */
     }
 

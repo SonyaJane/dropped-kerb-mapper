@@ -1,11 +1,9 @@
-import searchResultsEventListener from './search-results-event-listener.js';
-
+import handleLocationSelect from './handle-location-select.js';
 /**
  * Displays the results of a search for a place or address.
  * Creates a title div with an exit button.
  * Then creates a new div for each result with a click event listener.
  */
-
 export default function displaySearchLocationResults(data) {
 
     // if a results div already exists, remove it
@@ -49,7 +47,7 @@ export default function displaySearchLocationResults(data) {
 
         // add an event listener to the div for choosing the location
         placeDiv.addEventListener('click', e => {
-            searchResultsEventListener(e);
+            handleLocationSelect(e);
         });
 
         // Append the div to the new div

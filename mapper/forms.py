@@ -79,8 +79,9 @@ class ReportForm(forms.ModelForm):
                 css_class='row mt-2 mt-sm-0'
             ),
             # Custom layout for the reasons field, required to force col-md-4 and col-md-8 classes on choices.js field
+            # and make it intialliy hidden
             HTML("""
-                <div class="row">
+                <div class="row hidden" id="reasons-container">
                     <div class="col-12 col-sm-4" id="reasons-label">
                         <label for="id_reasons" class="col-form-label">Reasons</label>
                     </div>
@@ -126,7 +127,7 @@ class ReportForm(forms.ModelForm):
             # Cancel button
             HTML("""
                 {% if is_map_reports %}
-                    <a href="javascript:void(0);" class="btn close-btn btn-mango report-cancel-btn">Cancel</a>
+                    <a href="javascript:void(0);" class="btn btn-mango report-cancel-btn">Cancel</a>
                 {% else %} 
                     {% if report.id %}
                         <a href="{% url 'report-detail' report.id %}" class="btn btn-mango report-cancel-btn">Cancel</a>

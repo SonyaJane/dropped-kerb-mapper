@@ -1,5 +1,25 @@
 import setMarkerColour from "./set-marker-colour.js";
-
+/**
+ * Creates and adds a MapLibre GL marker for the given report object,
+ * configures its popup content, and sets up all related interactions:
+ *   - Single‐click toggles the popup (debounced to avoid double-clicks)
+ *   - Double‐click enables dragging, with the marker turning purple
+ *   - Drag end validates the new position against the UK boundary,
+ *     sends an update to the server, and refreshes the popup & shows
+ *     a success message
+ *   - Clicking elsewhere on the map disables dragging mode
+ *   - Marker colour reflects the report condition (or purple when dragging)
+ *   - Saves the marker and its popup in the global DKM.markers array
+ *
+ *   The input report data object is expected to contain:
+ *   - id                – numeric primary key
+ *   - latitude, longitude – coords
+ *   - condition         – 'green'|'orange'|'red'|'none'|'white'|
+ *   - place_name        – geocoded place name
+ *   - county            – county name
+ *   - user_report_number|user_is_superuser – user info
+ *   - reasons, comments, photoUrl
+ */
 export default function addMarkerForReport(report) {
     const marker = new maplibregl.Marker({
         draggable: false
@@ -36,7 +56,6 @@ export default function addMarkerForReport(report) {
             clickTimer = null;
         }, 300); // 300ms is typical dblclick threshold
     }, { capture: true });
-
 
     // Add a double-click event listener to make marker draggable
     marker.getElement().addEventListener('dblclick', (e) => {
@@ -131,6 +150,7 @@ export default function addMarkerForReport(report) {
     DKM.markers.push(marker);
 
 }
+
 function generatePopupHTML(report, latitude, longitude, placeName, county) {
     // If the user who created the report is a superuser, show the report id.
     // Otherwise, show the user_report_number.
@@ -167,6 +187,7 @@ function generatePopupHTML(report, latitude, longitude, placeName, county) {
 
 // Function to send the updated location to the server
 async function updateReportLocation(reportId, latitude, longitude) {
+    console.log('Inside updateReportLocation()');
     const csrfToken = getCSRFToken(); // Get the CSRF token for security
     const response = await fetch(`/reports/${reportId}/update-location/`, {
         method: 'POST',
