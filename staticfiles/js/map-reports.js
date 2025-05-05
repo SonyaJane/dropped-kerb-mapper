@@ -11,6 +11,7 @@ import removeCrispyClassesFromForm from "./remove-crispy-classes-from-form.js";
 import submitNewReport from "./submit-new-report.js";
 import searchLocation from "./search-location.js";
 import processSuccessfulReportSubmission from "./process-successful-report-submission.js";
+import processSuccessfulReportUpdate from "./process-successful-report-update.js";
 import removeAllMessages from "./remove-all-messages.js";
 
 document.addEventListener('DOMContentLoaded', () => { 
@@ -83,10 +84,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //Add event listener for any HTMX swap into #message-container
     document.body.addEventListener('htmx:afterSwap', e => {
-        processSuccessfulReportSubmission();
-        // If the swap is into the message container, remove all messages after 5 seconds
-        if (e.detail.target.id === 'new-report-container') {
-            removeAllMessages();
+        // If the swap is into the update-report-container
+        if (e.detail.target.id === 'updated-report-container') {
+            processSuccessfulReportUpdate();
         }
+        // If the swap is into the new-reportcontainer, remove all messages after 5 seconds
+        if (e.detail.target.id === 'new-report-container') {
+            processSuccessfulReportSubmission();
+        }
+        removeAllMessages();
     });
 });

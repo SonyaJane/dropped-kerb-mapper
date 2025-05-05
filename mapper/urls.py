@@ -13,6 +13,6 @@ urlpatterns = [
     path('reports/<int:pk>/delete/', views.delete_report, name='delete-report'),
     path('os_tiles/<int:z>/<int:x>/<int:y>/', views.get_os_map_tiles, name='tile-proxy'),
     path('google_satellite_tiles/<int:z>/<int:x>/<int:y>/', views.get_google_satellite_tiles, name='google-satellite-tiles'),
-    path('reports/<int:pk>/update-location/', views.update_report_location, name='update-report-location'),
+    path('reports/<int:pk>/update-location/', views.update_report_location, name='update-location'),
     path('email-confirmation-success/', views.email_confirmation_success, name='email-confirmation-success'),
 ]

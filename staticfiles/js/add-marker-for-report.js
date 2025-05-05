@@ -1,4 +1,5 @@
 import setMarkerColour from "./set-marker-colour.js";
+import generatePopupHTML from "./generate-popup-html.js";
 /**
  * Creates and adds a MapLibre GL marker for the given report object,
  * configures its popup content, and sets up all related interactions:
@@ -26,7 +27,7 @@ export default function addMarkerForReport(report) {
     })
         .setLngLat([report.longitude, report.latitude]) // Set marker position
         .setPopup(new maplibregl.Popup().setHTML(
-            generatePopupHTML(report, report.latitude, report.longitude, report.place_name, report.county)
+            generatePopupHTML(report)
         ))
         .addTo(DKM.map);
     
@@ -78,13 +79,14 @@ export default function addMarkerForReport(report) {
             marker.getPopup().remove();
         }
 
-        const newLngLat = marker.getLngLat();
+        let { lat, lng } = marker.getLngLat();
         // round the coordinates to 6 decimal places
-        newLngLat.lat = parseFloat(newLngLat.lat.toFixed(6));
-        newLngLat.lng = parseFloat(newLngLat.lng.toFixed(6));
+        lat = parseFloat(lat.toFixed(6));
+        lng = parseFloat(lng.toFixed(6));
 
         // Check if the clicked location is within the boundary of the UK
-        const point = turf.point([newLngLat.lng, newLngLat.lat]);
+        const point = turf.point([lng, lat]);
+
         // Check if the point is within any of the 4 UK polygons
         let isWithinUK = false;
         for (const feature of DKM.ukBoundary.features) {
@@ -101,39 +103,15 @@ export default function addMarkerForReport(report) {
         }
 
         // Send the updated latitude and longitude to the server
-        updateReportLocation(report.id, newLngLat.lat, newLngLat.lng)
-            .then(data => {
-                // Refresh the popup content with updated data
-                marker.setPopup(new maplibregl.Popup().setHTML(
-                    generatePopupHTML(report, newLngLat.lat, newLngLat.lng, data.place_name, data.county)
-                ));
-            })
-            // then display a meesage to the user saying the location has been updated  
-            .then(() => {
-                // Create a success message in a new div
-                const successMessage = document.createElement('div');
-                successMessage.className = 'success-message';
-                successMessage.textContent = 'Location changed successfully!';
-                
-                // Append the success message to the map container
-                const mapContainer = document.getElementById('map');
-                mapContainer.appendChild(successMessage);
-
-                // Automatically remove the success message after 1.5 seconds
-                setTimeout(() => {
-                    successMessage.remove();
-                }, 1500);
-            })
-            .catch(error => {
-                console.error('Error updating report location:', error);
-                alert(`An error occurred while updating the location: ${error.message}`);
-            });
-        
-        // disable dragging after the location is updated
-        if (marker.isDraggable()) {
-            marker.setDraggable(false); 
-            setMarkerColour(marker.getElement(), report.condition); // Reset the marker colour to its original condition colour
-        }
+        htmx.ajax('POST',
+            `/reports/${report.id}/update-location/`,
+            {
+                target: "#updated-report-container",
+                swap: "beforeend",
+                headers: { 'X-CSRFToken': getCSRFToken() },
+                values: { latitude: lat, longitude: lng }
+            }
+        )
     });
 
     // Add a click event listener to the map to disable marker dragging
@@ -146,63 +124,11 @@ export default function addMarkerForReport(report) {
 
     // stash the popup on the marker so we can remove it then re‑attach later
     marker._savedPopup = marker.getPopup();
+    // stash the report id on the marker instance so we can update it later
+    marker._reportId = report.id;
     // add the marker to the markers array
     DKM.markers.push(marker);
 
-}
-
-function generatePopupHTML(report, latitude, longitude, placeName, county) {
-    // If the user who created the report is a superuser, show the report id.
-    // Otherwise, show the user_report_number.
-    const reportNumber = (report.user && report.user_is_superuser) ? report.id : report.user_report_number;
-    // Only include the reasons line if condition is red or orange.
-    let reasons = '';
-    if ((report.condition === 'red' || report.condition === 'orange')) {
-        reasons = `<p><span class="orange-font">${report.reasons}</span></p>`;
-    }
-    // Only include the comments line if there are comments.
-    let comments = ''
-    if (report.comments) {
-        comments = `<p><span class="orange-font">${report.comments}</span></p>`;
-    }
-    return `
-        <p>
-            <span class="orange-font">Report ${reportNumber}</span>
-            <span>&nbsp;</span>
-            <a href="/reports/${report.id}/" class="custom-link">view</a>
-            <span>&nbsp;</span>
-            <a href="/reports/${report.id}/edit/" class="custom-link">edit</a>
-        </p>
-        <p>
-            <span class="orange-font" id="latitude-${report.id}"> ${latitude}, </span>
-            <span class="orange-font" id="longitude-${report.id}"> ${longitude}</span>
-        </p>
-        <p><span class="orange-font" id="place_name-${report.id}"> ${placeName || 'Unknown'}</span></p>
-        <p><span class="orange-font" id="county-${report.id}"> ${county}</span></p>
-        ${reasons}
-        ${comments}
-        ${report.photoUrl ? `<img src="${report.photoUrl}" alt="Photo of dropped kerb" style="max-width: 100%; height: auto;">` : ''}
-    `;
-}
-
-// Function to send the updated location to the server
-async function updateReportLocation(reportId, latitude, longitude) {
-    console.log('Inside updateReportLocation()');
-    const csrfToken = getCSRFToken(); // Get the CSRF token for security
-    const response = await fetch(`/reports/${reportId}/update-location/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken
-        },
-        body: JSON.stringify({ latitude, longitude })
-    });
-
-    if (!response.ok) {
-        throw new Error('Failed to update location. Please try again.');
-    }
-
-    return await response.json();
 }
 
 // Function to get the CSRF token from the cookie

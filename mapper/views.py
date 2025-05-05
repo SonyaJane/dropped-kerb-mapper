@@ -3,14 +3,14 @@ import time
 import json
 import requests
 
-from django.http import HttpResponseRedirect, HttpResponse, Http404, JsonResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404, JsonResponse, HttpResponseBadRequest
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.cache import cache
 from django.core.mail import send_mail
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.http import require_POST
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect, reverse
@@ -63,13 +63,42 @@ class MapReportsView(LoginRequiredMixin, View):
             report.save()
             messages.add_message(request, messages.SUCCESS, 'Report created successfully!')
             return render(request,
-                        'mapper/partials/new_report_created_successfully.html',
+                        'mapper/partials/success.html',
                         {'report': serialise_report(report)})
         messages.add_message(request, messages.ERROR, 'Error creating report. Please try again later.')
         return render(request,
-                        'mapper/partials/new_report_submission_unsuccessful.html',
+                        'mapper/partials/fail.html',
                         status=400)
 
+@require_POST
+@login_required
+def update_report_location(request, pk):
+    print("update_report_location")
+    # Get the report with primary key pk
+    # superuser can update any report, others can only update their own
+    if request.user.is_superuser:
+        report = get_object_or_404(Report, pk=pk)
+    else:
+        report = get_object_or_404(Report, pk=pk, user=request.user)
+    try:
+        lat = float(request.POST['latitude'])
+        lon = float(request.POST['longitude'])
+    except (KeyError, json.JSONDecodeError): # Handle missing or invalid data
+        return HttpResponseBadRequest()
+
+    # Get the report object and update its location, and reverse geocode
+    # the latitude and longitude to get the place name
+    report.latitude = lat
+    report.longitude = lon
+    report.save() # handles updating the place_name, county and local authority
+    # get the updated report object
+    report.refresh_from_db()
+    # Create success message
+    messages.add_message(request, messages.SUCCESS, 'Location updated successfully!')
+    # render a small partial that HTMX will swap
+    return render(request,
+                  'mapper/partials/success.html',
+                  {'report': serialise_report(report)})
 
 # LIST OF REPORTS
 class ReportList(LoginRequiredMixin, SingleTableView):
@@ -296,39 +325,7 @@ def get_google_satellite_tiles(request, z, x, y):
         raise Http404("Tile not found.")
 
 
-@csrf_protect
-def update_report_location(request, pk):
-    if request.method == 'POST':
-        try:
-            # Parse the JSON data from the request body
-            data = json.loads(request.body)
-            latitude = data.get('latitude')
-            longitude = data.get('longitude')
 
-            # Validate the data
-            if latitude is None or longitude is None:
-                return JsonResponse({'success': False,
-                                     'error': 'Invalid data'}, 
-                                    status=400)
-
-            # Get the report object and update its location
-            report = get_object_or_404(Report, pk=pk)
-            report.latitude = latitude
-            report.longitude = longitude
-            report.save()
-
-            # get the new place_name and county
-            updated_place_name = report.place_name if report.place_name else None
-            updated_county = report.county.county if report.county else None
-
-            return JsonResponse({'success': True,
-                                 'message': 'Location updated successfully!',
-                                 'place_name': updated_place_name,
-                                 'county': updated_county})
-        except Exception as e:
-            print(f"Error: {e}")
-            return JsonResponse({'success': False, 'error': str(e)}, status=500)
-    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
 
 
 class CustomConfirmEmailView(ConfirmEmailView):
