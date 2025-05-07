@@ -6,7 +6,7 @@
  * On validation failure, inserts an inline error message and stops propagation.
  * On success, disables the submit and cancel buttons to prevent duplicate submissions.
  */
-export default function submitNewReport(e) {
+export default function validateNewReportForm(e) {
 
     const condition = document.getElementById('condition');
     const reasons = document.querySelector('.choices__list');

@@ -8,7 +8,7 @@ import toggleNewReportMode from './toggle-new-report-mode.js';
 import handleConditionSelectionChange from "./handle-condition-selection-change.js";
 import addExistingReportsToMap from './add-existing-reports-to-map.js';
 import removeCrispyClassesFromForm from "./remove-crispy-classes-from-form.js";
-import submitNewReport from "./submit-new-report.js";
+import validateNewReportForm from "./validate-new-report-form.js";
 import searchLocation from "./search-location.js";
 import processSuccessfulReportSubmission from "./process-successful-report-submission.js";
 import processSuccessfulReportUpdate from "./process-successful-report-update.js";
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // and disable buttons if valid
     const form = document.querySelector(".report-form");
     form.addEventListener('submit', e => {
-            submitNewReport(e)
+            validateNewReportForm(e)
         }, { capture: true });
     // capture: true enables e.preventDefault() to block the submit before HTMX sees it.
 

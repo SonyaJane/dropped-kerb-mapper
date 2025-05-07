@@ -1,5 +1,25 @@
+"""
+Views for the Dropped Kerb Mapper application.
+
+This module defines all HTTP endpoints and view logic for:
+  • home: Public landing page.
+  • MapReportsView: Interactive map-based report creation and listing (HTMX-enabled).
+  • update_report_location: AJAX endpoint to move a report marker.
+  • edit_report: Display and process the report editing form.
+  • delete_report: Delete a user's report with permission checks.
+  • ReportList: Tabular listing of reports via django-tables2.
+  • report_detail: Detail page (and HTMX/JSON partial) for a single report.
+  • get_os_map_tiles: Proxy view to fetch OS raster map tiles.
+  • get_google_satellite_tiles: Proxy view to fetch Google satellite tiles with session management.
+  • CustomConfirmEmailView: Auto-confirm email and log the user in.
+  • email_confirmation_success: Static page after email confirmation.
+  • instructions: Static usage instructions page.
+  • contact: Render and process the contact-us form.
+
+Each view either returns an HttpResponse (rendered template, JSON, or image bytes) 
+or redirects as appropriate, and enforces authentication/permissions where required.
+"""
 import os
-import time
 import json
 import requests
 
@@ -8,7 +28,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.cache import cache
 from django.core.mail import send_mail
 from django.views.decorators.http import require_POST
 from django.views import View
@@ -19,11 +38,22 @@ from allauth.account.views import ConfirmEmailView
 from .forms import ReportForm, ContactForm
 from .models import Report
 from .tables import ReportTable
+from .utils import serialise_report, get_google_session_token
 
 # HOME PAGE
 def home(request):
     """
-    Render the home page
+    Render and return the application home page.
+
+    Provides the landing page for Dropped Kerb Mapper, offering
+    introductory content and navigation to login, signup, and map
+    reporting features.
+
+    Args:
+        request (HttpRequest): The incoming HTTP request.
+
+    Returns:
+        HttpResponse: The rendered 'mapper/home.html' template.
     """
     return render(request, 'mapper/home.html')
 
@@ -31,13 +61,48 @@ def home(request):
 # MAP REPORTS PAGE
 class MapReportsView(LoginRequiredMixin, View):
     """
-    View to handle the map reports page.
-    GET: Display existing reports on the map.
-    POST: Create a new report via HTMX form submission.
+    Handles the interactive map-reports page:
+
+    GET:
+      - Instantiates an empty ReportForm
+      - Fetches existing reports: all for superusers, or only the
+        current user's reports
+      - Serialises reports into JSON-safe dictionaries
+      - Renders 'mapper/map_reports.html' passing:
+          • form: ReportForm instance
+          • reports: list of serialised report dicts
+          • is_map_reports: True (to customise form cancel link)
+
+    POST:
+      - Binds ReportForm to request.POST and request.FILES with user context
+      - On valid form:
+          • Creates a new Report (assigns request.user, saves)
+          • Adds a SUCCESS message to the messages framework
+          • Renders the HTMX partial 'mapper/partials/success.html'
+            with context {'report': serialised_report}
+      - On invalid form:
+          • Adds an ERROR message
+          • Renders the HTMX partial 'mapper/partials/fail.html'
+            with status=400
     """
     def get(self, request):
         """
-        Get existing reports and send them to the map_reports template.
+        Handle GET requests for the interactive map-reports page.
+
+        - Instantiates an empty ReportForm for new report submissions.
+        - Retrieves existing reports: all reports for superusers, or only the
+          current user's reports otherwise.
+        - Serialises each report into a JSON-safe dictionary.
+        - Renders 'mapper/map_reports.html' with context:
+            • form: ReportForm instance
+            • reports: list of serialised report dicts
+            • is_map_reports: True (to adjust the cancel link behavior).
+
+        Args:
+            request (HttpRequest): The incoming HTTP GET request.
+
+        Returns:
+            HttpResponse: The rendered map reports page.
         """
         form = ReportForm()
         # Only show this user's reports (unless they're superuser)
@@ -54,7 +119,24 @@ class MapReportsView(LoginRequiredMixin, View):
 
     def post(self, request):
         """
-        Create a new report via HTMX form submission.    
+        Handle POST requests to create a new dropped-kerb report via the map interface.
+
+        - Binds ReportForm to request.POST, request.FILES, and the current user.
+        - If the form is valid:
+            • Creates and saves a new Report linked to request.user.
+            • Adds a SUCCESS message to the messages framework.
+            • Returns the HTMX partial 'mapper/partials/success.html'
+              with context {'report': serialise_report(report)}.
+        - If the form is invalid:
+            • Adds an ERROR message.
+            • Returns the HTMX partial 'mapper/partials/fail.html'
+              with HTTP status 400.
+
+        Args:
+            request (HttpRequest): The incoming HTTP POST request from the map page.
+
+        Returns:
+            HttpResponse: Rendered success or failure HTMX partial.
         """
         form = ReportForm(data=request.POST, files=request.FILES, user=request.user)
         if form.is_valid():
@@ -65,7 +147,9 @@ class MapReportsView(LoginRequiredMixin, View):
             return render(request,
                         'mapper/partials/success.html',
                         {'report': serialise_report(report)})
-        messages.add_message(request, messages.ERROR, 'Error creating report. Please try again later.')
+        messages.add_message(request,
+                             messages.ERROR,
+                             'Error creating report. Please try again later.')
         return render(request,
                         'mapper/partials/fail.html',
                         status=400)
@@ -73,7 +157,27 @@ class MapReportsView(LoginRequiredMixin, View):
 @require_POST
 @login_required
 def update_report_location(request, pk):
-    print("update_report_location")
+    """
+    Update an existing report's latitude and longitude when the user drags 
+    the map marker to another location.
+
+    Only accepts POST requests from authenticated users.
+    Superusers may update any report; regular users may only update their own.
+
+    Parses 'latitude' and 'longitude' from request.POST:
+      - Returns HttpResponseBadRequest if values are missing or invalid.
+      - Updates the Report instance, triggering reverse geocoding and spatial lookups on save().
+      - Adds a SUCCESS message and returns the HTMX partial 'mapper/partials/success.html'
+        with context {'report': serialise_report(report)}.
+
+    Args:
+        request (HttpRequest): The incoming POST request containing 'latitude' and 'longitude'.
+        pk (int): Primary key of the Report to update.
+
+    Returns:
+        HttpResponse: Rendered success partial on successful update.
+        HttpResponseBadRequest: If required parameters are missing or invalid.
+    """
     # Get the report with primary key pk
     # superuser can update any report, others can only update their own
     if request.user.is_superuser:
@@ -86,8 +190,7 @@ def update_report_location(request, pk):
     except (KeyError, json.JSONDecodeError): # Handle missing or invalid data
         return HttpResponseBadRequest()
 
-    # Get the report object and update its location, and reverse geocode
-    # the latitude and longitude to get the place name
+    # Get the report object and update its location
     report.latitude = lat
     report.longitude = lon
     report.save() # handles updating the place_name, county and local authority
@@ -100,28 +203,146 @@ def update_report_location(request, pk):
                   'mapper/partials/success.html',
                   {'report': serialise_report(report)})
 
+def edit_report(request, pk):
+    """
+    Display and process the form for editing an existing report.
+
+    GET:
+      - Retrieves the Report by primary key.
+      - Instantiates a ReportForm pre-populated with the report instance.
+      - Renders 'mapper/edit_report.html' with context {'form': form, 'report': report}.
+
+    POST:
+      - Binds ReportForm to request.POST, request.FILES, and the existing report.
+      - If valid and the user has permission (owner or superuser):
+          • Saves the updated report.
+          • Adds a SUCCESS message.
+          • Redirects to the report-detail page.
+      - Otherwise:
+          • Adds an ERROR message.
+          • Falls through to re-render the edit form with errors.
+
+    Args:
+        request (HttpRequest): The incoming HTTP request.
+        pk (int): Primary key of the Report to edit.
+
+    Returns:
+        HttpResponse or HttpResponseRedirect: Renders the edit form template on GET
+        or invalid POST; redirects to detail page on successful POST.
+    """
+    # Allow superuser to grab any report; others only their own
+    report = get_object_or_404(Report, pk=pk)
+
+    # For when the form is submitted:
+    if request.method == "POST":
+        # Bind the form to the POST data and files
+        form = ReportForm(request.POST, request.FILES, instance=report)
+        if form.is_valid() and (report.user == request.user or request.user.is_superuser):
+            form.save()
+            messages.add_message(request, messages.SUCCESS, 'Report updated successfully!')
+            return HttpResponseRedirect(reverse('report-detail', args=[pk]))
+        messages.add_message(request, messages.ERROR, 'Error updating report.')
+    else: # GET request
+        # Create a new form instance with the existing report data
+        # Prepopulate the form with the existing report data
+        form = ReportForm(instance=report)
+    return render(request, 'mapper/edit_report.html', {'form': form, 'report': report})  
+
+
+def delete_report(request, pk):
+    """
+    Delete a dropped-kerb report.
+
+    - Retrieves the Report by primary key (returns 404 if not found).
+    - If the requesting user is the report owner or a superuser:
+        • Deletes the report.
+        • Adds a SUCCESS message.
+        • Redirects to the reports list page.
+    - If the user is not the owner or a superuser:
+        • Adds an ERROR message indicating lack of permission.
+        • Redirects to the reports list page.
+
+    Args:
+        request (HttpRequest): The incoming HTTP request.
+        pk (int): Primary key of the Report to delete.
+
+    Returns:
+        HttpResponseRedirect: Redirect to 'reports-list' after deletion or
+                              permission denial.
+    """
+    # Get the report object based on the primary key (pk) from the URL
+    queryset = Report.objects.all()
+    report = get_object_or_404(queryset, pk=pk)
+    if report.user == request.user or request.user.is_superuser:
+        report.delete()
+        messages.add_message(request, messages.SUCCESS, 'Report deleted successfully!')
+    messages.add_message(request,
+                         messages.ERROR,
+                         'You do not have permission to delete this report.')
+    return HttpResponseRedirect(reverse('reports-list'))
+
+
 # LIST OF REPORTS
 class ReportList(LoginRequiredMixin, SingleTableView):
+    """
+    Display a table of dropped-kerb reports for the current user.
+
+    Authentication required:
+      - Superusers see all reports.
+      - Regular users see only their own.
+
+    Renders the reports in a paginated django-tables2 table
+    using 'mapper/reports.html' as the template. The table
+    columns are dynamically excluded based on the user's role:
+      • Superusers exclude: user_report_number, latitude, longitude, local_authority
+      • Regular users exclude: id, user, latitude, longitude, local_authority, created_at
+    """
     login_url = 'account_login' # where to redirect if not logged in
     redirect_field_name = 'next'
-
     model = Report
     template_name = "mapper/reports.html"
-    # paginate_by = 24
 
     def get_queryset(self):
+        """
+        Retrieve the list of Report objects for display in the table.
+
+        - Superusers receive all reports.
+        - Regular users receive only their own reports.
+
+        Returns:
+            QuerySet[Report]: The filtered set of reports based on the current user's permissions.
+        """
         qs = super().get_queryset()
         if not self.request.user.is_superuser:
             qs = qs.filter(user=self.request.user)
         return qs
 
     def get_table(self, **kwargs):
+        """
+        Construct and configure the ReportTable for the list view.
+
+        - Retrieves the filtered QuerySet via get_queryset().
+        - Excludes certain columns based on the current user's role:
+            • Superusers: user_report_number, latitude, longitude, local_authority
+            • Regular users: id, user, latitude, longitude, local_authority, created_at
+        - Applies django-tables2 RequestConfig for pagination and sorting.
+
+        Args:
+            **kwargs: Additional keyword arguments (unused).
+
+        Returns:
+            ReportTable: The configured table instance for rendering.
+        """
         qs = self.get_queryset()
         # Dynamically exclude columns based on the current user
         if self.request.user.is_superuser:
-            table = ReportTable(qs, exclude=('user_report_number','latitude','longitude','local_authority'))
+            table = ReportTable(qs,
+                                exclude=('user_report_number','latitude',
+                                         'longitude','local_authority'))
         else:
-            table = ReportTable(qs, exclude=('id', 'user','latitude','longitude','local_authority','created_at'))
+            table = ReportTable(qs, 
+                                exclude=('id', 'user','latitude','longitude',
+                                         'local_authority','created_at'))
         RequestConfig(self.request).configure(table)
         return table
 
@@ -130,7 +351,20 @@ class ReportList(LoginRequiredMixin, SingleTableView):
 @login_required
 def report_detail(request, pk):
     """
-    Retrieves a single report from the database and displays it on the page.
+    Display detailed information for a single dropped-kerb report.
+
+    - Retrieves the Report by primary key (404 if not found).
+    - If `place_name` is missing, attempts reverse geocoding and saves it.
+    - For HTMX or AJAX requests, returns JsonResponse with serialised report data.
+    - For standard requests, renders 'mapper/report_detail.html' with the report context.
+
+    Args:
+        request (HttpRequest): The incoming HTTP request.
+        pk (int): Primary key of the Report to display.
+
+    Returns:
+        JsonResponse: Serialised report for HTMX/AJAX calls.
+        HttpResponse: Rendered detail page for regular requests.
     """
     queryset = Report.objects.all()
     report = get_object_or_404(queryset, pk=pk)
@@ -142,84 +376,34 @@ def report_detail(request, pk):
             report.save(update_fields=['place_name'])
 
     # Check if the request is an AJAX or HTMX request
-    if request.headers.get('HX-Request') or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+    if request.headers.get('HX-Request') \
+        or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return JsonResponse(serialise_report(report))
 
     # Render the report detail page for non-AJAX requests
     return render(request, "mapper/report_detail.html", {"report": report})
 
 
-def serialise_report(report):
-    """
-    Serialise a Report object into a dictionary.
-    Reverses geocode the latitude and longitude if the place_name is empty. 
-    """
-    # check if the place_name is empty and reverse geocode if necessary
-    if not report.place_name:
-        success = report.reverse_geocode(report.latitude, report.longitude)
-        if success:
-            report.save(update_fields=['place_name'])
-
-    return {
-        'user': report.user.username if report.user else None,
-        'user_report_number': report.user_report_number,
-        'user_is_superuser': report.user.is_superuser if report.user else False,
-        'id': report.id,
-        'latitude': report.latitude,
-        'longitude': report.longitude,
-        'place_name': report.place_name,
-        'county': report.county.county if report.county else None,
-        'condition': report.condition,
-        'reasons': report.get_reasons_display(),
-        'comments': report.comments,
-        'photoUrl': report.photo.url if report.photo else None,
-}
-
-def edit_report(request, pk):
-    """
-    Edit an existing report
-    """
-    # Allow superuser to grab any report; others only their own
-    if request.user.is_superuser:
-        report = get_object_or_404(Report, pk=pk)
-    else:
-        report = get_object_or_404(Report, pk=pk, user=request.user)
-
-    # For when the form is submitted:
-    if request.method == "POST":
-        # Bind the form to the POST data and files
-        form = ReportForm(request.POST, request.FILES, instance=report)
-        if form.is_valid() and (report.user == request.user or request.user.is_superuser):
-            form.save()
-            messages.add_message(request, messages.SUCCESS, 'Report updated successfully!')
-            return HttpResponseRedirect(reverse('report-detail', args=[pk]))
-        else:
-            messages.add_message(request, messages.ERROR, 'Error updating report.')
-    else: # GET request
-        # Create a new form instance with the existing report data
-        # Prepopulate the form with the existing report data
-        form = ReportForm(instance=report)
-    return render(request, 'mapper/edit_report.html', {'form': form, 'report': report})  
-
-
-def delete_report(request, pk):
-    """
-    Edit an existing report
-    """
-    # Get the report object based on the primary key (pk) from the URL
-    queryset = Report.objects.all()
-    report = get_object_or_404(queryset, pk=pk)
-    if report.user == request.user:
-        report.delete()
-        messages.add_message(request, messages.SUCCESS, 'Report deleted successfully!')
-        return HttpResponseRedirect(reverse('reports-list'))
-    else:
-        messages.add_message(request, messages.ERROR, 'You do not have permission to delete this report.')
-
-
 def get_os_map_tiles(request, z, x, y):
     """
-    Proxy view to fetch map tiles securely using the API key.
+    Proxy view to fetch Ordnance Survey raster map tiles.
+
+    - Caps `z` (zoom level) at a configured maximum (20).
+    - Builds the OS Maps API URL using `z`, `x`, `y` and the
+      `OS_MAPS_API_KEY` environment variable.
+    - Performs an HTTP GET to retrieve the PNG tile.
+    - On success (HTTP 200), returns the tile bytes as an `image/png` response.
+    - On failure, returns a 404 response with caching headers
+      (`Cache-Control: public, max-age=3600`).
+
+    Args:
+        request (HttpRequest): The incoming HTTP request.
+        z (int): Zoom level of the requested tile.
+        x (int): X coordinate of the requested tile.
+        y (int): Y coordinate of the requested tile.
+
+    Returns:
+        HttpResponse: The PNG tile on success, or a 404 response on error.
     """
     # Limit the maximum zoom level to 20
     max_zoom = 20
@@ -237,57 +421,39 @@ def get_os_map_tiles(request, z, x, y):
     if response.status_code == 200:
         # Return the image content with appropriate content-type
         return HttpResponse(response.content, content_type="image/png")
-    else:
-        # Return a 404 response with caching headers
-        return HttpResponse(
-            status=404,
-            headers={
-                "Cache-Control": "public, max-age=3600",  # Cache for 1 hour
-            }
-        )
 
-
-def get_google_session_token():
-    # Try to retrieve the token data from the cache
-    token_data = cache.get('google_tile_session_token')
-    if token_data:
-        return token_data.get('session')
-
-    # If no token is cached, request a new one
-    api_key = os.environ.get('GOOGLE_MAPS_API_KEY')
-
-    # Set up the createSession endpoint URL
-    create_session_url = f"https://tile.googleapis.com/v1/createSession?key={api_key}"
-
-    # Define the required payload
-    payload = {
-        "mapType": "satellite",
-        "language": "en-GB",
-        "region": "UK"
-    }
-    headers = {
-        "Content-Type": "application/json"
-    }
-
-    # Request the session token
-    response = requests.post(create_session_url, json=payload, headers=headers)
-    if response.status_code == 200:
-        data = response.json()
-        session_token = data.get("session")
-        expiry = data.get("expiry")
-        # Calculate the remaining time until expiry (expiry is seconds since the epoch)
-        now = int(time.time())
-        remaining = int(expiry) - now if expiry and int(expiry) > now else 14 * 24 * 3600
-        # Cache the full token data (you might want to cache the expiry as well)
-        cache.set('google_tile_session_token', data, timeout=remaining)
-        return session_token
-    else:
-        raise Exception("Failed to obtain session token: " + response.text)
-
+    # Return a 404 response with caching headers
+    return HttpResponse(
+        status=404,
+        headers={
+            "Cache-Control": "public, max-age=3600",  # Cache for 1 hour
+        }
+    )
 
 def get_google_satellite_tiles(request, z, x, y):
     """
-    Proxy view to fetch Google Satellite map tiles.
+    Proxy view to fetch Google Maps satellite tiles with session management.
+
+    - Retrieves or creates a Google Maps session token via get_google_session_token().
+    - Constructs the tile URL using `z`, `x`, `y`, the session token, and `GOOGLE_MAPS_API_KEY`.
+    - Sends an HTTP GET to the Google Maps 2D tiles endpoint.
+    - On HTTP 200, returns the tile bytes with content-type `image/png`.
+    - On HTTP 404, returns a 404 response with caching headers
+      (`Cache-Control: public, max-age=3600`).
+    - On other error statuses or token failures, raises Http404.
+
+    Args:
+        request (HttpRequest): The incoming HTTP request.
+        z (int): Zoom level of the requested tile.
+        x (int): X coordinate of the requested tile.
+        y (int): Y coordinate of the requested tile.
+
+    Returns:
+        HttpResponse: The satellite tile image (`image/png`) on success.
+        HttpResponse: A 404 response with caching headers if the tile is not found.
+
+    Raises:
+        Http404: If the session token cannot be obtained or other non-404 errors occur.
     """
     # Check if the session token is cached, if not, create a new one
     try:
@@ -299,14 +465,6 @@ def get_google_satellite_tiles(request, z, x, y):
     # Construct the Google Maps tile URL
     tile_url = f"https://tile.googleapis.com/v1/2dtiles/{z}/{x}/{y}?session={session_token}&key={api_key}"
 
-    # tile_url = "{}/{}/{}/{}?session={}&key={}".format(
-    #     "https://tile.googleapis.com/v1/2dtiles",
-    #     z,
-    #     x,
-    #     y,
-    #     session_token,
-    #     api_key
-    # ) 
     # Make a GET request to fetch the tile image
     response = requests.get(tile_url)
 
@@ -324,11 +482,19 @@ def get_google_satellite_tiles(request, z, x, y):
     else:
         raise Http404("Tile not found.")
 
-
-
-
-
+# EMAIL CONFIRMATION FOR SIGNUP VIEW
 class CustomConfirmEmailView(ConfirmEmailView):
+    """
+    Automatically confirm a user's email address and log them in.
+
+    Overrides the default allauth ConfirmEmailView to:
+      1. Retrieve and confirm the EmailConfirmation object.
+      2. Authenticate and log the user in with Django's ModelBackend.
+      3. Redirect the user to the 'email-confirmation-success' page.
+
+    This streamlines the signup flow by skipping the manual confirmation step
+    and immediately granting access upon visiting the confirmation link.
+    """
     def get(self, *args, **kwargs):
         # Automatically confirm the email
         confirmation = self.get_object()
@@ -346,6 +512,15 @@ class CustomConfirmEmailView(ConfirmEmailView):
 def email_confirmation_success(request):
     """
     Render the email confirmation success page.
+
+    This view is shown after a user has clicked their email confirmation link
+    and been automatically logged in via CustomConfirmEmailView.
+
+    Args:
+        request (HttpRequest): The incoming HTTP request.
+
+    Returns:
+        HttpResponse: The rendered 'mapper/email_confirmation_success.html' template.
     """
     return render(request, 'mapper/email_confirmation_success.html')
 
@@ -354,6 +529,14 @@ def email_confirmation_success(request):
 def instructions(request):
     """
     Render the instructions page.
+
+    Displays usage instructions and guidance for the Dropped Kerb Mapper application.
+
+    Args:
+        request (HttpRequest): The incoming HTTP request.
+
+    Returns:
+        HttpResponse: The rendered 'mapper/instructions.html' template.
     """
     return render(request, 'mapper/instructions.html')
 
@@ -361,7 +544,28 @@ def instructions(request):
 # CONTACT PAGE
 def contact(request):
     """
-    Render the contact page and handle form submissions.
+    Render and process the contact-us form.
+
+    GET:
+    - Instantiates ContactForm (pre-fills and locks user fields if authenticated).
+    - Renders 'mapper/contact.html' with an empty form and message_sent=False.
+
+    POST:
+    - Binds ContactForm to request.POST and current user.
+    - If valid:
+        • Sends an email to the site admin with the visitor's message.
+        • Sends a confirmation email back to the visitor.
+        • Adds a success message and sets message_sent=True.
+    - If invalid:
+        • Falls through to re-render the form with validation errors.
+
+    Args:
+        request (HttpRequest): The incoming HTTP request.
+
+    Returns:
+        HttpResponse: The rendered 'mapper/contact.html' template with:
+            - form: ContactForm instance
+            - message_sent: bool indicating if the message was successfully sent
     """
     message_sent = False
     if request.method == 'POST':
@@ -373,7 +577,7 @@ def contact(request):
             email = form.cleaned_data['email']
             message = form.cleaned_data['message']
 
-            # Send the message to myself
+            # Send the message to Mobility Mapper admin
             send_mail(
                 subject=f"Contact Form Submission from {first_name} {last_name}",
                 message=f"Message from {first_name} {last_name} ({email}):\n\n{message}",

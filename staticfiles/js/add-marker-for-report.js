@@ -1,5 +1,6 @@
 import setMarkerColour from "./set-marker-colour.js";
 import generatePopupHTML from "./generate-popup-html.js";
+import updateReportLocation from "./update-report-location.js";
 /**
  * Creates and adds a MapLibre GL marker for the given report object,
  * configures its popup content, and sets up all related interactions:
@@ -38,9 +39,9 @@ export default function addMarkerForReport(report) {
     // remove the default click-popup listener:
     markerElement.removeEventListener('click', marker._markerClickListener);
 
-        // now install your own click handler that waits a bit:
-        let clickTimer = null;
-        markerElement.addEventListener('click', e => {
+    // now install our own click handler that waits in case of a second click:
+    let clickTimer = null;
+    markerElement.addEventListener('click', e => {
         e.stopImmediatePropagation();
         e.preventDefault();
 
@@ -102,16 +103,8 @@ export default function addMarkerForReport(report) {
             return; // Exit the function if the location is outside the UK
         }
 
-        // Send the updated latitude and longitude to the server
-        htmx.ajax('POST',
-            `/reports/${report.id}/update-location/`,
-            {
-                target: "#updated-report-container",
-                swap: "beforeend",
-                headers: { 'X-CSRFToken': getCSRFToken() },
-                values: { latitude: lat, longitude: lng }
-            }
-        )
+        updateReportLocation(report.id, lat, lng); // Send the updated location to the server
+        
     });
 
     // Add a click event listener to the map to disable marker dragging
@@ -129,19 +122,6 @@ export default function addMarkerForReport(report) {
     // add the marker to the markers array
     DKM.markers.push(marker);
 
-}
-
-// Function to get the CSRF token from the cookie
-function getCSRFToken() {
-    const name = 'csrftoken';
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.startsWith(name + '=')) {
-            return cookie.substring(name.length + 1);
-        }
-    }
-    return null;
 }
 
 // Attach the function to the global window object for use when a new marker is added

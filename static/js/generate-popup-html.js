@@ -1,6 +1,4 @@
 /**
- * generatePopupHTML
- *
  * Constructs an HTML snippet for a MapLibre marker popup based on a report object.
  * - Shows report number (uses `id` or `user_report_number` for non-superusers).
  * - Includes view/edit links for the report.

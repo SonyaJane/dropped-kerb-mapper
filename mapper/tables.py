@@ -1,12 +1,33 @@
+"""
+Defines the ReportTable for the mapper app using django-tables2.
+
+This module provides:
+  - ReportTable: a Bootstrap-responsive table for Report instances.
+  - Custom columns and template columns for view/edit actions.
+  - Modal-enabled photo preview without exposing URLs to regular users.
+  - Formatted place_name, county, local_authority, and reasons with comma wrapping.
+  - Human-readable created_at and updated_at renderers using Windows-compatible formats.
+"""
 import django_tables2 as tables
 from .models import Report
 
 class ReportTable(tables.Table):
+    """
+     Table representation for Report instances.
+
+     Renders a responsive, Bootstrap-styled table with the following features:
+       - view: link icon to view report details
+       - edit: link icon to edit the report
+       - photo: shows a camera icon linking to the image or opens a modal (based on user role)
+       - formatted place_name, county, local_authority, and reasons columns
+       - human-readable created_at and updated_at timestamps
+     """
     # Show a link to the photo if it exists, otherwise show a dash
     photo = tables.TemplateColumn(
         verbose_name="Photo",
         # Superusers see the external link (URL revealed)
-        # Non‑superusers opens a modal popup showing the image, without exposing the URL in an <a> tag.
+        # Non‑superusers opens a modal popup showing the image, 
+        # without exposing the URL in an <a> tag.
         template_code='''
             {% if record.photo %}
                 {% if table.request.user.is_superuser %}
@@ -80,27 +101,39 @@ class ReportTable(tables.Table):
     # New column - link to view the report details (eye icon)
     view = tables.TemplateColumn(
         verbose_name="View",
-        template_code='''<a href="{% url 'report-detail' record.id %}"><i class="bi bi-eye-fill"></i></a>''',
+        template_code='''<a href="{% url 'report-detail' record.id %}">
+                         <i class="bi bi-eye-fill"></i></a>''',
         orderable=False
     )
     edit = tables.TemplateColumn(
         verbose_name="Edit",
-        template_code='''<a href="{% url 'edit-report' record.id %}"><i class="bi bi-pencil-fill"></i></a>''',
+        template_code='''<a href="{% url 'edit-report' record.id %}">
+                         <i class="bi bi-pencil-fill"></i></a>''',
         orderable=False
     )
 
     def render_created_at(self, value):
-        # Format the date as "day, month (name), year" e.g. "1 September 2025"
+        """
+        Format the created_at datetime for display.
+
+        Converts the datetime to a string like "1 September 2025 14:30",
+        using a Windows-compatible day format ("%#d") to avoid leading zeros.
+        """
+        # Note: on Windows use "%#d" instead of "%-d" if leading zeros become an issue.
+        return value.strftime("%#d %B %Y %H:%M")
+        # return value.strftime("%-d %B %Y %H:%M") # non-windows
+
+    def render_updated_at(self, value):
+        """
+        Format the updated_at datetime for display.
+
+        Converts the datetime to a string like "1 September 2025 14:30",
+        using a Windows-compatible day format ("%#d") to avoid leading zeros.
+        """
         # Note: on Windows use "%#d" instead of "%-d" if leading zeros become an issue.
         return value.strftime("%#d %B %Y %H:%M")
         # return value.strftime("%-d %B %Y %H:%M") #  non-windows
 
-    def render_updated_at(self, value):
-        # Format the date as "day, month (name), year" e.g. "1 September 2025"
-        # Note: on Windows use "%#d" instead of "%-d" if leading zeros become an issue.
-        return value.strftime("%#d %B %Y %H:%M")
-        # return value.strftime("%-d %B %Y %H:%M") #  non-windows
-        
     class Meta:
         model = Report
         template_name="django_tables2/bootstrap5-responsive.html"
