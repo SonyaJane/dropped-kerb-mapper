@@ -568,6 +568,17 @@ class ContactForm(forms.Form):
             self.fields['email'].initial = user.email
             self.fields['email'].widget.attrs['readonly'] = True
 
+        # Add a submit button to the form
+        from crispy_forms.layout import Submit
+        self.helper.add_input(
+            Submit(
+                name='submit',
+                value='Send Message',
+                css_class='btn btn-mango align-right',
+                css_id='contact-submit-btn'
+            )
+        )
+
 class CustomLoginForm(LoginForm):
     """
     Extends allauth's LoginForm to streamline the login UI and apply Crispy Forms styling:

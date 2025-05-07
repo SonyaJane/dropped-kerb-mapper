@@ -12,14 +12,9 @@
         <form method="post" action="{% url 'contact' %}" id="contact-form" class="font-size-125rem">
             {% csrf_token %}
             {% crispy form %}
-            <div class="btn-container">
-                <button class="btn btn-mango align-right" type="submit">Send Message</button>
-            </div>
         </form>
-        <!-- Loading message -->
-        <p id="loading-message" style="display: none; color: green;">Message being sent...</p>
     {% endif %}
 </div>
-<script src="{% static 'js/contact-form.js' %}"></script>
+<script type="module" src="{% static 'js/contact-form.js' %}"></script>
 
 {% endblock %}

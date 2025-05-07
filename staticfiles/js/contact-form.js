@@ -1,5 +1,9 @@
+import removeCrispyClassesFromContactForm from "./remove-crispy-classes-from-contact-form.js";
 // Add an event listener to the form submission
 document.addEventListener('DOMContentLoaded', function () {
+    // Remove crispy classes from the contact form
+    removeCrispyClassesFromContactForm();
+    
     // Add an event listener to the form submission
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
