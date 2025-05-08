@@ -29,13 +29,11 @@ class CustomUser(AbstractUser):
             Indicates whether the user uses a wheeled mobility device.
         mobility_device_type (str | None):
             Type of mobility device the user uses. Choices include:
-            'manual_wheelchair', 'powered_wheelchair', 'mobility_scooter',
-            'tricycle', 'adapted_bicycle', 'bicycle', 'other'.
+            'manual_wheelchair', 'manual_wheelchair_with_powered_front_attachment',
+            'all_terrain_wheelchair','powered_wheelchair', 'mobility_scooter',
+            'tricycle', 'handcycle', 'adapted_bicycle', 'bicycle', 'other'.
         is_carer (bool):
-            Indicates whether the user is a carer for someone using a mobility device.
-        mobility_device_type_caree (str | None):
-            Type of mobility device used by the person the user cares for.
-            Same choices as `mobility_device_type`.
+            Indicates whether the user is a carer for someone using a mobility device..
     """
     # Add mobility device fields
     uses_mobility_device = models.BooleanField(
@@ -45,8 +43,12 @@ class CustomUser(AbstractUser):
     MOBILITY_DEVICE_CHOICES = (
         ('manual_wheelchair', 'Manual Wheelchair'),
         ('powered_wheelchair', 'Powered Wheelchair'),
+        ('manual_wheelchair_with_powered_front_attachment',
+            'Manual Wheelchair with Powered Front Attachment'),
+        ('all_terrain_wheelchair', 'All Terrain Wheelchair'),
         ('mobility_scooter', 'Mobility Scooter'),
         ('tricycle', 'Tricycle'),
+        ('handcycle', 'Handcycle'),
         ('adapted_bicycle', 'Adapted Bicycle'),
         ('bicycle', 'Bicycle'),
         ('other', 'Other'),
@@ -61,13 +63,6 @@ class CustomUser(AbstractUser):
     is_carer = models.BooleanField(
         default=False,
         verbose_name="Uses a wheeled mobility device"
-    )
-    mobility_device_type_caree = models.CharField(
-        max_length=50,
-        choices=MOBILITY_DEVICE_CHOICES,
-        blank=True,
-        null=True,
-        verbose_name="Carees Mobility Device Type"
     )
 
 class County(geomodels.Model):

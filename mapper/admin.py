@@ -46,11 +46,12 @@ class CustomUserAdmin(UserAdmin):
     Extends Django's built-in UserAdmin to include:
       - uses_mobility_device
       - mobility_device_type
+      - is_carer
     in both the user detail and user creation forms.
     """
     fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('uses_mobility_device', 'mobility_device_type')}),
+        (None, {'fields': ('uses_mobility_device', 'mobility_device_type', 'is_carer')}),
     )
     add_fieldsets = UserAdmin.add_fieldsets + (
-        (None, {'fields': ('uses_mobility_device', 'mobility_device_type')}),
+        (None, {'fields': ('uses_mobility_device', 'mobility_device_type', 'is_carer')}),
     )

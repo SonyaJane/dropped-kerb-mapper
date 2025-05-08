@@ -9,8 +9,8 @@ Form definitions
 
 - CustomSignupForm:
     Extends allauth's SignupForm to collect first/last name, auto-generate
-    a unique username, and capture mobility device usage details for both
-    the user and their caree, if they have one.
+    a unique username, ask if the user is a wheeled mobility device user or if they
+    care for someone who does, and capture mobility device usage details.
 
 - ContactForm:
     A simple contact-us Form collecting first name, last name, email, and
@@ -376,10 +376,10 @@ class CustomSignupForm(SignupForm):
       - first_name (required)
       - last_name (required)
       - Auto-generates a unique username based on first and last name.
-      - uses_mobility_device (bool): does the user use a wheeled mobility device?
+      - is_carer (bool): does the user care for someone with a mobility device?      
+      - uses_mobility_device (bool): does the user of the person the user cares 
+        for use a wheeled mobility device?
       - mobility_device_type (str): type of device, if any.
-      - is_carer (bool): does the user care for someone with a mobility device?
-      - mobility_device_type_caree (str): caree's device type, if any.
 
     On save(request):
       1. Creates the User via super().
@@ -391,7 +391,7 @@ class CustomSignupForm(SignupForm):
     last_name = forms.CharField(max_length=30, label="Last Name", required=True)
 
     uses_mobility_device = forms.TypedChoiceField(
-        label="Do you use a wheeled mobility device?",
+        label="Do you, or the person you care for, use a wheeled mobility device?",
         required=False,
         choices=((False, 'No'),(True, 'Yes')),
         coerce=lambda x: x == 'True',  # converts the posted value to boolean
@@ -410,7 +410,7 @@ class CustomSignupForm(SignupForm):
     )
 
     mobility_device_type = forms.ChoiceField(
-        label="Please select your mobility device:",
+        label="Please select the primary mobility device you use, or the person you care for uses:",
         choices=MOBILITY_DEVICE_CHOICES,
         required=False,
     )
@@ -421,12 +421,6 @@ class CustomSignupForm(SignupForm):
         choices=((False, 'No'),(True, 'Yes')),
         coerce=lambda x: x == 'True',  # converts the posted value to boolean
         widget=forms.Select,
-    )
-
-    mobility_device_type_caree = forms.ChoiceField(
-        label="Please select the mobility device used by the person you care for:",
-        choices=MOBILITY_DEVICE_CHOICES,
-        required=False,
     )
 
     def __init__(self, *args, **kwargs):
@@ -446,6 +440,12 @@ class CustomSignupForm(SignupForm):
         # Apply custom classes to labels and fields
         self.helper.label_class = 'col-12 col-sm-4'
         self.helper.field_class = 'col-12 col-sm-8'
+        
+        # Initially hide the mobility_device_type field until uses_mobility_device or is_carer is True
+        self.fields['mobility_device_type'].widget.attrs.update({
+            'class': self.fields['mobility_device_type']
+                        .widget.attrs.get('class', '') + ' hidden'
+        })
 
     def clean(self):
         """
@@ -473,7 +473,7 @@ class CustomSignupForm(SignupForm):
         - Calls super().save(request) to create the base User object.
         - Normalises first_name and last_name, auto-generates a unique username.
         - Sets uses_mobility_device, mobility_device_type,
-          is_carer, and mobility_device_type_caree on the user.
+          is_carer on the user.
         - Saves and returns the new User instance.
 
         Args:
