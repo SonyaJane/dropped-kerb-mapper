@@ -763,11 +763,7 @@ the top centre of the map */
 #id_is_carer,
 #id_uses_mobility_device {
     max-width: 131px;
-}
-
-#id_mobility_device_type_caree,
-#id_mobility_device_type {
-    max-width: 277px;
+    max-height: 44px;;
 }
 
 .btn-container {

@@ -31,7 +31,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, HTML, Field, Div
 from cloudinary import uploader
 from cloudinary.exceptions import Error as CloudinaryError
-from .models import Report
+from .models import Report, CustomUser
 
 logger = logging.getLogger(__name__) # Set up logging for this module
 
@@ -376,9 +376,8 @@ class CustomSignupForm(SignupForm):
       - first_name (required)
       - last_name (required)
       - Auto-generates a unique username based on first and last name.
-      - is_carer (bool): does the user care for someone with a mobility device?      
-      - uses_mobility_device (bool): does the user of the person the user cares 
-        for use a wheeled mobility device?
+      - is_carer (bool): does the user care for someone who uses a wheeled mobility device?      
+      - uses_mobility_device (bool): does the user use a wheeled mobility device?
       - mobility_device_type (str): type of device, if any.
 
     On save(request):
@@ -391,37 +390,31 @@ class CustomSignupForm(SignupForm):
     last_name = forms.CharField(max_length=30, label="Last Name", required=True)
 
     uses_mobility_device = forms.TypedChoiceField(
-        label="Do you, or the person you care for, use a wheeled mobility device?",
+        label="Do you use a wheeled mobility device?",
         required=False,
         choices=((False, 'No'),(True, 'Yes')),
         coerce=lambda x: x == 'True',  # converts the posted value to boolean
         widget=forms.Select,
-    )
-
-    # Define choices for mobility devices.
-    MOBILITY_DEVICE_CHOICES = (
-        ('manual_wheelchair', 'Manual Wheelchair'),
-        ('powered_wheelchair', 'Powered Wheelchair'),
-        ('mobility_scooter', 'Mobility Scooter'),
-        ('tricycle', 'Tricycle'),
-        ('adapted_bicycle', 'Adapted Bicycle'),
-        ('bicycle', 'Bicycle'),
-        ('other', 'Other'),
-    )
-
-    mobility_device_type = forms.ChoiceField(
-        label="Please select the primary mobility device you use, or the person you care for uses:",
-        choices=MOBILITY_DEVICE_CHOICES,
-        required=False,
     )
 
     is_carer = forms.TypedChoiceField(
-        label="Do you care for someone who uses a wheeled mobility device?",
-        required=False,
-        choices=((False, 'No'),(True, 'Yes')),
-        coerce=lambda x: x == 'True',  # converts the posted value to boolean
-        widget=forms.Select,
+            label="Do you care for someone who uses a wheeled mobility device?",
+            required=False,
+            choices=((False, 'No'),(True, 'Yes')),
+            coerce=lambda x: x == 'True',  # converts the posted value to boolean
+            widget=forms.Select,
     )
+    
+    # Get the choices defined on the CustomUser model field
+    MOBILITY_DEVICE_CHOICES = CustomUser._meta.get_field(
+        'mobility_device_type'
+    ).choices
+
+    mobility_device_type = forms.ChoiceField(
+        label="Please select the primary mobility device that you, or the person you care for, uses:",
+        choices=MOBILITY_DEVICE_CHOICES,
+        required=False,
+    )    
 
     def __init__(self, *args, **kwargs):
         """
@@ -440,12 +433,6 @@ class CustomSignupForm(SignupForm):
         # Apply custom classes to labels and fields
         self.helper.label_class = 'col-12 col-sm-4'
         self.helper.field_class = 'col-12 col-sm-8'
-        
-        # Initially hide the mobility_device_type field until uses_mobility_device or is_carer is True
-        self.fields['mobility_device_type'].widget.attrs.update({
-            'class': self.fields['mobility_device_type']
-                        .widget.attrs.get('class', '') + ' hidden'
-        })
 
     def clean(self):
         """
