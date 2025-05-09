@@ -28,7 +28,9 @@
             {% if redirect_field_value %}
             <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
             {% endif %}
-            <button class="btn btn-mango" type="submit" name="sign_in">Sign In</button>
+            <div class="btn-container">
+              <button class="btn btn-mango align-right" type="submit" name="sign_in">Sign In</button>
+            </div>
         </form>
     </div>
 </div>

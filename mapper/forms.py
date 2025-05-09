@@ -170,7 +170,7 @@ class ReportForm(forms.ModelForm):
                 {% if report.photo %}
                     <div class="form-group">
                         <label class = 'col-12 col-md-4 fw-normal mb-2'>Current Photo</label>
-                        <img src="{{ report.photo.url }}" alt="Current Photo" class='col-12 col-md-8'>
+                        <img src="{{ report.photo.url }}" alt="Current Photo" class='col-12 col-md-8 current-photo'>
                     </div>
                     <div class="row my-2 align-items-center">
                         <label for="id_delete_photo"
@@ -181,7 +181,7 @@ class ReportForm(forms.ModelForm):
                         {{ form.delete_photo }}
                         </div>
                     </div>
-                    <p>Uploading a new photo replaces the existing photo.</p>
+                    <p>Uploading a new photo replaces the current photo.</p>
                 {% endif %}
             """),
             # Photo field with custom label class

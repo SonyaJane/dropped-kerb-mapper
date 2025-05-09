@@ -648,6 +648,11 @@ the top centre of the map */
     font-size: 1.15rem !important;
 }
 
+.choices__item.choices__item--selectable {
+    background-color: var(--color-green-5) !important;
+    border: 1px solid var(--color-green-6) !important;
+}
+
 #reasons .form-check {
     width: 48%; /* Adjust width to fit two columns */
     box-sizing: border-box;
@@ -722,6 +727,11 @@ the top centre of the map */
     max-width: 540px;
     margin-right: auto;
     margin-left: auto;
+}
+
+.current-photo {
+    width: 100%;
+    max-width: 500px;
 }
 
 .report-detail {
