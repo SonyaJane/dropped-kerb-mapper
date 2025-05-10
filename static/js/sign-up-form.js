@@ -26,6 +26,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const grandParent = password1HelpText.parentElement.parentElement;
   grandParent.parentElement.insertBefore(password1HelpText, grandParent.nextSibling);
 
+  // remove the btn-primary class from the submit button
+  const submitButton = document.getElementById('signup-submit-btn');
+  if (submitButton) {
+      submitButton.classList.remove('btn-primary');
+  }
+  // add class="btn-container" to the submit button's parent div
+  const submitButtonParent = submitButton.parentElement;
+  if (submitButtonParent) {
+    submitButtonParent.classList.add('btn-container');
+  }
+
   function toggleDeviceContainer() {
     // Show or hide the device container based on the selected value of the mobility device dropdown
     // and the isCarer checkbox

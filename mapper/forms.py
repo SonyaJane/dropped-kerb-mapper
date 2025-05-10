@@ -433,6 +433,17 @@ class CustomSignupForm(SignupForm):
         # Apply custom classes to labels and fields
         self.helper.label_class = 'col-12 col-sm-4'
         self.helper.field_class = 'col-12 col-sm-8'
+        
+        # Add a submit button to the form
+        from crispy_forms.layout import Submit
+        self.helper.add_input(
+            Submit(
+                name='submit',
+                value='Submit',
+                css_class='btn btn-mango align-right',
+                css_id='signup-submit-btn'
+            )
+        )
 
     def clean(self):
         """
