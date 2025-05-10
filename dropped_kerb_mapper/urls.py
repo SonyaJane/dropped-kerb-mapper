@@ -26,7 +26,6 @@ urlpatterns = [
         name='account_confirm_email',
     ),
     path("accounts/", include("allauth.urls")),
-    path('summernote/', include('django_summernote.urls')),
     # mapper app urls
     path('', include('mapper.urls'), name='mapper-urls'),  
 ]

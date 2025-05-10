@@ -12,59 +12,26 @@
 
     /* Colours */
     /* Orange */
-	--color-orange-1: #f5ddd2;
-	--color-orange-1-a: #f5ddd2DD; 
-	--color-orange-2: #eabaa5; 
-	--color-orange-2-b: #ebbaa6d9; 
-	--color-orange-3: #e09878;  	
-	--color-orange-3-a: #e09878DD; 
-	--color-orange-4: #bd582c; 	/* main colour */
-	--color-orange-4-a: #bd582cdd; 
-	--color-orange-4-b: #bd582cbb;
-	--color-orange-5: #8e4221; 
-	--color-orange-6: #5f2c16;
+	--color-orange-1: #f5ddd2;  /* Footer background */
+	--color-orange-2:  #eabaa5; /* Header h2 underline */
+	--color-orange-3: #e09878;  /* Button hover */
+	--color-orange-4: #bd582c; 	/* Link and icon */
+	--color-orange-4-b: #bd582cbb; /* cover title background */
 	
 	/* Coffee */
-	--color-coffee-1: #ebdcd5;
-	--color-coffee-2: #D7B8AB; 	
-	--color-coffee-3: #C29580;
-	--color-coffee-4: #865640;
-	--color-coffee-4-a: #865640da; 
-	--color-coffee-5: #644030;
-	--color-coffee-6: rgb(67, 43, 32); 	/* main font-color */
-	--color-coffee-6-a: #432b20cc; 
+	--color-coffee-6: #432b20; 	/* Links */
 
 	/* Green */
-	--color-green-1: #E0E4DB;
-	--color-green-1-a: #E0E4DBCC;
-	--color-green-2: #C1CAB6;
-	--color-green-2-a: #C1CAB6CC;
-	--color-green-3: #A2AF92; 
-	--color-green-4: #637052; 
-	--color-green-4-a: #637052cc;
-	--color-green-5: #4A543E;
-	--color-green-6: #313829;
-
-	/* Brown */
-	--color-brown-1: #ECE6DD;
-	--color-brown-2: #D8CEBA;
-	--color-brown-3: #C5B598;
-	--color-brown-4: #9B8357;
-	--color-brown-5: #746241;
-	--color-brown-6: #4E422C;
+	--color-green-1: #E0E4DB;  /* Message alert background */
+	--color-green-2: #C1CAB6;  /* Message alert border, button*/
+	--color-green-3: #A2AF92;  /* Button hover */
+	--color-green-5: #4A543E;  /* Reasons background */
+	--color-green-6: #313829;  /* Reasons border */
 
 	/* Mango */
-	--color-mango-1: #FBE6CE;
-	--color-mango-1-a: #FBE6CEF0;
-	--color-mango-2: #F7CE9D;
-	--color-mango-2-a: #F7CE9DF0;
-	--color-mango-3: #F3B56C;
-	--color-mango-3-a: #F3B56CF0;
-	--color-mango-4: #E48312;
-	--color-mango-5: #AB620E;
-	--color-mango-6: #724209;
-
-    
+	--color-mango-1: #FBE6CE; /* Map location search results background */
+	--color-mango-2: #F7CE9D; /* Button background */
+	--color-mango-3: #F3B56C; /* Button hover */    
 }
 
 /* Ensure the body and html take up the full height */
@@ -435,9 +402,8 @@ header.container {
 /* Location search results */
 #location-search-results {
     position: relative;
-    /* background-color: rgb(246, 245, 241); */
     background-color: var(--color-mango-1);
-    z-index: 3; /* Ensure the results are above the map controls */
+    z-index: 3;
     padding: 5px 12px;
 }
 
@@ -532,25 +498,6 @@ header.container {
     /* width: 300px; */
     max-width: 90%;
 }
-
-/* Location updated success message div */
-/* Show the successful report submission message in 
-the top centre of the map */
-.success-message {
-    position: absolute;
-    top: 75px; 
-    left: 50%;
-    transform: translate(-50%); 
-    background-color: var(--color-mango-1);
-    color: var(--color-brown-6);
-    font-size: 1.25rem;
-    padding: 10px 10px;
-    border-radius: 5px;
-    border: 1px solid var(--color-brown-4);
-    z-index: 1001;
-    width: 300px;
-}
-
 
 /* ATTRIBUTION */
 
@@ -763,10 +710,6 @@ the top centre of the map */
 
 .what-next.row .col-md-auto {
     padding-right: 0;
-}
-
-.orange-font {
-    color: var(--color-orange-6)
 }
 
 /* SIGNUP PAGE */

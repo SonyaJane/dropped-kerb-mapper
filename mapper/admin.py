@@ -2,13 +2,12 @@
 Admin configuration for the mapper application.
 
 Registers and configures the Django admin interfaces for:
-  • Report (with SummernoteModelAdmin and custom filtering/form),
+  • Report (with custom filtering/form),
   • County and LocalAuthority (GeoDjango ModelAdmin),
   • CustomUser (extends UserAdmin with extra profile fields).
 """
 from django.contrib import admin
 from .models import Report, County, LocalAuthority
-from django_summernote.admin import SummernoteModelAdmin
 from .filters import ReasonsFilter
 from .admin_forms import ReportAdminForm  # custom admin form
 from django.contrib.gis import admin as geo_admin
@@ -17,7 +16,7 @@ from .models import CustomUser
 
 # Use a decorator to register a class, compared to just registering the standard model
 @admin.register(Report)
-class ReportAdmin(SummernoteModelAdmin):
+class ReportAdmin(admin.ModelAdmin):
     """
     Admin interface for the Report model.
 

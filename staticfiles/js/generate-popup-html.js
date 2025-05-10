@@ -24,18 +24,18 @@ export default function generatePopupHTML(report) {
     }
     return `
         <p>
-            <span class="orange-font">Report ${reportNumber}</span>
+            <span>Report ${reportNumber}</span>
             <span>&nbsp;</span>
             <a href="/reports/${report.id}/" class="custom-link">view</a>
             <span>&nbsp;</span>
             <a href="/reports/${report.id}/edit/" class="custom-link">edit</a>
         </p>
         <p>
-            <span class="orange-font" id="latitude-${report.id}"> ${report.latitude}, </span>
-            <span class="orange-font" id="longitude-${report.id}"> ${report.longitude}</span>
+            <span id="latitude-${report.id}"> ${report.latitude}, </span>
+            <span id="longitude-${report.id}"> ${report.longitude}</span>
         </p>
-        <p><span class="orange-font" id="place_name-${report.id}"> ${report.place_name || 'Unknown'}</span></p>
-        <p><span class="orange-font" id="county-${report.id}"> ${report.county}</span></p>
+        <p><span id="place_name-${report.id}"> ${report.place_name || 'Unknown'}</span></p>
+        <p><span id="county-${report.id}"> ${report.county}</span></p>
         ${report.reasons}
         ${report.comments}
         ${report.photoUrl ? `<img src="${report.photoUrl}" alt="Photo of dropped kerb" style="max-width: 100%; height: auto;">` : ''}
