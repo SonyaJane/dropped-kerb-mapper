@@ -34,7 +34,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
 
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
     <!-- Navigation -->
     <nav class="navbar navbar-expand-md" role="navigation" aria-label="main navigation">
         <div class="container-fluid nav-container">
@@ -73,6 +73,17 @@
     </nav>
 
     <main>
+        <!--Messges container: Used to display messages to the user, such as success or error messages. -->
+        <div class="message-container m-3 dkm-container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} m-2" role="alert">
+                {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        </div>
+
         {% block content %}
         <!-- Content Goes here -->
         {% endblock content %}

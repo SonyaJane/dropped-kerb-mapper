@@ -2,6 +2,8 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
+{% comment %} Add a unique class to the <body> so we can target the message-container div{% endcomment %}
+{% block body_class %}map-reports-body{% endblock %}
 {% block content %}
 <div>    
     <div id="map">
@@ -17,10 +19,7 @@
                     </button>
                 </div>
             </div>
-        </div>
-
-        {% comment %} messages (report creation success or failure) {% endcomment %}
-        <div id="message-container"></div>
+        </div>        
 
         <!-- Toggle map style button -->
         <button id="toggle-satellite">

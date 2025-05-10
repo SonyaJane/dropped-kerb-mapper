@@ -125,16 +125,35 @@ Footer | Hover effects and social media links are working as expected. | Pass
 | Call to action buttons (Not logged in) | Sign In and Create Account buttons appear for unauthenticated users and on click work as expected | Pass |
 | Call to action buttons (Logged in) | Create Report button appears for authenticated users and on click work as expected | Pass |
 
+**Contact**
+
+| Feature | Outcome | Pass/Fail |
+|---|---|---|
+| Contact heading and text | "Contact Us" heading and text is visible  | Pass |
+| Contact form | Form is displayed when no message has been sent | Pass |
+| Form fields | All required fields are present | Pass |
+| Crispy form styling | Form is rendered using crispy-forms for consistent Bootstrap styling | Pass |
+| Submit button | Send Message button is present and enabled when form is valid | Pass |
+| Form validation | Invalid submissions show error messages and do not submit | Pass |
+| Confirmation email | Confirmation email is sent after submitting the form | Pass |
+| Message sent to site owner | Email containing the form contents is sent to the site owner after form is submitted | Pass |
+| Success message | "Thank you for your message!" appears after successful form submission and removes the form. | Pass |
 
 
+**Create Account**
 
-**Main app screen, shown on closing landing page**
+| Feature | Outcome | Pass/Fail |
+|---|---|---|
+| Create account heading | "Create an account" heading is visible | Pass |
+| Introductory text | Instructions for creating an account are shown | Pass |
+| Sign in link | Link to sign in is present and navigates to sign in page | Pass |
+| Signup form visible | Signup form is displayed with all required fields | Pass |
+| Form uses crispy forms | Form is rendered using crispy-forms for Bootstrap styling | Pass |
+| Mobility device field | Only shows if user selects yes for either of the questions about a wheeled mobility device | Pass |
+| Submit button | Submit button is present and enabled when form is valid | Pass |
+| Form validation | Invalid submissions show error messages and do not submit | Pass |
 
-Feature | Outcome | Pass/Fail
---- | --- | ---
-Start and destination display sections | Hover effects are working as expected. | Pass
-Map click | Clicking on the map shows a marker at the clicked location and shows a section below the map containing the address of the clicked location, and three buttons, which enable to user to set it as the start or destination location, or to go back | Pass
-Map get current location button (crosshairs icon) | Zooms to users location and displays a circle with radius equal to the accuracy of the location displayed for two seconds | Pass
+
 
 **Location Selection Options section**
 

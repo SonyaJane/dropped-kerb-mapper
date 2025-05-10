@@ -82,8 +82,6 @@ class MapReportsView(LoginRequiredMixin, View):
             with context {'report': serialised_report}
       - On invalid form:
           • Adds an ERROR message
-          • Renders the HTMX partial 'mapper/partials/fail.html'
-            with status=400
     """
     def get(self, request):
         """
@@ -129,14 +127,12 @@ class MapReportsView(LoginRequiredMixin, View):
               with context {'report': serialise_report(report)}.
         - If the form is invalid:
             • Adds an ERROR message.
-            • Returns the HTMX partial 'mapper/partials/fail.html'
-              with HTTP status 400.
 
         Args:
             request (HttpRequest): The incoming HTTP POST request from the map page.
 
         Returns:
-            HttpResponse: Rendered success or failure HTMX partial.
+            HttpResponse: Rendered success partial.
         """
         form = ReportForm(data=request.POST, files=request.FILES, user=request.user)
         if form.is_valid():
@@ -150,9 +146,7 @@ class MapReportsView(LoginRequiredMixin, View):
         messages.add_message(request,
                              messages.ERROR,
                              'Error creating report. Please try again later.')
-        return render(request,
-                        'mapper/partials/fail.html',
-                        status=400)
+        return HttpResponse(status=204)
 
 @require_POST
 @login_required

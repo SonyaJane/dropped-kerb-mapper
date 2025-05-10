@@ -488,14 +488,13 @@ header.container {
 }
 
 /* New reports map page messages container div */
-#message-container {
+.map-reports-body .message-container {
     position: absolute;
     top: 75px; 
     left: 50%;
     transform: translate(-50%); 
     font-size: 1.25rem;
     z-index: 1001;
-    /* width: 300px; */
     max-width: 90%;
 }
 
@@ -741,18 +740,6 @@ header.container {
     width: 22px;
 }
 
-@media (min-width: 360px) {
-    /* Success message for dragging marker on map */
-    /* Move success message down */
-    .success-message {
-        position: absolute;
-        top: 100px; 
-        left: 50%;
-        transform: translate(-50%);
-    }
-}
-
-
 @media (max-width: 360px) {
     /* reduce all font sizes by 10% on very small screens  */
 
@@ -885,7 +872,7 @@ header.container {
 
 @media (min-width: 360px) {
     /* Move message container down */
-    #message-container {
+    .map-reports-body .message-container {
         position: absolute;
         top: 100px; 
         left: 50%;

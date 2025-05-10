@@ -1,16 +1,5 @@
 {% comment %} 
-Partial template for successful report creation. The hx-swap-oob 
-attribute allows HTMX to replace the content of the #message-container 
-div with the flashed messages.
+Partial template for successful report creation. 
+Add the details of the new report to a div with id "report-data" 
 {% endcomment %}
-<div id="message-container" hx-swap-oob="innerHTML">
-  {% if messages %}
-    {% for message in messages %}
-      <div class="alert alert-{{ message.tags }} mt-2" role="alert">
-        {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
-</div>
-{% comment %} Add the details of the new report to a div with id "report-data" {% endcomment %}
 {{ report|json_script:"report-data" }}

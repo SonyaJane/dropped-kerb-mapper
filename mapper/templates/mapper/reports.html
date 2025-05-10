@@ -6,14 +6,6 @@
 
 <div class="list-reports-container my-4 mx-1">
 
-    {# display any flash messages #}
-    {% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} mt-2" role="alert">
-        {{ message }}
-        </div>
-    {% endfor %}
-
     {% comment %} Title {% endcomment %}
     {% endif %}
     {% if user.is_superuser %}

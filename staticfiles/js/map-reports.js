@@ -79,10 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Rresponsive to screen size
     window.addEventListener('resize', updateAttributionControl); 
 
-    // Remove all messages after 5 seconds
-    removeAllMessages();
-
-    //Add event listener for any HTMX swap into #message-container
+    // Add event listener for any HTMX swap
     document.body.addEventListener('htmx:afterSwap', e => {
         // If the swap is into the update-report-container
         if (e.detail.target.id === 'updated-report-container') {
