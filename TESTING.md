@@ -99,19 +99,34 @@ Samsung Galaxy Ultra 22 | No appearance, responsiveness nor functionality issues
 
 **Common Elements**
 
-    Feature | Outcome | Pass/Fail
-    --- | --- | ---
-    Navigation Bar | Hover effects and links are working as expected. | Pass
-    Social media links | Opens the corresponding website in a new tab. | | Pass
-    Back to top button | Scrolls up to the top of the page | Pass
-    Footer | Hover effects and links are working as expected. | Pass
+Feature | Outcome | Pass/Fail
+--- | --- | ---
+Navigation Bar | Link is working as expected. | Pass
+Menu | Links are working as expected. | Pass
+Footer | Hover effects and social media links are working as expected. | Pass
 
 **Home Page**
 
-Feature | Outcome | Pass/Fail
---- | --- | ---
-Welcome screen | Displayed on landing on the website | Pass
-Go to app button | On click, closes the landing welcome page (the div is removed), and the main app screen is shown | Pass
+| Feature | Outcome | Pass/Fail |
+|---|---|---|
+| Hero image | Visible at the top of the page | Pass |
+| Hero section cover title | Cover text is visible at the top of the page on the hero image | Pass |
+| Call to action buttons (Not logged in)  | Sign In and Create Account buttons appear for unauthenticated users and on click work as expected | Pass |
+| Call to action buttons (Logged in) | Create Report and Instruction buttons appear for authenticated users and on click work as expected | Pass |
+| Welcome section and How to Contribute sections | Present and visible | Pass |
+| Instructions link | Navigates to the instructions page | Pass |
+
+**Instructions**
+
+| Feature | Outcome | Pass/Fail |
+|---|---|---|
+| Instructions text | Visible at the top of the page | Pass |
+| Images | Cover text is visible at the top of the page on the hero image | Pass |
+| Call to action buttons (Not logged in) | Sign In and Create Account buttons appear for unauthenticated users and on click work as expected | Pass |
+| Call to action buttons (Logged in) | Create Report button appears for authenticated users and on click work as expected | Pass |
+
+
+
 
 **Main app screen, shown on closing landing page**
 

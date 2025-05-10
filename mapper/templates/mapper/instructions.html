@@ -164,6 +164,20 @@
     <h3>How to do something else</h3>
 
     <p>If you have any questions, feel free to contact us through the <a href="{% url 'contact' %}">Contact</a> page.</p>
+
+    <div class="call-to-action" class="text-center my-1">
+        {% if not user.is_authenticated %}
+            <div id="not-logged-in">
+                <a href="{% url 'account_login' %}" class="btn btn-mango">Sign In</a>
+                <a href="{% url 'account_signup' %}" class="btn btn-mango">Create Account</a>
+            </div>
+        {% else %}
+            <div id="logged-in">
+                <a href="{% url 'map-reports' %}" class="btn btn-mango">Create Report</a>
+            </div>
+        {% endif %}
+    </div>
+
     <a href="{% url 'map-reports' %}" class="btn btn-primary">Go to Map Reports</a>
 </div>
 {% endblock %}
