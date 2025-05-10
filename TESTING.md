@@ -137,7 +137,8 @@ Footer | Hover effects and social media links are working as expected. | Pass
 | Form validation | Invalid submissions show error messages and do not submit | Pass |
 | Confirmation email | Confirmation email is sent after submitting the form | Pass |
 | Message sent to site owner | Email containing the form contents is sent to the site owner after form is submitted | Pass |
-| Success message | "Thank you for your message!" appears after successful form submission and removes the form. | Pass |
+| Django system success message | 'Message submitted successfully!' flashed at top of page on successful form submission | Pass |
+| Form replaced | Form replaced with "Thank you for your message!" after successful form submission. | Pass |
 
 
 **Create Account**

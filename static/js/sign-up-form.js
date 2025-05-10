@@ -1,4 +1,4 @@
-function initSignUpForm() {
+document.addEventListener('DOMContentLoaded', () => { 
 
   // toggle the display of the mobility device containers based on the selected value of the yes/no dropdown
   const usesMobilityDevice = document.getElementById("id_uses_mobility_device");
@@ -42,7 +42,4 @@ function initSignUpForm() {
   // Add an event listener to update on change
   usesMobilityDevice.addEventListener("change", toggleDeviceContainer);
   isCarer.addEventListener("change", toggleDeviceContainer);
-}
-
-
-
+});
