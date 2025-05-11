@@ -400,8 +400,15 @@ header.container {
 }
 
 /* search submit icon */
-.bi-search {
+.bi-search, 
+.bi-x {
     color: black;
+}
+
+#text-search-submit:hover,
+.hover-orange:hover,
+.maplibregl-ctrl-geolocate:hover {
+    background: var(--color-orange-2) !important;
 }
 
 /* Location search results */
