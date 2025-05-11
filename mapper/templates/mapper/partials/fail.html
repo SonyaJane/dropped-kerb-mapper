@@ -1,7 +1,6 @@
 {% comment %} 
-Partial template for successful report creation. 
-Show success message.
-Add the details of the new report to a div with id "report-data" 
+Partial template for unsuccessful report creation. 
+Show fail message.
 {% endcomment %}
 <div id="message-container" class="dkm-container message-container my-3" hx-swap-oob="true">
     {% if messages %}
@@ -12,5 +11,3 @@ Add the details of the new report to a div with id "report-data"
       {% endfor %}
     {% endif %}
   </div>
-
-{{ report|json_script:"report-data" }}

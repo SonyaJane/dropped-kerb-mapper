@@ -508,15 +508,20 @@ header.container {
 }
 
 /* New reports map page messages container div */
-.map-reports-body .message-container {
+.map-reports-body #message-container {
     position: absolute;
-    top: 75px; 
+    top: 100px; 
     left: 50%;
     transform: translate(-50%); 
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     z-index: 1001;
-    max-width: 90%;
+    width: 100%;
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
 }
+
+map-reports-body
 
 /* ATTRIBUTION */
 
@@ -892,15 +897,26 @@ header.container {
 
 @media (min-width: 360px) {
     /* Move message container down */
-    .map-reports-body .message-container {
+    .map-reports-body #message-container {
         position: absolute;
-        top: 100px; 
+        top: 116px; 
         left: 50%;
         transform: translate(-50%);
+        font-size: 1.25rem;
     }
 }
 
 @media (min-width: 423px) {
+    /* Move message container */
+    .map-reports-body #message-container {
+        position: absolute;
+        top: 116px; 
+        left: 0;
+        transform: none;
+        font-size: 1.25rem;
+        max-width: 350px;
+    }
+
     #search-location {
         max-width: 330px;
     }

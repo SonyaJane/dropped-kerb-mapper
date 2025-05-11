@@ -162,10 +162,11 @@ Footer | Hover effects and social media links are working as expected. | Pass
 | Feature | Outcome | Pass/Fail |
 |--- | --- | --- |
 | Map displays on page load | Interactive map is visible and loads correctly, centering on the user's location | Pass |
-| Geolocation button | Geolocation button is visible and centers the map on the user's location when clicked | Pass |
+| Search location | Search input and button are present and functional | Pass |
+| Geolocation button | Geolocation button is visible and centers the map on the user's location when clicked| Pass |
 | Toggle satellite button | Toggle satellite button switches between map view and satellite map view. Button turns orange when in satellite view. | Pass |
 | Add report button | Add report button is visible and toggles new report mode | Pass |
-| Search location input | Search input and button are present and functional | Pass |
+| Button hover effects | Changes colour on hover, cursor changes to pointer | Pass |
 | Markers for existing reports | All user reports are shown as markers on the map | Pass |
 | Marker popup | Clicking a marker shows a popup with report details | Pass |
 | Add new report by clicking map | Clicking the map in add mode opens the report form at that location | Pass |

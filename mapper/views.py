@@ -143,10 +143,11 @@ class MapReportsView(LoginRequiredMixin, View):
             return render(request,
                         'mapper/partials/success.html',
                         {'report': serialise_report(report)})
+        # Unsuccessful form submission
         messages.add_message(request,
                              messages.ERROR,
                              'Error creating report. Please try again later.')
-        return HttpResponse(status=204)
+        return render(request, 'mapper/partials/fail.html')
 
 @require_POST
 @login_required
