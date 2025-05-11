@@ -113,7 +113,8 @@ class MapReportsView(LoginRequiredMixin, View):
                         {'form': form,
                         'reports': data,
                         # Indicate to the ReportForm that it is on the map_reports page
-                        'is_map_reports': True})
+                        'is_map_reports': True,
+                        'is_edit': False})
 
     def post(self, request):
         """
@@ -241,7 +242,7 @@ def edit_report(request, pk):
         # Create a new form instance with the existing report data
         # Prepopulate the form with the existing report data
         form = ReportForm(instance=report)
-    return render(request, 'mapper/edit_report.html', {'form': form, 'report': report})  
+    return render(request, 'mapper/edit_report.html', {'form': form, 'report': report, 'is_edit': True})  
 
 
 def delete_report(request, pk):

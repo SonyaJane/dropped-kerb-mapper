@@ -186,8 +186,13 @@ class ReportForm(forms.ModelForm):
             """),
             # Photo field with custom label class
             Div(
-                HTML('<label for="id_photo"\
-                            class="col-12 col-sm-4 col-form-label">New Photo</label>'),
+                HTML(
+                    '{% if is_edit %}'
+                    '<label for="id_photo" class="col-12 col-sm-4 col-form-label">New Photo</label>'
+                    '{% else %}'
+                    '<label for="id_photo" class="col-12 col-sm-4 col-form-label">Photo</label>'
+                    '{% endif %}'
+            ),
                 Field('photo', wrapper_class='col-12 col-sm-8'),
                 css_class='row'
             ),

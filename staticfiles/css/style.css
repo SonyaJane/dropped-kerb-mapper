@@ -610,7 +610,7 @@ map-reports-body
     font-size: 1.25rem;
 }
 
-/* Reasons list items */
+/* Selected reasons list items */
 .choices__list--dropdown .choices__item,
 .choices__input {
     font-size: 1.25rem !important;
@@ -625,11 +625,7 @@ map-reports-body
     border: 1px solid var(--color-green-6) !important;
 }
 
-.choices__item.choices__item--choice.choices__item--selectable {
-    background-color: var(--color-green-1) !important;
-    border: 1px solid var(--color-green-2) !important;
-}
-
+/* Reasons dropdown list */
 .choices {
     position: relative;
 }
@@ -642,6 +638,26 @@ map-reports-body
     min-width: 0 !important;
     max-width: 100% !important;
     box-sizing: border-box;
+    margin-right: 12px;
+	margin-left: 12px;
+}
+
+/*  Edit report page only */
+.editing-report .choices__item.choices__item--choice.choices__item--selectable {
+    background-color: var(--color-green-1) !important;
+    border: 1px solid var(--color-green-2) !important;
+}
+
+/* Create new report page */
+
+#map-report-form .choices__list.choices__list--dropdown.is-active {
+    max-height: 190px;
+    overflow-y: scroll; /* Enable vertical scrolling */
+}
+
+#map-report-form .choices__item.choices__item--choice.choices__item--selectable {
+    background-color: var(--color-mango-1) !important;
+    border: 1px solid var(--color-mango-2) !important;
 }
 
 #reasons .form-check {

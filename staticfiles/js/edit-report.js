@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     removeCrispyClassesFromForm()
     initialiseReasonsChoices()
-    // toggleReasonsFieldVisibility()
+    toggleReasonsFieldVisibility()
     // Attach event listener to condition field dropdown
     const condition = document.getElementById('condition');
     condition.addEventListener('change', toggleReasonsFieldVisibility);
