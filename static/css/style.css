@@ -99,6 +99,11 @@ h4 {
     --bs-alert-border-color: var(--color-green-2) !important;
 }
 
+/* Ensure the pointer cursor appears when hovering over the div and any child elements, such as text */
+.cursor-pointer,
+.cursor-pointer * {
+    cursor: pointer;
+}
 
 .bold-font {
     font-weight: 600;
@@ -405,6 +410,10 @@ header.container {
     background-color: var(--color-mango-1);
     z-index: 3;
     padding: 5px 12px;
+}
+
+.border-bottom-mango {
+    border-bottom: 1px solid var(--color-mango-3);
 }
 
 /* User location button */

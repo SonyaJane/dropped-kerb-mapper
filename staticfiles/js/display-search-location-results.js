@@ -27,8 +27,12 @@ export default function displaySearchLocationResults(data) {
         }
         // add html to the div
         placeDiv.innerHTML = `<p class="mb-0 py-2">${name}</p>`;
-        // add css classes to the div
-        placeDiv.classList.add('border-bottom', 'py-1', 'cursor-pointer');
+        // add css classes to the div if place is not the last one
+        if (place === data[data.length - 1]) {
+            placeDiv.classList.add('py-1', 'cursor-pointer');
+        } else {
+            placeDiv.classList.add('border-bottom-mango', 'py-1', 'cursor-pointer');
+        }
 
         // add latitude and longitude to the div
         placeDiv.dataset.latitude = place.lat;

@@ -132,6 +132,7 @@ Footer | Hover effects and social media links are working as expected. | Pass
 | Contact heading and text | "Contact Us" heading and text is visible  | Pass |
 | Contact form | Form is displayed when no message has been sent | Pass |
 | Form fields | All required fields are present | Pass |
+| Field prepopulated | First name, last name and email address pre filled and not editable when user logged in | Pass |
 | Crispy form styling | Form is rendered using crispy-forms for consistent Bootstrap styling | Pass |
 | Submit button | Send Message button is present and enabled when form is valid | Pass |
 | Form validation | Invalid submissions show error messages and do not submit | Pass |
@@ -153,51 +154,33 @@ Footer | Hover effects and social media links are working as expected. | Pass
 | Mobility device field | Only shows if user selects yes for either of the questions about a wheeled mobility device | Pass |
 | Submit button | Submit button is present and enabled when form is valid | Pass |
 | Form validation | Invalid submissions show error messages and do not submit | Pass |
+| Email signup link | Email sent to user with link to click for email address confirmation | Pass |
+| Email confirmed | Email confirmed page shown on email link click  and user automatically logged in| Pass |
 
+****
 
+| Feature | Outcome | Pass/Fail |
+|--- | --- | --- |
+| Map displays on page load | Interactive map is visible and loads correctly, centering on the user's location | Pass |
+| Geolocation button | Geolocation button is visible and centers the map on the user's location when clicked | Pass |
+| Toggle satellite button | Toggle satellite button switches between map view and satellite map view. Button turns orange when in satellite view. | Pass |
+| Add report button | Add report button is visible and toggles new report mode | Pass |
+| Search location input | Search input and button are present and functional | Pass |
+| Markers for existing reports | All user reports are shown as markers on the map | Pass |
+| Marker popup | Clicking a marker shows a popup with report details | Pass |
+| Add new report by clicking map | Clicking the map in add mode opens the report form at that location | Pass |
+| Report form validation | Invalid submissions show error messages and do not submit | Pass |
+| Report form submission | Valid submissions add a new marker and show a success message | Pass |
+| Edit marker location | Marker can be dragged (if allowed) to update location | Pass |
+| Responsive layout | Map and controls display correctly on all screen sizes | Pass |
+| Success/error messages | Messages appear at the top of the page after actions | Pass |
 
-**Location Selection Options section**
-
-Feature | Outcome | Pass/Fail
---- | --- | ---
-Search text input field | Field is required and must contain letters and or numbers before submission. Invalid characters result in red text placeholder warning. | Pass
-Current location button | Location of user is displayed on the map with the appropriate marker, and the location text is diplayed in the appropriate waypoint div. Map is centered on the location. | Pass 
-Map Select button | Map expands to full screen, except for the header, and the user can click the map to select a location | Pass 
-Saved places button | On click, the list of user saved places is shown and everthing else except the header is hidden | Pass 
-
-**Text search results**
-
-Feature | Outcome | Pass/Fail
---- | --- | ---
-List of search results | Displayed correctly, while everything else is hidden except the header and the search text input box  | Pass
-Individual search result | Clickable, and background turns light orange on hover  | Pass 
-Clicked search result  | Displays the location in the appropriate start or destination display section, and add the corresonding marker on the map, with the map centered at that location | Pass
-Exit button | Rmoves search results and returns to the prvious screen with the search location options still shown | Pass
-
-**Map Select screen**
-
-Feature | Outcome | Pass/Fail
---- | --- | ---
-Expanded map | On clicking on the map a marker is shown at the clicked location, and a section below the map is created containing the address of the clicked location, and three buttons, which enable to user to set it as the start or destination location, or to go back | 
-
-**Saved places screen**
-Feature | Outcome | Pass/Fail
---- | --- | ---
-List of saved places | Displayed correctly, while everything else is hidden except the header and the search text input box  | Pass
-Individual place | Clickable, and background turns light orange on hover  | Pass 
-Clicked saved place  | Displays the location in the appropriate start or destination display section, and add the corresonding marker on the map, with the map centered at that location | Pass
-Exit button | Removes saved places and returns to the prvious screen with the search location options still shown | Pass
-
-**Route generation**
+****
 
 Feature | Outcome | Pass/Fail
 --- | --- | ---
-Route generation | Route generated when both the start and destination location have been chosen. Solid blue line showing the route on the map, with a dashed line between any non-routable waypoints and the actual route. | Pass
 
-**Error Modals**
 
-Feature | Outcome | Pass/Fail
---- | --- | ---
-Route generation | Error modal shown when the OpenRouteService API returns an error, tells user to try again with different locations. Close button closes the modal. | Pass
-Text search Nominatim API request | Error modal with message to say the location search failed, and to try again | Pass
-
+**Sign In**
+Incorrect password
+non existant email
