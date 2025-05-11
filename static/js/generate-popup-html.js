@@ -38,6 +38,6 @@ export default function generatePopupHTML(report) {
         <p><span id="county-${report.id}"> ${report.county}</span></p>
         ${report.reasons}
         ${report.comments}
-        ${report.photoUrl ? `<img src="${report.photoUrl}" alt="Photo of dropped kerb" style="max-width: 100%; height: auto;">` : ''}
+        ${report.photoUrl ? `<img src="${report.photoUrl}" alt="Photo of dropped kerb" class="popup-photo">` : ''}
     `;
 }

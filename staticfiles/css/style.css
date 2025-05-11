@@ -580,6 +580,7 @@ map-reports-body
 /* Map marker popup */
 .maplibregl-popup {
     max-width: 300px !important;
+    z-index: 5;
 }
 .maplibregl-popup p {
     margin-bottom: 0.7rem;
@@ -624,6 +625,25 @@ map-reports-body
     border: 1px solid var(--color-green-6) !important;
 }
 
+.choices__item.choices__item--choice.choices__item--selectable {
+    background-color: var(--color-green-1) !important;
+    border: 1px solid var(--color-green-2) !important;
+}
+
+.choices {
+    position: relative;
+}
+
+.choices__list.choices__list--dropdown.is-active {
+    position: absolute !important;
+    left: 0;
+    right: 0;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+}
+
 #reasons .form-check {
     width: 48%; /* Adjust width to fit two columns */
     box-sizing: border-box;
@@ -632,6 +652,12 @@ map-reports-body
 
 .hide-sm {
     display: none;
+}
+
+.popup-photo {
+    width: 100%;
+    max-width: 200px;
+    height: auto;
 }
 
 /* LIST REPORTS PAGE */
@@ -788,11 +814,6 @@ map-reports-body
         width: 20px;  
     }
 
-    /* Home page hero cover title  */
-    /* .cover-title { */
-        /* width: 250px; */
-    /* } */
-
     /* Map controls */
 
     /* Location search bar */
@@ -846,7 +867,6 @@ map-reports-body
 
     /* map marker popup */
     .maplibregl-popup {
-        width: 80vw !important;
         max-width: 80vw !important;
     }
 
