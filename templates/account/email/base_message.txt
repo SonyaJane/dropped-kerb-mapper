@@ -4,6 +4,6 @@ Hello from Dropped Kerb Mapper!
 {% block content %}
 {% endblock content %}
 
-Thank you for using Dropped Kerb Mapper (a tool created by Mobility Mapper: https://www.mobilitymapper.co.uk/)
+Thank you for using Dropped Kerb Mapper.
 
 {% endautoescape %}
