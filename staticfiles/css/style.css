@@ -409,11 +409,15 @@ header.container {
     position: relative;
     background-color: var(--color-mango-1);
     z-index: 3;
-    padding: 5px 12px;
 }
 
 .border-bottom-mango {
     border-bottom: 1px solid var(--color-mango-3);
+}
+
+.mango-hover:hover {
+    background-color: var(--color-mango-2);
+    color: black;
 }
 
 /* User location button */

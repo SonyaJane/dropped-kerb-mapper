@@ -29,9 +29,9 @@ export default function displaySearchLocationResults(data) {
         placeDiv.innerHTML = `<p class="mb-0 py-2">${name}</p>`;
         // add css classes to the div if place is not the last one
         if (place === data[data.length - 1]) {
-            placeDiv.classList.add('py-1', 'cursor-pointer');
+            placeDiv.classList.add('p-3', 'cursor-pointer', 'mango-hover');
         } else {
-            placeDiv.classList.add('border-bottom-mango', 'py-1', 'cursor-pointer');
+            placeDiv.classList.add('border-bottom-mango', 'p-3', 'cursor-pointer', 'mango-hover');
         }
 
         // add latitude and longitude to the div
