@@ -163,6 +163,8 @@ Footer | Hover effects and social media links are working as expected. | Pass
 |--- | --- | --- |
 | Map displays on page load | Interactive map is visible and loads correctly, centering on the user's location | Pass |
 | Search location | Search input and button are present and functional | Pass |
+| Search results | Panel displayed and functions as expected | Pass |
+| Search result selection | Point or area displayed on map and results panel removed | Pass |
 | Geolocation button | Geolocation button is visible and centers the map on the user's location when clicked| Pass |
 | Toggle satellite button | Toggle satellite button switches between map view and satellite map view. Button turns orange when in satellite view. | Pass |
 | Add report button | Add report button is visible and toggles new report mode | Pass |
@@ -171,7 +173,7 @@ Footer | Hover effects and social media links are working as expected. | Pass
 | Marker popup | Clicking a marker shows a popup with report details | Pass |
 | Add new report by clicking map | Clicking the map in add mode opens the report form at that location | Pass |
 | Report form validation | Invalid submissions show error messages and do not submit | Pass |
-| Report form submission | Valid submissions add a new marker and show a success message | Pass |
+| Report form submission | Valid submissions add a new marker and show a success message, which disappears after 5 seconds | Pass |
 | Edit marker location | Marker can be dragged (if allowed) to update location | Pass |
 | Responsive layout | Map and controls display correctly on all screen sizes | Pass |
 | Success/error messages | Messages appear at the top of the page after actions | Pass |

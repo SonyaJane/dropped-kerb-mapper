@@ -92,6 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.detail.target.id === 'new-report-container') {
             processSuccessfulReportSubmission();
         }
-        // removeAllMessages();
+        removeAllMessages();
     });
 });
