@@ -36,8 +36,8 @@ export default function generatePopupHTML(report) {
         </p>
         <p><span id="place_name-${report.id}"> ${report.place_name || 'Unknown'}</span></p>
         <p><span id="county-${report.id}"> ${report.county}</span></p>
-        ${report.reasons}
-        ${report.comments}
+        <p>${report.reasons}</p>
+        <p>${report.comments}</p>
         ${report.photoUrl ? `<img src="${report.photoUrl}" alt="Photo of dropped kerb" class="popup-photo">` : ''}
     `;
 }
