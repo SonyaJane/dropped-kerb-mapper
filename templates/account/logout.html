@@ -9,7 +9,8 @@
         {% if redirect_field_value %}
         <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
         {% endif %}
-        <button class="btn btn-mango" type="submit">Sign Out</button>
+        <button class="btn btn-green" type="submit">Sign Out</button>
+        <a href="javascript:history.back()" class="btn btn-mango">Cancel</a>
     </form>
 </div>
 {% endblock %}

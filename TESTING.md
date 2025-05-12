@@ -203,16 +203,26 @@ Feature | Outcome | Pass/Fail
 | Photo display | Photo is shown if present, otherwise "No photo available" message | Pass |
 | Created by (superuser) | "Created by" row is visible for superusers | Pass |
 | Edit button | Edit button is visible for owner or superuser and links to edit page | Pass |
-| Delete button | Delete button is visible for owner or superuser and opens confirmation modal | Pass |
+| Delete button | Delete button is visible for owner or superuser and opens confirmation modal. | Pass |
 | Go to reports list button | Button links to the reports list page | Pass |
 | Create new report button | Button links to the create report page | Pass |
-| Delete confirmation modal | Modal appears and allows user to confirm or cancel deletion | Pass |
+| Delete confirmation modal | Modal appears and allows user to confirm or cancel deletion, Report is successfuly deleted on confirm. | Pass |
 
+**Sign Out**
 
 Feature | Outcome | Pass/Fail
 --- | --- | ---
-
+| Sign out page visible | "Sign Out" heading and confirmation message are displayed | Pass |
+| Sign out button present | "Sign Out" button is visible and enabled | Pass |
+| Cancel/redirect option | Option to cancel or return to previous page is available | Pass |
+| Successful sign out | User is logged out and redirected to login or home page | Pass |
+| Success message | "You have signed out." message is displayed after logout | Pass |
+| Cannot access user pages after sign out | Accessing authenticated pages redirects to login | Pass |
+| Responsive layout | Sign out page displays correctly on all screen sizes | Pass |
 
 **Sign In**
+
+Feature | Outcome | Pass/Fail
+--- | --- | ---
 Incorrect password
 non existant email
