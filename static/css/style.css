@@ -676,6 +676,12 @@ map-reports-body
     height: auto;
 }
 
+
+/* Hide the footer on add report page */
+html:has(#map) footer {
+    display: none;
+}
+
 /* LIST REPORTS PAGE */
 .table-responsive {
     overflow-x: auto; /* Enable horizontal scrolling */
@@ -924,12 +930,6 @@ map-reports-body
     }
 }
 
-@media (max-width: 575px) {
-    /* when #map exists in the doc hide the footer for small screens */
-    html:has(#map) footer {
-        display: none;
-    }
-}
 
 @media (min-width: 360px) {
     /* Move message container down */

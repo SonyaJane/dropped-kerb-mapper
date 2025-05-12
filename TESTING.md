@@ -157,7 +157,7 @@ Footer | Hover effects and social media links are working as expected. | Pass
 | Email signup link | Email sent to user with link to click for email address confirmation | Pass |
 | Email confirmed | Email confirmed page shown on email link click  and user automatically logged in| Pass |
 
-****
+**Add Report Page**
 
 | Feature | Outcome | Pass/Fail |
 |--- | --- | --- |
@@ -174,11 +174,42 @@ Footer | Hover effects and social media links are working as expected. | Pass
 | Add new report by clicking map | Clicking the map in add mode opens the report form at that location | Pass |
 | Report form validation | Invalid submissions show error messages and do not submit | Pass |
 | Report form submission | Valid submissions add a new marker and show a success message, which disappears after 5 seconds | Pass |
-| Edit marker location | Marker can be dragged (if allowed) to update location | Pass |
+| Edit marker location | Marker can be dragged to update location on double clicking on the marker | Pass |
 | Responsive layout | Map and controls display correctly on all screen sizes | Pass |
+
+**Reports List Page**
+
+Feature | Outcome | Pass/Fail
+--- | --- | ---
+| Reports table visible | Table of reports is displayed on the page | Pass |
+| Title correct for user type | "All Reports" shown for superuser, "Your Reports" for regular user | Pass |
+| Table columns correct | Columns match user type | Pass |
+| Pagination works | Table paginates if there are many reports | Pass |
+| Sorting works | Clicking column headers sorts the table | Pass |
+| Photo icon/thumbnail | Photo icon shown if report has a photo and displays photo on click  | Pass |
+| Edit link present | Edit link/button is present for each report | Pass |
+| View detail link present | Link to view report details is present for each report | Pass |
+| Responsive layout | Table and controls display correctly on all screen sizes | Pass |
+
+**Report Detail Page**
+
+Feature | Outcome | Pass/Fail
+--- | --- | ---
+| Report heading | Shows correct report number for user type (ID for superuser, user_report_number for regular user) | Pass |
+| Report details table | Table displays latitude, longitude, place, county, condition, reasons, comments, created/updated dates | Pass |
+| Reasons display | Reasons are shown and formatted, or "None" if not present | Pass |
+| Comments display | Comments are shown, or "None" if not present | Pass |
+| Photo display | Photo is shown if present, otherwise "No photo available" message | Pass |
+| Created by (superuser) | "Created by" row is visible for superusers | Pass |
+| Edit button | Edit button is visible for owner or superuser and links to edit page | Pass |
+| Delete button | Delete button is visible for owner or superuser and opens confirmation modal | Pass |
+| Go to reports list button | Button links to the reports list page | Pass |
+| Create new report button | Button links to the create report page | Pass |
+| Delete confirmation modal | Modal appears and allows user to confirm or cancel deletion | Pass |
+| Responsive layout | All elements display correctly on mobile and desktop | Pass |
 | Success/error messages | Messages appear at the top of the page after actions | Pass |
 
-****
+
 
 Feature | Outcome | Pass/Fail
 --- | --- | ---

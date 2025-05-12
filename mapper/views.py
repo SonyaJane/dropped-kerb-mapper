@@ -365,6 +365,11 @@ def report_detail(request, pk):
     queryset = Report.objects.all()
     report = get_object_or_404(queryset, pk=pk)
 
+    # Only allow the owner or a superuser to view the report
+    if not (request.user.is_superuser or report.user == request.user):
+        messages.error(request, "You do not have permission to view this report.")
+        return redirect('reports-list')
+    
     # check if the place_name is empty and reverse geocode if necessary
     if not report.place_name:
         success = report.reverse_geocode(report.latitude, report.longitude)
