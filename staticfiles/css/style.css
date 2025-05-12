@@ -99,6 +99,13 @@ h4 {
     --bs-alert-border-color: var(--color-green-2) !important;
 }
 
+.alert-error {
+    /* Override Bootstrap variables */
+    --bs-alert-color: black !important;
+    --bs-alert-bg: #f77474 !important;
+    --bs-alert-border-color: #ff3e3e !important;
+}
+
 /* Ensure the pointer cursor appears when hovering over the div and any child elements, such as text */
 .cursor-pointer,
 .cursor-pointer * {
@@ -676,6 +683,12 @@ map-reports-body
     height: auto;
 }
 
+
+/* Hide the footer on add report page */
+html:has(#map) footer {
+    display: none;
+}
+
 /* LIST REPORTS PAGE */
 .table-responsive {
     overflow-x: auto; /* Enable horizontal scrolling */
@@ -924,12 +937,6 @@ map-reports-body
     }
 }
 
-@media (max-width: 575px) {
-    /* when #map exists in the doc hide the footer for small screens */
-    html:has(#map) footer {
-        display: none;
-    }
-}
 
 @media (min-width: 360px) {
     /* Move message container down */
