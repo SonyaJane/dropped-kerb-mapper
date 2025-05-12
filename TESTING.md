@@ -215,14 +215,36 @@ Feature | Outcome | Pass/Fail
 | Sign out page visible | "Sign Out" heading and confirmation message are displayed | Pass |
 | Sign out button present | "Sign Out" button is visible and enabled | Pass |
 | Cancel/redirect option | Option to cancel or return to previous page is available | Pass |
-| Successful sign out | User is logged out and redirected to login or home page | Pass |
+| Successful sign out | User is logged out and redirected to login page | Pass |
 | Success message | "You have signed out." message is displayed after logout | Pass |
 | Cannot access user pages after sign out | Accessing authenticated pages redirects to login | Pass |
-| Responsive layout | Sign out page displays correctly on all screen sizes | Pass |
 
 **Sign In**
 
 Feature | Outcome | Pass/Fail
 --- | --- | ---
-Incorrect password
-non existant email
+| Sign in page visible | "Sign In" heading and instructions are displayed | Pass |
+| Sign in form present | Email and password fields are visible | Pass |
+| Sign in button present | "Sign In" button is visible and enabled | Pass |
+| Sign up link present | Link to create an account is visible and navigates to sign up page | Pass |
+| Form validation | Invalid submissions show error messages and do not submit | Pass |
+| Incorrect password handling | Error message shown for incorrect password | Pass |
+| Non-existent email handling | Error message shown for non-existent email | Pass |
+| Successful sign in | User is redirected to dashboard or home page after login | Pass |
+| Success message | "Successfully signed in" message is displayed after login | Pass |
+
+**Forgot Password**
+| Feature | Outcome | Pass/Fail |
+|---|---|---|
+| Forgot password page visible | "Password Reset" heading and instructions are displayed | Pass |
+| Email input field present | Email input field is visible and enabled | Pass |
+| CSRF protection | CSRF token is present in the form | Pass |
+| Reset button present | "Reset My Password" button is visible and enabled | Pass |
+| Form validation | Invalid submissions show error messages and do not submit | Pass |
+| Non-existent email handling | Error message shown for non-existent email | Pass |
+| Password reset email sent | Password reset email is sent to the user if email exists | Pass |
+| Success message | Confirmation message is displayed after submitting the form | Pass |
+| Password reset link works | Clicking the link in the email opens the password reset form | Pass |
+| New password form validation | New password form validates input and shows errors if invalid | Pass |
+| Successful password reset | User can set a new password and log in with it | Pass |
+| Responsive layout | Forgot password page displays correctly on all screen sizes | Pass |
