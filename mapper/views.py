@@ -367,7 +367,7 @@ def report_detail(request, pk):
 
     # Only allow the owner or a superuser to view the report
     if not (request.user.is_superuser or report.user == request.user):
-        messages.error(request, "You do not have permission to view this report.")
+        messages.error(request, "You do not have permission to view that report.")
         return redirect('reports-list')
     
     # check if the place_name is empty and reverse geocode if necessary

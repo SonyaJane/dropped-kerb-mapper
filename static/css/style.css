@@ -99,6 +99,13 @@ h4 {
     --bs-alert-border-color: var(--color-green-2) !important;
 }
 
+.alert-error {
+    /* Override Bootstrap variables */
+    --bs-alert-color: black !important;
+    --bs-alert-bg: #f77474 !important;
+    --bs-alert-border-color: #ff3e3e !important;
+}
+
 /* Ensure the pointer cursor appears when hovering over the div and any child elements, such as text */
 .cursor-pointer,
 .cursor-pointer * {
