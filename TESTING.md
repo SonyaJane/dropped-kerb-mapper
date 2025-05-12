@@ -195,6 +195,7 @@ Feature | Outcome | Pass/Fail
 
 Feature | Outcome | Pass/Fail
 --- | --- | ---
+| Report access | Report only shows for user who created it and superusers | Pass |
 | Report heading | Shows correct report number for user type (ID for superuser, user_report_number for regular user) | Pass |
 | Report details table | Table displays latitude, longitude, place, county, condition, reasons, comments, created/updated dates | Pass |
 | Reasons display | Reasons are shown and formatted, or "None" if not present | Pass |
@@ -206,9 +207,6 @@ Feature | Outcome | Pass/Fail
 | Go to reports list button | Button links to the reports list page | Pass |
 | Create new report button | Button links to the create report page | Pass |
 | Delete confirmation modal | Modal appears and allows user to confirm or cancel deletion | Pass |
-| Responsive layout | All elements display correctly on mobile and desktop | Pass |
-| Success/error messages | Messages appear at the top of the page after actions | Pass |
-
 
 
 Feature | Outcome | Pass/Fail

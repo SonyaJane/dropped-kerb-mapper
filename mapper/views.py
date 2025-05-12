@@ -272,9 +272,11 @@ def delete_report(request, pk):
     if report.user == request.user or request.user.is_superuser:
         report.delete()
         messages.add_message(request, messages.SUCCESS, 'Report deleted successfully!')
-    messages.add_message(request,
-                         messages.ERROR,
-                         'You do not have permission to delete this report.')
+    else:
+        # User is not the owner or a superuser    
+        messages.add_message(request,
+                            messages.ERROR,
+                            'You do not have permission to delete this report.')
     return HttpResponseRedirect(reverse('reports-list'))
 
 
@@ -367,7 +369,7 @@ def report_detail(request, pk):
 
     # Only allow the owner or a superuser to view the report
     if not (request.user.is_superuser or report.user == request.user):
-        messages.error(request, "You do not have permission to view that report.")
+        messages.error(request, "Sorry, you cannot view that report.")
         return redirect('reports-list')
     
     # check if the place_name is empty and reverse geocode if necessary
