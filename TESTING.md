@@ -103,6 +103,7 @@ Feature | Outcome | Pass/Fail
 --- | --- | ---
 Navigation Bar | Link is working as expected. | Pass
 Menu | Links are working as expected. | Pass
+| Button hover effects | Changes colour on hover, cursor changes to pointer | Pass |
 Footer | Hover effects and social media links are working as expected. | Pass
 
 **Home Page**
@@ -168,7 +169,6 @@ Footer | Hover effects and social media links are working as expected. | Pass
 | Geolocation button | Geolocation button is visible and centers the map on the user's location when clicked| Pass |
 | Toggle satellite button | Toggle satellite button switches between map view and satellite map view. Button turns orange when in satellite view. | Pass |
 | Add report button | Add report button is visible and toggles new report mode | Pass |
-| Button hover effects | Changes colour on hover, cursor changes to pointer | Pass |
 | Markers for existing reports | All user reports are shown as markers on the map | Pass |
 | Marker popup | Clicking a marker shows a popup with report details | Pass |
 | Add new report by clicking map | Clicking the map in add mode opens the report form at that location | Pass |
@@ -241,10 +241,30 @@ Feature | Outcome | Pass/Fail
 | CSRF protection | CSRF token is present in the form | Pass |
 | Reset button present | "Reset My Password" button is visible and enabled | Pass |
 | Form validation | Invalid submissions show error messages and do not submit | Pass |
-| Non-existent email handling | Error message shown for non-existent email | Pass |
 | Password reset email sent | Password reset email is sent to the user if email exists | Pass |
 | Success message | Confirmation message is displayed after submitting the form | Pass |
 | Password reset link works | Clicking the link in the email opens the password reset form | Pass |
 | New password form validation | New password form validates input and shows errors if invalid | Pass |
 | Successful password reset | User can set a new password and log in with it | Pass |
-| Responsive layout | Forgot password page displays correctly on all screen sizes | Pass |
+
+
+## Code Validation
+
+### HTML
+
+The [W3C Markup Validator](https://validator.w3.org/) was used to validate the project HTML code to ensure there were no syntax errors.
+ 
+W3C Markup Validator found the following errors for the home page:
+
+![Home page validation errors image](/readme-files/html_validator_errors.png)
+
+The errors were solved by removing the second use of the id 'not-logged-in',and adding the id="home-title-md" to the cover title.
+
+![index.html validation](assets/testing_files/index_validation.jpg)
+
+
+
+W3C Markup Validator also found a great amount of errors in pages with user input. However, I found those errors to be coming from the Summernote editor. See example below:
+
+![Summernote HTML errors image](assets/testing_files/summernote_errors.jpg)
+

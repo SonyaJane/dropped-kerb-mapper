@@ -14,7 +14,7 @@
 
             <!-- Cover title  -->
             <div class="cover-title p-2 mb-4">
-                <h2 class="mx-1 mt-2">Help us make the UK accessible.<br>For everyone.</h2>  
+                <h2 id="home-title-md" class="mx-1 mt-2">Help us make the UK accessible.<br>For everyone.</h2>  
             </div>
 
             <!-- Call to action buttons  -->
@@ -49,7 +49,7 @@
         condition, but this is optional.
     </p>
     <p>
-        This data is fed into <a href="https://www.mobilitymapper.com" target="_blank" rel="noopener noreferrer" class="custom-link">Mobility Mapper</a>,
+        This data is fed into <a href="https://www.mobilitymapper.co.uk" target="_blank" rel="noopener noreferrer" class="custom-link">Mobility Mapper</a>,
         which is a free app that generates accessible routes for users of wheeled mobility devices.
         Mobility Mapper is currently in development, and we will keep contributers to Dropped Kerb Mapper up-to-date on its progress.
     </p>
@@ -82,7 +82,7 @@
     </p>
 
     {% if not user.is_authenticated %}
-    <div class="mb-4" id="not-logged-in">
+    <div class="mb-4">
         <p>Sign in or create an account to start contributing!</p>
         <div id="not-logged-in-buttons">
             <a href="{% url 'account_login' %}" class="btn btn-mango mx-2">Sign In</a>
