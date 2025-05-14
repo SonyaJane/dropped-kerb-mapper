@@ -12,10 +12,8 @@ import resetForm from './reset-form.js';
 export default function processSuccessfulReportSubmission() {
     // get the new report data from the embedded JSON in the DOM
     const reportData = document.getElementById('report-data');
-    
     // Parse the JSON data
     const report = JSON.parse(reportData.textContent);
-    
     // Add map marker for the new report, create popup content, and set up interactions
     addMarkerForReport(report);
     

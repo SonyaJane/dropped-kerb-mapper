@@ -82,14 +82,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Remove all messages after 5 seconds
     // removeAllMessages();
 
-    //Add event listener for any HTMX swap into #message-container
+    // Add event listener for any HTMX swap into a report container
     document.body.addEventListener('htmx:afterSwap', e => {
         // If the swap is into the update-report-container
-        if (e.detail.target.id === 'updated-report-container') {
+        if (e.target.id === 'updated-report-container') {
             processSuccessfulReportUpdate();
         }
         // If the swap is into the new-reportcontainer, remove all messages after 5 seconds
-        if (e.detail.target.id === 'new-report-container') {
+        if (e.target.id === 'new-report-container') {
             processSuccessfulReportSubmission();
         }
         removeAllMessages();

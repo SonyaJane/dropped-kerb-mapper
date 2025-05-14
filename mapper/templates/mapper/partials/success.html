@@ -2,7 +2,11 @@
 Partial template for successful report creation. 
 Show success message.
 Add the details of the new report to a div with id "report-data" 
+Use Django’s json_script template filter to safely
+embed the report Python object as JSON in the HTML. 
 {% endcomment %}
+{{ report|json_script:"report-data" }}
+
 <div id="message-container" class="dkm-container message-container my-3" hx-swap-oob="true">
     {% if messages %}
       {% for message in messages %}
@@ -11,6 +15,4 @@ Add the details of the new report to a div with id "report-data"
         </div>
       {% endfor %}
     {% endif %}
-  </div>
-
-{{ report|json_script:"report-data" }}
+</div>
