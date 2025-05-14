@@ -5,9 +5,9 @@ import validateNewReportForm from "./validate-new-report-form.js";
 
 document.addEventListener('DOMContentLoaded', () => { 
 
-    removeCrispyClassesFromForm()
-    initialiseReasonsChoices()
-    toggleReasonsFieldVisibility()
+    removeCrispyClassesFromForm();
+    initialiseReasonsChoices();
+    toggleReasonsFieldVisibility();
     // Attach event listener to condition field dropdown
     const condition = document.getElementById('condition');
     condition.addEventListener('change', toggleReasonsFieldVisibility);
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // and disable buttons if valid
     const form = document.querySelector(".report-form");
     form.addEventListener('submit', e => {
-            validateNewReportForm(e)
+            validateNewReportForm(e);
         }, { capture: true });
 
 });

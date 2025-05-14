@@ -11,4 +11,4 @@ export default function removeAllMessages() {
       setTimeout(() => el.remove(), 500);
     }, 5000);
   });
-};    
+} 

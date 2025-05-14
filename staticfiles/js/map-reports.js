@@ -66,12 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // and disable buttons if valid
     const form = document.querySelector(".report-form");
     form.addEventListener('submit', e => {
-            validateNewReportForm(e)
+            validateNewReportForm(e);
         }, { capture: true });
     // capture: true enables e.preventDefault() to block the submit before HTMX sees it.
 
     // remove selected crispy classes from the form
-    removeCrispyClassesFromForm()
+    removeCrispyClassesFromForm();
 
     // Responsive attribution control
     // Responsive to map tiles or tile source changes 

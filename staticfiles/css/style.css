@@ -239,11 +239,6 @@ header.container {
     margin: 0 auto;
 }
 
-/* Visibility */
-.invisible {
-	display: none;
-}
-
 /* HOME PAGE */
 
 /* hero image */
@@ -294,7 +289,6 @@ header.container {
 
 .cover-title > h2 {
     color: white;
-    font-size: 1.25rem;
     font-weight: 600;
 }
 
@@ -742,7 +736,6 @@ html:has(#map) footer {
     width: 100% !important;
 }
 
-
 #div_id_photo {
     padding-bottom: 0.75rem;
 }
@@ -826,14 +819,20 @@ html:has(#map) footer {
 .bi-bluesky::before {
     content: "";
     background-color: currentColor;
-    -webkit-mask: url("../images/icons/bluesky.svg") no-repeat 50% 50%;
-    mask: url("../images/bluesky.svg") no-repeat 50% 50%;
+    mask-image: url("../images/bluesky.svg");
+    mask-repeat: no-repeat;
+    mask-position: 50% 50%;
+    -webkit-mask-image: url("../images/bluesky.svg");
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: 50% 50%;
     -webkit-mask-size: cover;
     mask-size: cover;
     height: 22px;
     width: 22px;
 }
 
+/* Media Queries
+ */
 @media (max-width: 360px) {
     /* reduce all font sizes by 10% on very small screens  */
 
@@ -1018,6 +1017,7 @@ html:has(#map) footer {
     .para-768 {
         display: block;
     }
+
     .para-narrow {
         display: none;
     }

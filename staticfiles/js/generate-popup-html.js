@@ -18,7 +18,7 @@ export default function generatePopupHTML(report) {
         reasons = `<p><span class="orange-font">${report.reasons}</span></p>`;
     }
     // Only include the comments line if there are comments.
-    let comments = ''
+    let comments = '';
     if (report.comments) {
         comments = `<p><span class="orange-font">${report.comments}</span></p>`;
     }

@@ -12,7 +12,7 @@ const submitButton = document.getElementById("submitButton");
 * - Sets the form's action attribute to the `edit_comment/{commentId}` endpoint.
 */
 
-button.addEventListener("click", (e) => {
+editButton.addEventListener("click", (e) => {
     let commentId = e.target.getAttribute("comment_id");
     let commentContent = document.getElementById(`comment${commentId}`).innerText;
     commentText.value = commentContent;
