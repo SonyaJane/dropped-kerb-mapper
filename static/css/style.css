@@ -624,10 +624,6 @@ header.container {
 }
 
 /* Reasons dropdown list */
-.choices {
-    position: relative;
-}
-
 .choices__list.choices__list--dropdown.is-active {
     position: absolute !important;
     left: 0;
@@ -648,9 +644,13 @@ header.container {
 
 /* Create new report page */
 
-#map-report-form .choices__list.choices__list--dropdown.is-active {
-    max-height: 190px;
+#map-report-form .choices__list--dropdown .choices__list {
+    max-height: 190px !important; /* Set a max height for the dropdown */
     overflow-y: scroll; /* Enable vertical scrolling */
+}
+
+.choices.is_open {
+    overflow: none !important; /* Disable overflow on the parent container */
 }
 
 #map-report-form .choices__item.choices__item--choice.choices__item--selectable {
@@ -721,9 +721,9 @@ html:has(#map) footer {
 
 /* Create new report form */
 
-#div_id_reasons > div {
+/* #div_id_reasons > div {
     width: 100% !important;
-}
+} */
 
 /* Crispy applies mb-3 to div that contains form elements */
 #map-report-form-container .row.mb-3 {
@@ -999,8 +999,7 @@ html:has(#map) footer {
 /* Add a left margin to the main content for medium screens and larger */
 @media (min-width: 768px) {
     main,
-    footer,
-    #map-report-form-container {
+    footer {
         margin-right: 250px; /* width of the menu panel */
     }
 

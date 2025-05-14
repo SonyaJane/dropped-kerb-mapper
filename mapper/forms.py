@@ -132,7 +132,9 @@ class ReportForm(forms.ModelForm):
         # Set the layout for the form using crispy-forms
         self.helper = FormHelper()
         self.helper.form_class = 'form-horizontal'
-
+        # Render only the fields so we control the <form> tag
+        self.helper.form_tag = False
+        
         self.helper.layout = Layout(
             Div(
                 HTML('<label for="id_latitude" class="col-4 col-form-label">\
