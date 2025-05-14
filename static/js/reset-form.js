@@ -21,7 +21,7 @@ export default function resetForm() {
 
     // Clear the selected reasons in the reasons field
     // and hide the reasons field
-    toggleReasonsFieldVisibility()
+    toggleReasonsFieldVisibility();
     
 
 

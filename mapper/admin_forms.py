@@ -6,7 +6,8 @@ This module provides ModelForms used in the Django admin:
     (to webp) and compression when uploading photos via the admin interface.
 """
 from .models import Report
-from .forms import ReportForm  
+from .forms import ReportForm
+
 
 class ReportAdminForm(ReportForm):
     """

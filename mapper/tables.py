@@ -5,8 +5,10 @@ This module provides:
   - ReportTable: a Bootstrap-responsive table for Report instances.
   - Custom columns and template columns for view/edit actions.
   - Modal-enabled photo preview without exposing URLs to regular users.
-  - Formatted place_name, county, local_authority, and reasons with comma wrapping.
-  - Human-readable created_at and updated_at renderers using Windows-compatible formats.
+  - Formatted place_name, county, local_authority, and reasons with comma
+    wrapping.
+  - Human-readable created_at and updated_at renderers using
+    Windows-compatible formats.
 """
 import django_tables2 as tables
 from .models import Report
@@ -18,7 +20,8 @@ class ReportTable(tables.Table):
      Renders a responsive, Bootstrap-styled table with the following features:
        - view: link icon to view report details
        - edit: link icon to edit the report
-       - photo: shows a camera icon linking to the image or opens a modal (based on user role)
+       - photo: shows a camera icon linking to the image or opens a modal
+        (based on user role)
        - formatted place_name, county, local_authority, and reasons columns
        - human-readable created_at and updated_at timestamps
      """
@@ -31,15 +34,16 @@ class ReportTable(tables.Table):
         template_code='''
             {% if record.photo %}
                 {% if table.request.user.is_superuser %}
-                    <a href="{{ record.photo.url }}" target="_blank" rel="noopener noreferrer">
+                    <a href="{{ record.photo.url }}"
+                       target="_blank" rel="noopener noreferrer">
                         <i class="bi bi-camera-fill"></i>
                     </a>
                 {% else %}
                     <!-- Button to trigger Bootstrap modal -->
-                    <button 
-                      type="button" 
-                      class="btn btn-link p-0" 
-                      data-bs-toggle="modal" 
+                    <button
+                      type="button"
+                      class="btn btn-link p-0"
+                      data-bs-toggle="modal"
                       data-bs-target="#photoModal{{ record.id }}"
                       aria-label="View photo"
                     >
@@ -47,17 +51,17 @@ class ReportTable(tables.Table):
                     </button>
                     <!-- Modal -->
                     <div 
-                      class="modal fade" 
-                      id="photoModal{{ record.id }}" 
-                      tabindex="-1" 
-                      aria-labelledby="photoModalLabel{{ record.id }}" 
+                      class="modal fade"
+                      id="photoModal{{ record.id }}"
+                      tabindex="-1"
+                      aria-labelledby="photoModalLabel{{ record.id }}"
                       aria-hidden="true"
                     >
                       <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content bg-transparent border-0">
-                          <img 
-                            src="{{ record.photo.url }}" 
-                            class="img-fluid" 
+                          <img
+                            src="{{ record.photo.url }}"
+                            class="img-fluid"
                             alt="Report {{ record.id }} photo"
                           >
                         </div>
@@ -74,20 +78,24 @@ class ReportTable(tables.Table):
         verbose_name="Report",
     )
     place_name = tables.TemplateColumn(
-        template_code='''{% load comma_wrap %}{{ record.place_name|comma_wrap }}''',
+        template_code='''{% load comma_wrap %}\
+            {{ record.place_name|comma_wrap }}''',
         attrs={"td": {"style": "white-space: nowrap;"}}
     )
     county = tables.TemplateColumn(
-        template_code='''{% load comma_wrap %}{{ record.county|comma_wrap }}''',
+        template_code='''{% load comma_wrap %}\
+            {{ record.county|comma_wrap }}''',
         attrs={"td": {"style": "white-space: nowrap;"}}
     )
     local_authority = tables.TemplateColumn(
         verbose_name="LA",
-        template_code='''{% load comma_wrap %}{{ record.local_authority|comma_wrap }}''',
+        template_code='''{% load comma_wrap %}\
+            {{ record.local_authority|comma_wrap }}''',
         attrs={"td": {"style": "white-space: nowrap;"}}
     )
     reasons = tables.TemplateColumn(
-        template_code='''{% load comma_wrap %}{{ record.reasons|comma_wrap }}''',
+        template_code='''{% load comma_wrap %}\
+            {{ record.reasons|comma_wrap }}''',
         attrs={"td": {"style": "white-space: nowrap;"}}
     )
     created_at = tables.Column(
@@ -119,9 +127,8 @@ class ReportTable(tables.Table):
         Converts the datetime to a string like "1 September 2025 14:30",
         using a Windows-compatible day format ("%#d") to avoid leading zeros.
         """
-        # Note: on Windows use "%#d" instead of "%-d" if leading zeros become an issue.
-        return value.strftime("%#d %B %Y %H:%M")
-        # return value.strftime("%-d %B %Y %H:%M") # non-windows
+        return value.strftime("%#d %B %Y %H:%M")    # Windows
+        # return value.strftime("%-d %B %Y %H:%M")  # non-windows
 
     def render_updated_at(self, value):
         """
@@ -130,9 +137,8 @@ class ReportTable(tables.Table):
         Converts the datetime to a string like "1 September 2025 14:30",
         using a Windows-compatible day format ("%#d") to avoid leading zeros.
         """
-        # Note: on Windows use "%#d" instead of "%-d" if leading zeros become an issue.
-        return value.strftime("%#d %B %Y %H:%M")
-        # return value.strftime("%-d %B %Y %H:%M") #  non-windows
+        return value.strftime("%#d %B %Y %H:%M")    # Windows
+        # return value.strftime("%-d %B %Y %H:%M")  # non-windows
 
     class Meta:
         model = Report

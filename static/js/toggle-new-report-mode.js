@@ -27,7 +27,7 @@ export default function toggleNewReportMode(addReportButton) {
     if (addReportButton.classList.contains('button-active')) {
         addReportButton.classList.remove('button-active'); // Remove the active class
         DKM.map.getCanvas().style.cursor = ''; // Reset the cursor to default
-        DKM.map.off('click', selectNewReportLocation) // Remove click event listener to the map   
+        DKM.map.off('click', selectNewReportLocation); // Remove click event listener to the map   
         // reenable popup event listener for all the markers
         DKM.markers.forEach(marker => {
             marker.setPopup(marker._savedPopup);
@@ -37,7 +37,7 @@ export default function toggleNewReportMode(addReportButton) {
         addReportButton.classList.add('button-active'); // Add the active class
         // turn the cursor to custom crosshair
         DKM.map.getCanvas().style.cursor = dataUrl;
-        DKM.map.on('click', selectNewReportLocation) // Add a click event listener to the map
+        DKM.map.on('click', selectNewReportLocation); // Add a click event listener to the map
         // remove popup event listener from all the markers
         DKM.markers.forEach(marker => {
             marker.setPopup(null);

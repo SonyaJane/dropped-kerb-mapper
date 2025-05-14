@@ -33,7 +33,7 @@ export default function addMarkerForReport(report) {
         .addTo(DKM.map);
     
     const markerElement = marker.getElement();
-    setMarkerColour(markerElement, report.condition)
+    setMarkerColour(markerElement, report.condition);
 
     // Intercept multi‐clicks in the capture phase and swallow them:
     // remove the default click-popup listener:

@@ -10,7 +10,7 @@ export default async function loadUKBoundary() {
             throw new Error('Failed to load boundary file.');
         }
         DKM.ukBoundary = await response.json(); // Parse the GeoJSON file
-        console.log('UK Boundary loaded')
+        console.log('UK Boundary loaded');
     } catch (error) {
         console.error('Error loading boundary:', error);
     }

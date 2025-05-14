@@ -16,7 +16,7 @@ export default function updateReportLocation(reportId, lat, lng) {
             headers: { 'X-CSRFToken': getCSRFToken() },
             values: { latitude: lat, longitude: lng }
         }
-    )
+    );
 }
 
 // Function to get the CSRF token from the cookie

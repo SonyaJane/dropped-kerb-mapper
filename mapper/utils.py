@@ -38,7 +38,8 @@ def serialise_report(report):
     return {
         'user': report.user.username if report.user else None,
         'user_report_number': report.user_report_number,
-        'user_is_superuser': report.user.is_superuser if report.user else False,
+        'user_is_superuser': report.user.is_superuser if report.user
+        else False,
         'id': report.id,
         'latitude': report.latitude,
         'longitude': report.longitude,
@@ -48,10 +49,12 @@ def serialise_report(report):
         'reasons': report.get_reasons_display(),
         'comments': report.comments,
         'photoUrl': report.photo.url if report.photo else None,
-}
+        }
+
 
 class SessionTokenError(Exception):
     """Raised when a Google Maps session token cannot be retrieved."""
+
 
 def get_google_session_token():
     """
@@ -85,7 +88,8 @@ def get_google_session_token():
     api_key = os.environ.get('GOOGLE_MAPS_API_KEY')
 
     # Set up the createSession endpoint URL
-    create_session_url = f"https://tile.googleapis.com/v1/createSession?key={api_key}"
+    create_session_url = \
+        f"https://tile.googleapis.com/v1/createSession?key={api_key}"
 
     # Define the required payload
     payload = {
@@ -106,10 +110,14 @@ def get_google_session_token():
         data = response.json()
         session_token = data.get("session")
         expiry = data.get("expiry")
-        # Calculate the remaining time until expiry (expiry is seconds since the epoch)
+        # Calculate the remaining time until expiry (expiry is seconds since
+        # the epoch)
         now = int(time.time())
-        remaining = int(expiry) - now if expiry and int(expiry) > now else 14 * 24 * 3600
-        # Cache the full token data (you might want to cache the expiry as well)
+        remaining = int(expiry) - now if expiry and int(expiry) > \
+            now else 14 * 24 * 3600
+        # Cache the full token data (you might want to cache the expiry
+        # as well)
         cache.set('google_tile_session_token', data, timeout=remaining)
         return session_token
-    raise SessionTokenError(f"Failed to obtain session token: {response.text}")
+    raise SessionTokenError(f"Failed to obtain session token: \
+        {response.text}")

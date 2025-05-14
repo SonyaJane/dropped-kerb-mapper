@@ -1,8 +1,10 @@
 """
 Signal handlers for the Report model to manage Cloudinary photos.
 
-• delete_photo_on_delete: after a Report is deleted, removes its image from Cloudinary.
-• delete_old_photo_on_update: before saving an existing Report, deletes the old image if replaced.
+• delete_photo_on_delete: after a Report is deleted, removes its image from
+  Cloudinary.
+• delete_old_photo_on_update: before saving an existing Report, deletes the
+  old image if replaced.
 """
 from django.db.models.signals import post_delete, pre_save
 from django.dispatch import receiver
