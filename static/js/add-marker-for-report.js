@@ -23,6 +23,12 @@ import updateReportLocation from "./update-report-location.js";
  *   - reasons, comments, photoUrl
  */
 export default function addMarkerForReport(report) {
+    // Remove inital marker
+    if(DKM.newMarker) {
+        DKM.newMarker.remove();
+        DKM.newMarker = null;
+    }
+
     const marker = new maplibregl.Marker({
         draggable: false
     })

@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', updateAttributionControl); 
 
     // Remove all messages after 5 seconds
-    // removeAllMessages();
+    removeAllMessages();
 
     // Add event listener for any HTMX swap into a report container
     document.body.addEventListener('htmx:afterSwap', e => {
