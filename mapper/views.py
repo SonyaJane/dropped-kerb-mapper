@@ -448,8 +448,7 @@ def get_os_map_tiles(request, z, x, y):
     api_key = os.environ.get("OS_MAPS_API_KEY")
 
     # Construct the Ordnance Survey tile URL
-    tile_url = f"https://api.os.uk/maps/raster/v1/zxy/Light_3857/{z}/{x}/{y}\
-        .png?key={api_key}"
+    tile_url = f"https://api.os.uk/maps/raster/v1/zxy/Light_3857/{z}/{x}/{y}.png?key={api_key}"
 
     # Make a GET request to fetch the tile image
     response = requests.get(tile_url)
@@ -504,8 +503,7 @@ def get_google_satellite_tiles(request, z, x, y):
 
     api_key = os.environ.get("GOOGLE_MAPS_API_KEY")
     # Construct the Google Maps tile URL
-    tile_url = f"https://tile.googleapis.com/v1/2dtiles/{z}/{x}/{y}\
-        ?session={session_token}&key={api_key}"
+    tile_url = f"https://tile.googleapis.com/v1/2dtiles/{z}/{x}/{y}?session={session_token}&key={api_key}"
 
     # Make a GET request to fetch the tile image
     response = requests.get(tile_url)

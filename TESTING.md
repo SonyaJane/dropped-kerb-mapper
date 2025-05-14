@@ -339,13 +339,13 @@ in the website are easy to read and accessible. See reports in the table below:
 
 Page | Lighthouse Report |
 | --- | --- |
-| Home | ![](/readme-files/) |
-| Instructions | ![](/readme-files/) |
-| Contact | ![](/readme-files/) |
-| Create Account | ![](/readme-files/) |
-| Add Report Page | ![](/readme-files/) |
-| Reports List Page | ![](/readme-files/) |
-| Report Detail Page | ![](/readme-files/) |
-| Sign Out | ![](/readme-files/) |
-| Sign In | ![](/readme-files/) |
-| Forgot Password | ![](/readme-files/) |
+| Home | ![Lighthouse report Home page](/readme-files/lighthouse_home.png) |
+| Instructions | ![Lighthouse report ](/readme-files/lighthouse_instructions.png) |
+| Contact | ![Lighthouse report ](/readme-files/lighthouse_contact.png) |
+| Create Account | ![Lighthouse report ](/readme-files/lighthouse_create_account.png) |
+| Add Report Page | ![Lighthouse report ](/readme-files/) |
+| Reports List Page | ![Lighthouse report ](/readme-files/) |
+| Report Detail Page | ![Lighthouse report ](/readme-files/) |
+| Sign Out | ![Lighthouse report ](/readme-files/lighthouse_signout.png) |
+| Sign In | ![Lighthouse report ](/readme-files/lighthouse_signin.png) |
+| Forgot Password | ![Lighthouse report ](/readme-files/lighthouse_password.png) |
