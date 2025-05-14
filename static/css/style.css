@@ -596,7 +596,6 @@ header.container {
     padding: 10px;
     z-index: 1000;
     max-height: 80vh;    /* Adjust based on how tall you want the form */
-    overflow-y: auto;    /* Enable vertical scrolling */
 }
 
 .col-form-label {
