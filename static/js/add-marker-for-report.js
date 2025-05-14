@@ -33,9 +33,6 @@ export default function addMarkerForReport(report) {
         draggable: false
     })
         .setLngLat([report.longitude, report.latitude]) // Set marker position
-        .setPopup(new maplibregl.Popup().setHTML(
-            generatePopupHTML(report)
-        ))
         .addTo(DKM.map);
     
     const markerElement = marker.getElement();
@@ -60,7 +57,16 @@ export default function addMarkerForReport(report) {
 
         // otherwise schedule a popup on a short delay
         clickTimer = setTimeout(() => {
-            marker.togglePopup();
+            // Find the marker for this report
+            const foundMarker = DKM.markers.find(m => m._reportId === report.id);
+            if (foundMarker) {
+                // Create and set the popup
+                const popup = new maplibregl.Popup()
+                    .setLngLat([report.longitude, report.latitude])
+                    .setHTML(generatePopupHTML(report));
+                foundMarker.setPopup(popup);
+                foundMarker.togglePopup();
+            } 
             clickTimer = null;
         }, 300); // 300ms is typical dblclick threshold
     }, { capture: true });
@@ -121,13 +127,10 @@ export default function addMarkerForReport(report) {
         }
     });
 
-    // stash the popup on the marker so we can remove it then re‑attach later
-    marker._savedPopup = marker.getPopup();
     // stash the report id on the marker instance so we can update it later
     marker._reportId = report.id;
     // add the marker to the markers array
     DKM.markers.push(marker);
-
 }
 
 // Attach the function to the global window object for use when a new marker is added
