@@ -328,27 +328,27 @@ for PEP8 requirements. The validation results are shown below. All errors were f
     </tr>
     <tr>
       <td>./mapper/admin.py</td>
-      <td><img alt="admin.py linter results image" src="/readme-files/python_linter_admin.png" style="width:400px;"></td>
+      <td><img alt="admin.py linter results image" src="/readme-files/python_linter_admin.png" style="width:200px;"></td>
     </tr>
     <tr>
       <td>./mapper/filters.py</td>
-      <td><img alt="filters.py linter results image" src="/readme-files/python_linter_admin.png" style="width:400px;"></td>
+      <td><img alt="filters.py linter results image" src="/readme-files/python_linter_admin.png" style="width:200px;"></td>
     </tr>
     <tr>
       <td>./mapper/forms.py</td>
-      <td><img alt="forms.py linter results image" src="/readme-files/python_linter_forms.png" style="width:400px;"></td>
+      <td><img alt="forms.py linter results image" src="/readme-files/python_linter_forms.png" style="width:200px;"></td>
     </tr>
     <tr>
       <td>./mapper/models.py</td>
-      <td><img alt="models.py linter results image" src="/readme-files/python_linter_models.png" style="width:400px;"></td>
+      <td><img alt="models.py linter results image" src="/readme-files/python_linter_models.png" style="width:200px;"></td>
     </tr>
     <tr>
       <td>./mapper/signals.py</td>
-      <td><img alt="signals.py linter results image" src="/readme-files/python_linter_signals.png" style="width:400px;"></td>
+      <td><img alt="signals.py linter results image" src="/readme-files/python_linter_signals.png" style="width:200px;"></td>
     </tr>
     <tr>
       <td>./mapper/tables.py</td>
-      <td><img alt="tables.py linter results image" src="/readme-files/python_linter_tables.png" style="width:400px;"></td>
+      <td><img alt="tables.py linter results image" src="/readme-files/python_linter_tables.png" style="width:200px;"></td>
     </tr>
     <tr>
       <td>./mapper/urls.py</td>
@@ -356,11 +356,11 @@ for PEP8 requirements. The validation results are shown below. All errors were f
     </tr>
     <tr>
       <td>./mapper/utils.py</td>
-      <td><img alt="utils.py linter results image" src="/readme-files/python_linter_utils.png" style="width:400px;"></td>
+      <td><img alt="utils.py linter results image" src="/readme-files/python_linter_utils.png" style="width:200px;"></td>
     </tr>
     <tr>
       <td>./mapper/views.py</td>
-      <td><img alt="views.py linter results image" src="/readme-files/python_linter_views.png" style="width:400px;"></td>
+      <td><img alt="views.py linter results image" src="/readme-files/python_linter_views.png" style="width:200px;"></td>
     </tr>
   </tbody>
 </table>
@@ -372,18 +372,56 @@ in the website are easy to read and accessible. See reports in the table below:
 
 ### Lighthouse Reports
 
-Page | Lighthouse Report |
-| --- | --- |
-| Home | ![Lighthouse report Home page](/readme-files/lighthouse_home.png) |
-| Instructions | ![Lighthouse report ](/readme-files/lighthouse_instructions.png) |
-| Contact | ![Lighthouse report ](/readme-files/lighthouse_contact.png) |
-| Create Account | ![Lighthouse report ](/readme-files/lighthouse_create_account.png) |
-| Reports List Page | ![Lighthouse report ](/readme-files/lighthouse_reports_list.png) |
-| Report Detail Page | ![Lighthouse report ](/readme-files/lighthouse_report_details.png) |
-| Sign Out | ![Lighthouse report ](/readme-files/lighthouse_signout.png) |
-| Sign In | ![Lighthouse report ](/readme-files/lighthouse_signin.png) |
-| Forgot Password | ![Lighthouse report ](/readme-files/lighthouse_password.png) |
-| Add Report Page | ![Lighthouse report ](/readme-files/lighthouse_new_report.png) |
+<table>
+  <thead>
+    <tr>
+      <th>Page</th>
+      <th>Lighthouse Report</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Home</td>
+      <td><img src="/readme-files/lighthouse_home.png" alt="Lighthouse report Home page" style="width:400px;"></td>
+    </tr>
+    <tr>
+      <td>Instructions</td>
+      <td><img src="/readme-files/lighthouse_instructions.png" alt="Lighthouse report Instructions page" style="width:400px;"></td>
+    </tr>
+    <tr>
+      <td>Contact</td>
+      <td><img src="/readme-files/lighthouse_contact.png" alt="Lighthouse report Contact page" style="width:400px;"></td>
+    </tr>
+    <tr>
+      <td>Create Account</td>
+      <td><img src="/readme-files/lighthouse_create_account.png" alt="Lighthouse report Create Account page" style="width:400px;"></td>
+    </tr>
+    <tr>
+      <td>Reports List Page</td>
+      <td><img src="/readme-files/lighthouse_reports_list.png" alt="Lighthouse report Reports List Page" style="width:400px;"></td>
+    </tr>
+    <tr>
+      <td>Report Detail Page</td>
+      <td><img src="/readme-files/lighthouse_report_details.png" alt="Lighthouse report Report Detail Page" style="width:400px;"></td>
+    </tr>
+    <tr>
+      <td>Sign Out</td>
+      <td><img src="/readme-files/lighthouse_signout.png" alt="Lighthouse report Sign Out page" style="width:400px;"></td>
+    </tr>
+    <tr>
+      <td>Sign In</td>
+      <td><img src="/readme-files/lighthouse_signin.png" alt="Lighthouse report Sign In page" style="width:400px;"></td>
+    </tr>
+    <tr>
+      <td>Forgot Password</td>
+      <td><img src="/readme-files/lighthouse_password.png" alt="Lighthouse report Forgot Password page" style="width:400px;"></td>
+    </tr>
+    <tr>
+      <td>Add Report Page</td>
+      <td><img src="/readme-files/lighthouse_new_report.png" alt="Lighthouse report Add Report Page" style="width:400px;"></td>
+    </tr>
+  </tbody>
+</table>
 
 Note that the low score for performance for the create report page is due to the 
 map tiles loading and the map markers being created. Loading time was reduced by 
