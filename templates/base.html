@@ -1,5 +1,5 @@
 {% load static %}
-
+{% load custom_user %}
 {% url 'home' as home_url %}
 {% url 'reports-list' as reports_list_url %}
 {% url 'account_login' as login_url %}
@@ -9,6 +9,8 @@
 {% url 'instructions' as instructions_url %}
 {% url 'contact' as contact_url %}
 {% url 'instructions' as instructions_url %}
+
+{% user_display user as display_name %}
 
 <!DOCTYPE html>
 <html class="h-100" lang="en">
@@ -47,10 +49,6 @@
 
             <!-- Navbar links - right aligned -->
             <div class="offcanvas offcanvas-end d-md-none" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
                 <div class="offcanvas-body">
                     {% include 'partials/menu.html' %}
                 </div>
@@ -59,7 +57,6 @@
             <!-- Always visible panel for medium screens and larger -->
             <div class="sidepanel d-none d-md-block position-fixed top-0 end-0 vh-100 shadow">
                 <div class="p-3">
-                    <h3 class="text-center">Menu</h3>
                     {% include 'partials/menu.html' %}
                 </div>
             </div>
