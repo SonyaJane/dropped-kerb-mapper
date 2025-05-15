@@ -10,8 +10,10 @@
 {% url 'contact' as contact_url %}
 {% url 'instructions' as instructions_url %}
 
+{% if user.is_authenticated %}
 {% user_display user as display_name %}
-
+{% endif %}
+    
 <!DOCTYPE html>
 <html class="h-100" lang="en">
 <head>
