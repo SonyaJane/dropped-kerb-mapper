@@ -319,49 +319,49 @@ for PEP8 requirements. The validation results are shown below. All errors were f
   <thead>
     <tr>
       <th>Location</th>
-      <th style="max-width:400px;">Errors / Warnings</th>
+      <th style="width:400px;">Errors / Warnings</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>./mapper/admin_forms.py</td>
-      <td style="max-width:400px; word-break:break-word;">None</td>
+      <td style="width:400px; word-break:break-word;">None</td>
     </tr>
     <tr>
       <td>./mapper/admin.py</td>
-      <td style="max-width:400px; word-break:break-word;"><img alt="admin.py linter results image" src="/readme-files/python_linter_admin.png"></td>
+      <td style="width:400px; word-break:break-word;"><img alt="admin.py linter results image" src="/readme-files/python_linter_admin.png"></td>
     </tr>
     <tr>
       <td>./mapper/filters.py</td>
-      <td style="max-width:400px; word-break:break-word;"><img alt="filters.py linter results image" src="/readme-files/python_linter_admin.png"></td>
+      <td style="width:400px; word-break:break-word;"><img alt="filters.py linter results image" src="/readme-files/python_linter_admin.png"></td>
     </tr>
     <tr>
       <td>./mapper/forms.py</td>
-      <td style="max-width:400px; word-break:break-word;"><img alt="forms.py linter results image" src="/readme-files/python_linter_forms.png"></td>
+      <td style="width:400px; word-break:break-word;"><img alt="forms.py linter results image" src="/readme-files/python_linter_forms.png"></td>
     </tr>
     <tr>
       <td>./mapper/models.py</td>
-      <td style="max-width:400px; word-break:break-word;"><img alt="models.py linter results image" src="/readme-files/python_linter_models.png"></td>
+      <td style="width:400px; word-break:break-word;"><img alt="models.py linter results image" src="/readme-files/python_linter_models.png"></td>
     </tr>
     <tr>
       <td>./mapper/signals.py</td>
-      <td style="max-width:400px; word-break:break-word;"><img alt="signals.py linter results image" src="/readme-files/python_linter_signals.png"></td>
+      <td style="width:400px; word-break:break-word;"><img alt="signals.py linter results image" src="/readme-files/python_linter_signals.png"></td>
     </tr>
     <tr>
       <td>./mapper/tables.py</td>
-      <td style="max-width:400px; word-break:break-word;"><img alt="tables.py linter results image" src="/readme-files/python_linter_tables.png"></td>
+      <td style="width:400px; word-break:break-word;"><img alt="tables.py linter results image" src="/readme-files/python_linter_tables.png"></td>
     </tr>
     <tr>
       <td>./mapper/urls.py</td>
-      <td style="max-width:400px; word-break:break-word;">None</td>
+      <td style="width:400px; word-break:break-word;">None</td>
     </tr>
     <tr>
       <td>./mapper/utils.py</td>
-      <td style="max-width:400px; word-break:break-word;"><img alt="utils.py linter results image" src="/readme-files/python_linter_utils.png"></td>
+      <td style="width:400px; word-break:break-word;"><img alt="utils.py linter results image" src="/readme-files/python_linter_utils.png"></td>
     </tr>
     <tr>
       <td>./mapper/views.py</td>
-      <td style="max-width:400px; word-break:break-word;"><img alt="views.py linter results image" src="/readme-files/python_linter_views.png"></td>
+      <td style="width:400px; word-break:break-word;"><img alt="views.py linter results image" src="/readme-files/python_linter_views.png"></td>
     </tr>
   </tbody>
 </table>
