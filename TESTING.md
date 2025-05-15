@@ -266,7 +266,7 @@ The [W3C Markup Validator](https://validator.w3.org/) was used to validate the p
  
 W3C Markup Validator found the following errors for the home page:
 
-<img src="readme-files/html_validator_errors.png" alt="Home page validation errors image" style="max-width:300px;">
+<img src="readme-files/html_validator_errors.png" alt="Home page validation errors image" style="width:300px;">
 
 The errors were solved by removing the second use of the id 'not-logged-in',and adding the id="home-title-md" to the cover title.
 
