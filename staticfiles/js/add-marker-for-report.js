@@ -38,6 +38,9 @@ export default function addMarkerForReport(report) {
     const markerElement = marker.getElement();
     setMarkerColour(markerElement, report.condition);
 
+    // Change cursor to pointer when hovering over marker
+    markerElement.style.cursor = 'pointer';
+
     // Intercept multi‐clicks in the capture phase and swallow them:
     // remove the default click-popup listener:
     markerElement.removeEventListener('click', marker._markerClickListener);
@@ -58,9 +61,7 @@ export default function addMarkerForReport(report) {
         // otherwise schedule a popup on a short delay
         clickTimer = setTimeout(() => {
             // Find the marker for this report
-            console.log(report.id)
             const foundMarker = DKM.markers.find(m => m._reportId === report.id);
-            console.log(foundMarker)
             if (foundMarker) {
                 // Create and set the popup
                 const popup = new maplibregl.Popup()

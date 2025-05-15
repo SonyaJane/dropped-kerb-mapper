@@ -578,9 +578,9 @@ header.container {
 
 /* Map marker popup */
 .maplibregl-popup {
-    max-width: 300px !important;
     z-index: 5;
 }
+
 .maplibregl-popup p {
     margin-bottom: 0.7rem;
 }
@@ -904,11 +904,6 @@ html:has(#map) footer {
     #add-report img {
         height: 30px; 
         vertical-align: middle;
-    }
-
-    /* map marker popup */
-    .maplibregl-popup {
-        max-width: 80vw !important;
     }
 
     .maplibregl-popup p {

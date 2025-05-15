@@ -46,5 +46,11 @@ def delete_old_photo_on_update(sender, instance, **kwargs):
         return
 
     # If the photo is being updated, delete the old file
-    if old_instance.photo and old_instance.photo != instance.photo:
+    if (
+        old_instance.photo
+        and (
+            not instance.photo
+            or not hasattr(instance.photo, "public_id")
+            or old_instance.photo.public_id != getattr(instance.photo, "public_id", None)        )
+    ):
         destroy(old_instance.photo.public_id)

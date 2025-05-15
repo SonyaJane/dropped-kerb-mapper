@@ -230,37 +230,54 @@ class ReportForm(forms.ModelForm):
                 {% endif %}
                 """),
         )
-
-    def clean_photo(self):
+   
+    def clean(self):
         """
-        Validate and process the uploaded photo for WebP conversion and
-        compression.
+        Validate the ReportForm's data and enforce edit permissions.
 
-        - If `photo` already exists and therefore is a CloudinaryResource
-          (no `read` method), returns it unchanged.
-        - Converts newly uploaded images to WebP format.
-        - Ensures the file size does not exceed 5 MB by iteratively reducing
-          quality.
-        - Wraps the final bytes in an InMemoryUploadedFile for downstream
-          saving.
-
-        Raises:
-            forms.ValidationError: If any error occurs during image processing.
-
-        Returns:
-            InMemoryUploadedFile or CloudinaryResource: The processed image
-            file.
+        - Calls parent clean() to populate `cleaned_data`.
+        - If `condition` is 'red' or 'orange', ensures at least one `reason`
+          is selected.
+        - If editing an existing report, ensures the current user is either
+          the report owner or a superuser; otherwise raises a ValidationError.
+        - Adds form errors to the appropriate field or raises a form-level
+          ValidationError for permission issues.
         """
-        photo = self.cleaned_data.get('photo')
-
-        # Skip processing if the photo is not new
-        # (e.g., if it's a CloudinaryResource)
-        if photo and not hasattr(photo, 'read'):
-            return photo
-
-        if photo:
+        # Call the parent clean method to get cleaned data
+        cleaned_data = super().clean()
+        
+        # Get the condition, reasons, comments and photo from cleaned data
+        condition = cleaned_data.get('condition')
+        reasons = cleaned_data.get('reasons')
+        comments = cleaned_data.get('comments')
+        photo = cleaned_data.get('photo')
+        
+        # Field‐level validation via add_error()
+        if condition in ['red', 'orange'] and not reasons:
+            self.add_error(
+                'reasons',
+                "At least one reason must be selected when condition is\
+                    red or orange."
+                )
+        if condition not in ['red', 'orange'] and reasons:
+            self.add_error('reasons',
+                           "Reasons can only be provided for red or orange\
+                           conditions."
+                           )
+        if condition == 'white' and not comments:
+            self.add_error('comments',
+                           "Comments must be provided for 'white' condition."
+                           )
+        
+        # Process new photo if there is one
+        # converts to WebP and compresses the file by iteratively
+        # reducing quality.
+        # Newly uploaded files have a .read() method,
+        # while CloudinaryResource does not
+        if photo and hasattr(photo, 'read'):
             # convert image to webp format:
             try:
+                print("Converting image to WebP format.")
                 # Open the image using PIL
                 image = Image.open(photo)
                 # Convert to RGB as webp does not support RGBA
@@ -295,46 +312,14 @@ class ReportForm(forms.ModelForm):
                     output.getbuffer().nbytes,
                     None
                 )
-            except Exception as e:
-                raise forms.ValidationError(f"Error processing image: \
-                    {str(e)}")
-        return photo
-
-    def clean(self):
-        """
-        Validate the ReportForm's data and enforce edit permissions.
-
-        - Calls parent clean() to populate `cleaned_data`.
-        - If `condition` is 'red' or 'orange', ensures at least one `reason`
-          is selected.
-        - If editing an existing report, ensures the current user is either
-          the report owner or a superuser; otherwise raises a ValidationError.
-        - Adds form errors to the appropriate field or raises a form-level
-          ValidationError for permission issues.
-        """
-        # Call the parent clean method to get cleaned data
-        cleaned_data = super().clean()
-        # Get the condition, reasons and comments from cleaned data
-        condition = cleaned_data.get('condition')
-        reasons = cleaned_data.get('reasons')
-        comments = cleaned_data.get('comments')
-
-        # Field‐level validation via add_error()
-        if condition in ['red', 'orange'] and not reasons:
-            self.add_error(
-                'reasons',
-                "At least one reason must be selected when condition is\
-                    red or orange."
-                )
-        if condition not in ['red', 'orange'] and reasons:
-            self.add_error('reasons',
-                           "Reasons can only be provided for red or orange\
-                           conditions."
-                           )
-        if condition == 'white' and not comments:
-            self.add_error('comments',
-                           "Comments must be provided for 'white' condition."
-                           )
+                # assign the processed photo back to cleaned_data['photo']
+                cleaned_data['photo'] = photo
+                print("Image converted to WebP format and compressed.")
+            except OSError as e:
+                print('Error converting image to WebP format.', e)
+                raise forms.ValidationError(
+                    f"Error converting image to WebP: {str(e)}")
+                
         # Check permissions: allow edit only if the current user is
         # the original owner or a superuser.
         if self.instance.pk and self.current_user:
@@ -342,7 +327,8 @@ class ReportForm(forms.ModelForm):
                     self.current_user and not self.current_user.is_superuser:
                 raise forms.ValidationError(
                     "You do not have permission to edit this report.")
-
+        print("ReportForm cleaned data:")
+        print(cleaned_data)
         return cleaned_data
 
     def handle_delete_photo(self, instance):
@@ -364,7 +350,8 @@ class ReportForm(forms.ModelForm):
             instance (Report): The unsaved Report model instance whose photo
                                should be removed if requested.
         """
-        if self.cleaned_data.get('delete_photo') and instance.photo:
+        delete_photo = self.cleaned_data.get('delete_photo', False)
+        if delete_photo and instance.photo:
             # delete (destroy) CloudinaryResource by public_id
             public_id = getattr(instance.photo, 'public_id', None)
             if public_id:
@@ -397,14 +384,17 @@ class ReportForm(forms.ModelForm):
             Report: The Report model instance (saved if commit=True, else
             unsaved).
         """
+        print("Saving ReportForm...")
         # Get an unsaved instance first
         instance = super().save(commit=False)
 
         # Delete existing photo if requested
+        print("Checking if photo should be deleted...")
         self.handle_delete_photo(instance)
 
         # Get the new photo from cleaned_data if one was uploaded
         # and assign it to the instance
+        print("Checking if new photo was uploaded...")
         new_photo = self.cleaned_data.get('photo')
         if 'photo' in self.changed_data:
             instance.photo = new_photo

@@ -38,6 +38,9 @@ export default function addMarkerForReport(report) {
     const markerElement = marker.getElement();
     setMarkerColour(markerElement, report.condition);
 
+    // Change cursor to pointer when hovering over marker
+    markerElement.style.cursor = 'pointer';
+
     // Intercept multi‐clicks in the capture phase and swallow them:
     // remove the default click-popup listener:
     markerElement.removeEventListener('click', marker._markerClickListener);
