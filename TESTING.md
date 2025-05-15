@@ -343,9 +343,17 @@ Page | Lighthouse Report |
 | Instructions | ![Lighthouse report ](/readme-files/lighthouse_instructions.png) |
 | Contact | ![Lighthouse report ](/readme-files/lighthouse_contact.png) |
 | Create Account | ![Lighthouse report ](/readme-files/lighthouse_create_account.png) |
-| Add Report Page | ![Lighthouse report ](/readme-files) |
-| Reports List Page | ![Lighthouse report ](/readme-files/) |
-| Report Detail Page | ![Lighthouse report ](/readme-files/) |
+| Reports List Page | ![Lighthouse report ](/readme-files/lighthouse_reports_list.png) |
+| Report Detail Page | ![Lighthouse report ](/readme-files/lighthouse_report_details.png) |
 | Sign Out | ![Lighthouse report ](/readme-files/lighthouse_signout.png) |
 | Sign In | ![Lighthouse report ](/readme-files/lighthouse_signin.png) |
 | Forgot Password | ![Lighthouse report ](/readme-files/lighthouse_password.png) |
+| Add Report Page | ![Lighthouse report ](/readme-files/lighthouse_new_report.png) |
+
+Note that the low score for performance for the create report page is due to the 
+map tiles loading and the map markers being created. Loading time was reduced by 
+delaying the creation of the markers popups content until the marker is clicked
+by the user. The acessibility score of 96 is due to the aria-labels added to the
+markers by MapLibre GL JS. The SEO score of 91 is due to the links not being crawlable
+but this is not an issue because this page is only visible to users who are
+logged-in.
