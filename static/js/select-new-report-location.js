@@ -36,7 +36,7 @@ export default function selectNewReportLocation(e) {
 
     // Add a new marker at the clicked location
     DKM.newMarker = new maplibregl.Marker({
-        color: 'yellow' // Set the marker colour
+        color: '#ffff66' // Set the marker colour
     })
         .setLngLat(e.lngLat) 
         .addTo(DKM.map);

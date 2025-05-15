@@ -88,8 +88,17 @@ export default function handleLocationSelect(e) {
     }   else { // geometry is a point
             // get the coordinates
             const coordinates = [e.currentTarget.dataset.longitude, e.currentTarget.dataset.latitude];
-            // add marker to the map
-            window.DKM.map.searchResultMarker = new maplibregl.Marker()
+            
+            // create a custom marker element with marker.png
+            const markerEl = document.createElement('div');
+            markerEl.className = 'custom-marker';
+            markerEl.style.backgroundImage = "url('/static/images/marker.png')";
+            markerEl.style.backgroundRepeat = 'no-repeat';
+            markerEl.style.width = '32px';
+            markerEl.style.height = '48px';
+            markerEl.style.backgroundSize = '100%';
+
+            window.DKM.map.searchResultMarker = new maplibregl.Marker({ element: markerEl })
                 .setLngLat(coordinates)
                 .addTo(window.DKM.map);
             // set the map view to the marker
