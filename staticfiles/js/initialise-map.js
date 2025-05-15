@@ -77,8 +77,13 @@ export default function initialiseMap() {
 
     DKM.map.on('styledata', () => {
         if (!geolocationTriggered) {
-            geolocateControl.trigger(); // Automatically zoom to user's location
-            geolocationTriggered = true;
+            // Defer to next tick to ensure control is attached   
+            setTimeout(() => {
+                if (geolocateControl._map) {
+                    geolocateControl.trigger();
+                    geolocationTriggered = true;
+                }
+            }, 0); 
         }
     });
 
