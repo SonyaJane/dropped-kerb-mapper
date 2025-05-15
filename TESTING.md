@@ -343,7 +343,7 @@ Page | Lighthouse Report |
 | Instructions | ![Lighthouse report ](/readme-files/lighthouse_instructions.png) |
 | Contact | ![Lighthouse report ](/readme-files/lighthouse_contact.png) |
 | Create Account | ![Lighthouse report ](/readme-files/lighthouse_create_account.png) |
-| Add Report Page | ![Lighthouse report ](/readme-files/) |
+| Add Report Page | ![Lighthouse report ](/readme-files) |
 | Reports List Page | ![Lighthouse report ](/readme-files/) |
 | Report Detail Page | ![Lighthouse report ](/readme-files/) |
 | Sign Out | ![Lighthouse report ](/readme-files/lighthouse_signout.png) |

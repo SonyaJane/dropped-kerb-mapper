@@ -14,7 +14,7 @@
                 <div class="input-group">
                     <input type="text" id="text-search-input" placeholder="Search for location" class="form-control">
                     <!-- Search button -->
-                    <button class="btn btn-outline-secondary hover-orange" type="button" id="text-search-submit">
+                    <button class="btn btn-outline-secondary hover-orange" type="button" id="text-search-submit" aria-label="Search location">
                         <i class="bi bi-search"></i>
                     </button>
                 </div>
@@ -22,12 +22,12 @@
         </div>        
 
         <!-- Toggle map style button -->
-        <button id="toggle-satellite" class="hover-orange">
+        <button id="toggle-satellite" class="hover-orange" aria-label="Toggle satellite map view">
             <img id="satellite-icon" src="{% static 'images/satellite.png' %}" alt="Satellite Icon">
         </button>
 
         <!-- Add new report button -->
-        <button id="add-report" class="hover-orange">
+        <button id="add-report" class="hover-orange" aria-label="Add new report">
             <img src="{% static 'images/marker-bw.png' %}" alt="Add Report Icon">
         </button>
 
