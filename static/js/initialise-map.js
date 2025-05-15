@@ -72,8 +72,14 @@ export default function initialiseMap() {
     DKM.map.addControl(geolocateControl);
 
     // Trigger geolocation
+    // Add a flag to ensure geolocation is only triggered once
+    let geolocationTriggered = false;
+
     DKM.map.on('styledata', () => {
-        geolocateControl.trigger(); // Automatically zoom to user's location
+        if (!geolocationTriggered) {
+            geolocateControl.trigger(); // Automatically zoom to user's location
+            geolocationTriggered = true;
+        }
     });
 
     // Add a custom AttributionControl with compact mode enabled.
