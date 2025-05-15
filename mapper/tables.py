@@ -144,11 +144,12 @@ class ReportTable(tables.Table):
         model = Report
         template_name="django_tables2/bootstrap5-responsive.html"
         fields = (
+            'id',
+            'user_report_number',
             'view',
             'edit',
-            'id',
+            'photo',
             'user',
-            'user_report_number',
             'latitude',
             'longitude',
             'place_name',
@@ -159,4 +160,4 @@ class ReportTable(tables.Table):
             'comments',
             'created_at',
             'updated_at',
-            'photo')
+            )

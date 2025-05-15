@@ -156,6 +156,12 @@ a {
     padding-bottom: 5px;
 }
 
+.underline-green {
+    display: inline-block;
+    border-bottom: 5px solid var(--color-green-2);
+    padding-bottom: 5px;
+}
+
 /* SIDEPANEL MENU FOR XL SCREENS */
 .offcanvas.offcanvas-end {
     background-color: #FBE6CE;
@@ -300,12 +306,55 @@ header.container {
 }
 
 /* INSTRUCTIONS PAGE */
-.para-wide {
-    display: none;
+
+/* Remove all borders on the accordion */
+.accordion,
+.accordion-item,
+.accordion-button,
+.accordion-header,
+.accordion-collapse {
+    border: none !important;
+    box-shadow: none !important;
 }
 
-.para-narrow {
+.accordion {
+    --bs-accordion-btn-padding-x: 0;
+    --bs-accordion-body-padding-x: 0;
+    padding-right: 12px;
+}
+
+.accordion-button {
+    font-size: 1.35rem;
+    font-weight: 600;
+    padding-bottom: 5px;
+}
+
+/* Remove blue background on open accordion button */
+.accordion-button:not(.collapsed) {
+    background-color: transparent !important;
+    color: inherit !important;
+    box-shadow: none !important;
+}
+
+.accordion-header {
+    margin: 0;
+}
+
+.accordion-item {
+    background-color: inherit;
+    border: none;
+}
+
+.accordion-body {
+    padding-top: 5px;
+}
+
+.display-narrow {
     display: block;
+}
+
+.display-768 {
+    display: none;
 }
 
 .para-sm,
@@ -329,11 +378,33 @@ header.container {
 
 /* Instructions images */
 .instructions-img {
-    width: 450px;
     max-width: 100%;
     margin-bottom: 1.5rem;
     display: block;
     margin: 0 auto 1.5rem auto;
+}
+
+.map-view-img {
+    width: 450px;
+}
+
+.message-img {
+    width: 320px;
+}
+
+.popup-img { 
+    width: 270px;
+}
+
+.view-reports-img {
+    width: 800px;
+    display: block;
+    margin: 0 auto 1.5rem auto;
+}
+
+.view-reports-img-wrapper {
+    width: 100%;
+    overflow-x: auto;
 }
 
 #big-plus::before {
@@ -1033,12 +1104,13 @@ html:has(#map) footer {
         overflow-x: auto;
     }
 
-    .para-768 {
-        display: block;
+    /* INSTRUCTIONS PAGE */
+    .display-narrow {
+        display: none;
     }
 
-    .para-narrow {
-        display: none;
+    .display-768 {
+        display: block;
     }
 
 }
