@@ -109,13 +109,13 @@ class ReportTable(tables.Table):
     # New column - link to view the report details (eye icon)
     view = tables.TemplateColumn(
         verbose_name="View",
-        template_code='''<a href="{% url 'report-detail' record.id %}">
+        template_code='''<a href="{% url 'report-detail' record.id %}" aria-label="View report details">
                          <i class="bi bi-eye-fill"></i></a>''',
         orderable=False
     )
     edit = tables.TemplateColumn(
         verbose_name="Edit",
-        template_code='''<a href="{% url 'edit-report' record.id %}">
+        template_code='''<a href="{% url 'edit-report' record.id %}" aria-label="Edit report details">
                          <i class="bi bi-pencil-fill"></i></a>''',
         orderable=False
     )
