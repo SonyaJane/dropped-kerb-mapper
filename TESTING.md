@@ -335,27 +335,27 @@ for PEP8 requirements. The validation results are shown below. All errors were f
     </tr>
     <tr>
       <td>./mapper/admin.py</td>
-      <td><img alt="admin.py linter results image" src="/readme-files/python_linter_admin.png" style="width:200px;"></td>
+      <td><img alt="admin.py linter results image" src="/readme-files/python_linter_admin.png" style="width:300px;"></td>
     </tr>
     <tr>
       <td>./mapper/filters.py</td>
-      <td><img alt="filters.py linter results image" src="/readme-files/python_linter_admin.png" style="width:200px;"></td>
+      <td><img alt="filters.py linter results image" src="/readme-files/python_linter_admin.png" style="width:300px;"></td>
     </tr>
     <tr>
       <td>./mapper/forms.py</td>
-      <td><img alt="forms.py linter results image" src="/readme-files/python_linter_forms.png" style="width:200px;"></td>
+      <td><img alt="forms.py linter results image" src="/readme-files/python_linter_forms.png" style="width:300px;"></td>
     </tr>
     <tr>
       <td>./mapper/models.py</td>
-      <td><img alt="models.py linter results image" src="/readme-files/python_linter_models.png" style="width:200px;"></td>
+      <td><img alt="models.py linter results image" src="/readme-files/python_linter_models.png" style="width:300px;"></td>
     </tr>
     <tr>
       <td>./mapper/signals.py</td>
-      <td><img alt="signals.py linter results image" src="/readme-files/python_linter_signals.png" style="width:200px;"></td>
+      <td><img alt="signals.py linter results image" src="/readme-files/python_linter_signals.png" style="width:300px;"></td>
     </tr>
     <tr>
       <td>./mapper/tables.py</td>
-      <td><img alt="tables.py linter results image" src="/readme-files/python_linter_tables.png" style="width:200px;"></td>
+      <td><img alt="tables.py linter results image" src="/readme-files/python_linter_tables.png" style="width:300px;"></td>
     </tr>
     <tr>
       <td>./mapper/urls.py</td>
@@ -363,11 +363,11 @@ for PEP8 requirements. The validation results are shown below. All errors were f
     </tr>
     <tr>
       <td>./mapper/utils.py</td>
-      <td><img alt="utils.py linter results image" src="/readme-files/python_linter_utils.png" style="width:200px;"></td>
+      <td><img alt="utils.py linter results image" src="/readme-files/python_linter_utils.png" style="width:300px;"></td>
     </tr>
     <tr>
       <td>./mapper/views.py</td>
-      <td><img alt="views.py linter results image" src="/readme-files/python_linter_views.png" style="width:200px;"></td>
+      <td><img alt="views.py linter results image" src="/readme-files/python_linter_views.png" style="width:300px;"></td>
     </tr>
   </tbody>
 </table>
