@@ -8,6 +8,13 @@
 
 ## Table of Contents
 
+- [Testing User Stories](#testing-user-stories)
+- [Manual Testing](#manual-testing)
+- [Code Validation](#code-validation)
+- [Accessibility](#accessibility)
+- [Tools Testing](#tools-testing)
+
+
 ## Testing User Stories
 
 1. **Add a dropped kerb location**  
@@ -430,3 +437,15 @@ by the user. The acessibility score of 96 is due to the aria-labels added to the
 markers by MapLibre GL JS. The SEO score of 91 is due to the links not being crawlable
 but this is not an issue because this page is only visible to users who are
 logged-in.
+
+## Tools Testing
+
+### [Chrome DevTools](https://developer.chrome.com/docs/devtools/)
+
+Chrome DevTools was used during the development process to test, explore and modify HTML elements and CSS styles used in the project.
+
+### Responsiveness
+
+* [Am I Responsive?](http://ami.responsivedesign.is/#) was used to check responsiveness of the site pages across different devices.
+
+* Chrome DevTools was used to test responsiveness on different screen sizes during the development process.
