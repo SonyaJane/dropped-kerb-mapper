@@ -1,5 +1,7 @@
 import addMarkerForReport from './add-marker-for-report.js';
 import resetForm from './reset-form.js';
+import toggleNewReportMode from './toggle-new-report-mode.js';
+
 /**
  * Processes the response after a successful report submission via HTMX:
  *  - Reads the new embedded report data from the DOM
