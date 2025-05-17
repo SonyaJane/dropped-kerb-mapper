@@ -25,14 +25,26 @@ export default function initialiseReasonsChoices() {
             searchChoices: false, 
         });
 
+        
+
         // Add toggle open/close on click
         const choices = document.querySelector('.choices');
-        choices.addEventListener('click', function (e) {
-            
+        // Add text to the button to open the dropdown
+        const button = choices.querySelector('.choices__inner');
+        // Add text to the button to open the dropdown
+        const p = document.createElement('p');
+        p.textContent = 'Click to show options';
+        p.classList.add('mb-1');
+        button.insertBefore(p, button.firstChild);
+
+        choices.addEventListener('click', function (e) { 
             if (choices.classList.contains('is-open')) {
                 DKM.reasonsChoices.hideDropdown();
+                p.classList.remove('hidden');
             } else {
                 DKM.reasonsChoices.showDropdown();
+                // remove the text from the button to open the dropdown
+                p.classList.add('hidden');
             }
         });
     }

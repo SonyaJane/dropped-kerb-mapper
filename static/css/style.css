@@ -687,17 +687,21 @@ header.container {
     font-size: 1.25rem !important;
 }
 
-.choices__list--dropdown .choices__input {
+#reasons-container .choices__input {
     display: none !important;
 }
 
-#reasons-container .choices__inner,
-#reasons-container .choices__input {
+#reasons-container .choices__inner {
     background-color: white !important;
 }
 
 #reasons-container .choices__input::placeholder {
     color: black !important;
+}
+
+#reasons-container .choices,
+#reasons-container .choices__inner {
+    cursor: pointer !important;
 }
 
 .choices__list--multiple .choices__item {
