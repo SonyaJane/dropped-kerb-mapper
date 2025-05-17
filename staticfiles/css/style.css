@@ -687,6 +687,10 @@ header.container {
     font-size: 1.25rem !important;
 }
 
+.choices__input {
+    display: none !important;
+}
+
 .choices__list--multiple .choices__item {
     font-size: 1.15rem !important;
 }

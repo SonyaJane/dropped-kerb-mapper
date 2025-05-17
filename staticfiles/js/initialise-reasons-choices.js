@@ -13,12 +13,15 @@ export default function initialiseReasonsChoices() {
     const reasonsSelect = document.getElementById("reasons");
     if (reasonsSelect) {
         DKM.reasonsChoices = new Choices(reasonsSelect, {
-            searchEnabled: false, // Disable search functionality as keyboard gets in the way
-            searchChoices: false, 
             removeItemButton: true, // Allows removal of selected options via an "x"
             placeholderValue: 'click to show options',
             shouldSort: true,
-            itemSelectText: ""
+            itemSelectText: "",
+            renderChoiceLimit: -1,
+            searchFields: [],
+            addItems: false,
+            searchEnabled: false, // Disable search functionality as keyboard gets in the way
+            searchChoices: false, 
         });
     }
 }
