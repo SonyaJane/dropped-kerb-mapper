@@ -18,6 +18,8 @@ export default function initialiseReasonsChoices() {
             itemSelectText: "",
             renderChoiceLimit: -1,
             searchFields: [],
+            placeholder: true,
+            placeholderValue: 'Click to show options',
             addItems: false,
             searchEnabled: false, // Disable search functionality as keyboard gets in the way
             searchChoices: false, 

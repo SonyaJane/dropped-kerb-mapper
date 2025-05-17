@@ -687,7 +687,7 @@ header.container {
     font-size: 1.25rem !important;
 }
 
-.choices__input {
+.choices__list--dropdown .choices__input {
     display: none !important;
 }
 

@@ -118,7 +118,7 @@ class ReportForm(forms.ModelForm):
         self.fields['latitude'].label = ""
         self.fields['longitude'].label = ""
         # Remove the default '-------' option:
-        self.fields['condition'].empty_label = None
+        self.fields['condition'].empty_label = "Click to show options"
         # Remove empty choice from condition field
         self.fields['condition'].choices = \
             [choice for choice in self.fields['condition'].choices
