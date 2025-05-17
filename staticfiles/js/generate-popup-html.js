@@ -11,7 +11,7 @@
 export default function generatePopupHTML(report) {
     // If the user who created the report is a superuser, show the report id.
     // Otherwise, show the user_report_number.
-    const reportNumber = report.user_is_superuser ? report.id : report.user_report_number;
+    const reportNumber = window.CURRENT_USER_IS_SUPERUSER ? report.id : report.user_report_number;
     // Only include the reasons line if condition is red or orange.
     let reasons = '';
     if ((report.condition === 'red' || report.condition === 'orange')) {
