@@ -5,7 +5,7 @@
 * - Uses a placeholder text "click to show options".
 * - Sorts the items alphabetically.
 * - Hides the default item select text.
- */
+*/
 export default function initialiseReasonsChoices() {
     window.DKM = window.DKM || {}; // || {} ensures that if the namespace already exists, it won't be overwritten
 

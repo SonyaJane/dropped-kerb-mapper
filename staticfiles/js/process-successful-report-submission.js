@@ -28,5 +28,6 @@ export default function processSuccessfulReportSubmission() {
 
     // exit new report mode if it is active
     const addReportButton = document.getElementById('add-report');
+    console.log('About to toggle new report mode off');
     toggleNewReportMode(addReportButton);
 }
