@@ -24,5 +24,16 @@ export default function initialiseReasonsChoices() {
             searchEnabled: false, // Disable search functionality as keyboard gets in the way
             searchChoices: false, 
         });
+
+        // Add toggle open/close on click
+        const choices = document.querySelector('.choices');
+        choices.addEventListener('click', function (e) {
+            
+            if (choices.classList.contains('is-open')) {
+                DKM.reasonsChoices.hideDropdown();
+            } else {
+                DKM.reasonsChoices.showDropdown();
+            }
+        });
     }
 }

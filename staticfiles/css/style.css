@@ -691,6 +691,15 @@ header.container {
     display: none !important;
 }
 
+#reasons-container .choices__inner,
+#reasons-container .choices__input {
+    background-color: white !important;
+}
+
+#reasons-container .choices__input::placeholder {
+    color: black !important;
+}
+
 .choices__list--multiple .choices__item {
     font-size: 1.15rem !important;
 }
