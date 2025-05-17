@@ -86,7 +86,7 @@ class ReportForm(forms.ModelForm):
             'latitude': forms.TextInput(attrs={'id': 'latitude'}),
             'longitude': forms.TextInput(attrs={'id': 'longitude'}),
             'condition': forms.Select(attrs={'id': 'condition'}),
-            'reasons': forms.SelectMultiple(attrs={'id': 'reasons'}),
+            'reasons': forms.SelectMultiple(attrs={'id': 'reasons', 'placeholder': 'Click to show options'}),
             'photo': forms.FileInput(attrs={'accept': 'image/*'}),
         }
 

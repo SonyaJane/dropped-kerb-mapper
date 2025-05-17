@@ -14,7 +14,6 @@ export default function initialiseReasonsChoices() {
     if (reasonsSelect) {
         DKM.reasonsChoices = new Choices(reasonsSelect, {
             removeItemButton: true, // Allows removal of selected options via an "x"
-            placeholderValue: 'click to show options',
             shouldSort: true,
             itemSelectText: "",
             renderChoiceLimit: -1,
