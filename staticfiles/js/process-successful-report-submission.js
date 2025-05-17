@@ -25,4 +25,8 @@ export default function processSuccessfulReportSubmission() {
 
     // reset the form
     resetForm();
+
+    // exit new report mode if it is active
+    const addReportButton = document.getElementById('add-report');
+    toggleNewReportMode(addReportButton);
 }
