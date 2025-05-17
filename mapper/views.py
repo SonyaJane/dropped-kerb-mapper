@@ -624,10 +624,8 @@ def contact(request):
             message = form.cleaned_data['message']
 
             # Send the message to Mobility Mapper admin
-            send_mail(subject=f"Contact Form Submission \
-                      from {first_name} {last_name}",
-                      message=f"Message from {first_name} {last_name} \
-                          ({email}):\
+            send_mail(subject=f"Contact Form Submission from {first_name} {last_name}",
+                      message=f"Message from {first_name} {last_name} ({email}):\
                       \n\n{message}", from_email=settings.EMAIL_HOST_USER,
                       recipient_list=[settings.EMAIL_HOST_USER],
                       )
@@ -635,8 +633,7 @@ def contact(request):
             # Send a confirmation email to the user
             confirmation_message = (
                 f"Hi {first_name} {last_name},\n\n"
-                "Thank you for your message, we will get back to you as soon \
-                    as possible.\n\n"
+                "Thank you for your message, we will get back to you as soon as possible.\n\n"
                 "Here is a copy of your message:\n"
                 f"{message}\n\n"
                 "Kind regards,\n"
