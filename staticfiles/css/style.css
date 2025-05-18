@@ -165,12 +165,12 @@ a {
 /* SIDEPANEL MENU FOR XL SCREENS */
 .offcanvas.offcanvas-end {
     background-color: #FBE6CE;
-    width: 250px;
+    width: 210px;
 }
 
 .sidepanel {
     background-color: #FBE6CE;
-    width: 250px; 
+    width: 210px; 
     z-index: 10;
 }
 
@@ -664,7 +664,7 @@ header.container {
     bottom: 0;
     left: 0;
     width: 100%;
-    max-width: 500px;
+    max-width: 390px;
     background-color: #f5ddd2;
     padding: 10px;
     z-index: 1000;
@@ -788,7 +788,8 @@ html:has(#map) footer {
 
 .bi-eye-fill, 
 .bi-camera-fill,
-.bi-pencil-fill {
+.bi-pencil-fill,
+.bi-trash-fill {
     color: var(--color-orange-4);
 }
 
@@ -834,15 +835,6 @@ html:has(#map) footer {
   }
 
 /* Create new report form */
-
-/* #div_id_reasons > div {
-    width: 100% !important;
-} */
-
-/* Crispy applies mb-3 to div that contains form elements */
-#map-report-form-container .row.mb-3 {
-    margin-bottom: 0.25rem !important; /* Reduce the margin between form groups */
-}
 
 #div_id_condition > div {
     padding-right: 0;
@@ -1099,9 +1091,8 @@ html:has(#map) footer {
     .container {
         max-width: none; /* Remove the max-width for larger screens */
     }
-    /* Crispy applies mb-3 to div that contains form elements */
-    #map-report-form-container .row.mb-3 {
-        margin-bottom: 0.5rem !important; /* Reduce the margin between form groups */
+    #map-report-form-container {
+        max-width: 500px;
     }
 }
 
@@ -1109,7 +1100,7 @@ html:has(#map) footer {
 @media (min-width: 768px) {
     main,
     footer {
-        margin-right: 250px; /* width of the menu panel */
+        margin-right: 210px; /* width of the menu panel */
     }
 
     #map-marker {

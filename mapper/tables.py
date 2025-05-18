@@ -33,46 +33,40 @@ class ReportTable(tables.Table):
         # without exposing the URL in an <a> tag.
         template_code='''
             {% if record.photo %}
-                {% if table.request.user.is_superuser %}
-                    <a href="{{ record.photo.url }}"
-                       target="_blank" rel="noopener noreferrer">
-                        <i class="bi bi-camera-fill"></i>
-                    </a>
-                {% else %}
-                    <!-- Button to trigger Bootstrap modal -->
-                    <button
-                      type="button"
-                      class="btn btn-link p-0"
-                      data-bs-toggle="modal"
-                      data-bs-target="#photoModal{{ record.id }}"
-                      aria-label="View photo"
-                    >
-                        <i class="bi bi-camera-fill"></i>
-                    </button>
-                    <!-- Modal -->
-                    <div 
-                      class="modal fade"
-                      id="photoModal{{ record.id }}"
-                      tabindex="-1"
-                      aria-labelledby="photoModalLabel{{ record.id }}"
-                      aria-hidden="true"
-                    >
-                      <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content bg-transparent border-0">
-                          <img
-                            src="{{ record.photo.url }}"
-                            class="img-fluid"
-                            alt="Report {{ record.id }} photo"
-                          >
-                        </div>
-                      </div>
+                <!-- Button to trigger Bootstrap modal -->
+                <button
+                    type="button"
+                    class="btn btn-link p-0"
+                    data-bs-toggle="modal"
+                    data-bs-target="#photoModal{{ record.id }}"
+                    aria-label="View photo"
+                >
+                <i class="bi bi-camera-fill"></i>
+                </button>
+                <!-- Modal -->
+                <div 
+                    class="modal fade"
+                    id="photoModal{{ record.id }}"
+                    tabindex="-1"
+                    aria-labelledby="photoModalLabel{{ record.id }}"
+                    aria-hidden="true"
+                >
+                    <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content bg-transparent border-0">
+                        <img
+                        src="{{ record.photo.url }}"
+                        class="img-fluid"
+                        alt="Report {{ record.id }} photo"
+                        >
                     </div>
-                {% endif %}
+                </div>
+            <!--No photo available-->
             {% else %}
                 —
             {% endif %}
         ''',
-        orderable=False
+        orderable=False,
+        attrs={"td": {"class": "text-center align-middle"}}
     )
     user_report_number = tables.Column(
         verbose_name="Report",
@@ -85,7 +79,7 @@ class ReportTable(tables.Table):
     county = tables.TemplateColumn(
         template_code='''{% load comma_wrap %}\
             {{ record.county|comma_wrap }}''',
-        attrs={"td": {"style": "white-space: nowrap;"}}
+        attrs={"td": {"style": "white-space: nowrap;", "class": "align-middle"},}
     )
     local_authority = tables.TemplateColumn(
         verbose_name="LA",
@@ -96,30 +90,41 @@ class ReportTable(tables.Table):
     reasons = tables.TemplateColumn(
         template_code='''{% load comma_wrap %}\
             {{ record.reasons|comma_wrap }}''',
-        attrs={"td": {"style": "white-space: nowrap;"}}
+        attrs={"td": {"style": "white-space: nowrap;", "class": "text-center align-middle"},}
     )
     created_at = tables.Column(
         verbose_name="Created",
-        attrs={"td": {"style": "white-space: nowrap;"}}
+        attrs={"td": {"style": "white-space: nowrap;", "class": "text-center align-middle"},}
     )
     updated_at = tables.Column(
         verbose_name="Updated",
-        attrs={"td": {"style": "white-space: nowrap;"}}
+        attrs={"td": {"style": "white-space: nowrap;", "class": "text-center align-middle"},}
     )
     # New column - link to view the report details (eye icon)
     view = tables.TemplateColumn(
         verbose_name="View",
         template_code='''<a href="{% url 'report-detail' record.id %}" aria-label="View report details">
                          <i class="bi bi-eye-fill"></i></a>''',
-        orderable=False
+        orderable=False,
+        attrs={"td": {"class": "text-center align-middle"}}
+
     )
     edit = tables.TemplateColumn(
         verbose_name="Edit",
         template_code='''<a href="{% url 'edit-report' record.id %}" aria-label="Edit report details">
                          <i class="bi bi-pencil-fill"></i></a>''',
-        orderable=False
-    )
+        orderable=False,
+        attrs={"td": {"class": "text-center align-middle"}}
 
+    )
+    # delete
+    delete = tables.TemplateColumn(
+        verbose_name="Delete",
+        template_code='''<a href="{% url 'delete-report' record.id %}" aria-label="Delete report">
+                         <i class="bi bi-trash-fill"></i></a>''',
+        orderable=False,
+        attrs={"td": {"class": "text-center align-middle"}}    
+    )
     def render_created_at(self, value):
         """
         Format the created_at datetime for display.
@@ -148,6 +153,7 @@ class ReportTable(tables.Table):
             'user_report_number',
             'view',
             'edit',
+            'delete',
             'photo',
             'user',
             'latitude',
@@ -161,3 +167,6 @@ class ReportTable(tables.Table):
             'created_at',
             'updated_at',
             )
+        attrs = {
+        "td": {"class": "align-middle"},
+    }

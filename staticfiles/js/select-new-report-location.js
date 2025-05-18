@@ -46,8 +46,8 @@ export default function selectNewReportLocation(e) {
     formContainer.classList.remove('hidden');
 
     // Populate the latitude and longitude fields in the form
-    document.getElementById('latitude').value = lat.toFixed(6);
-    document.getElementById('longitude').value = lng.toFixed(6);
+    document.getElementById('id_latitude').value = lat.toFixed(6);
+    document.getElementById('id_longitude').value = lng.toFixed(6);
 
     // Add event listener to the form cancel button
     const cancelButton = document.querySelector('.report-cancel-btn');

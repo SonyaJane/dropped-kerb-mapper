@@ -112,13 +112,12 @@ class ReportForm(forms.ModelForm):
         self.current_user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
 
-        # Make latitude and longitude uneditable
-        self.fields['latitude'].widget.attrs['readonly'] = True
-        self.fields['longitude'].widget.attrs['readonly'] = True
-        self.fields['latitude'].label = ""
-        self.fields['longitude'].label = ""
+        # Hide latitude and longitude fields from the form UI but keep them for submission
+        self.fields['latitude'].widget = forms.HiddenInput()
+        self.fields['longitude'].widget = forms.HiddenInput()
+
         # Remove the default '-------' option:
-        self.fields['condition'].empty_label = "Click to show options"
+        self.fields['condition'].empty_label = ""
         # Remove empty choice from condition field
         self.fields['condition'].choices = \
             [choice for choice in self.fields['condition'].choices
@@ -136,23 +135,13 @@ class ReportForm(forms.ModelForm):
         self.helper.form_tag = False
         
         self.helper.layout = Layout(
-            Div(
-                HTML('<label for="id_latitude" class="col-4 col-form-label">\
-                    Latitude</label>'),
-                Field('latitude', wrapper_class='col-8'),
-                css_class='row mt-2 mt-sm-0'
-            ),
-            Div(
-                HTML('<label for="id_longitude" class="col-4 col-form-label">\
-                    Longitude</label>'),
-                Field('longitude', wrapper_class='col-8'),
-                css_class='row mt-2 mt-sm-0'
-            ),
+            Field('latitude'),
+            Field('longitude'),
             Div(
                 HTML('<label for="id_condition" class="col-4 col-form-label">\
                     Condition</label>'),
                 Field('condition', wrapper_class='col-8'),
-                css_class='row mt-2 mt-sm-0'
+                css_class='row mt-0'
             ),
             # Custom layout for the reasons field, required to force col-md-4
             # and col-md-8 classes on choices.js field and intially hide it

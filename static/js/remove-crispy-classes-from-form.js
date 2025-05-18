@@ -19,9 +19,13 @@ export default function removeCrispyClassesFromForm() {
     });
 
     // remove row classes from the fields
-    document.getElementById('div_id_latitude').classList.remove('row');  
-    document.getElementById('div_id_longitude').classList.remove('row');
-    document.getElementById('div_id_condition').classList.remove('row'); 
-    document.getElementById('div_id_comments').classList.remove('row'); 
-    document.getElementById('div_id_photo').classList.remove('row');
+    ['div_id_condition', 'div_id_comments', 'div_id_reasons', 'div_id_photo'].forEach(id => {
+        const div = document.getElementById(id);
+        if (div) {
+            div.classList.remove('row', 'mb-3');
+            if (id !== 'div_id_photo') {
+                div.classList.add('mb-sm-2');
+            }
+        }
+    });
 }
