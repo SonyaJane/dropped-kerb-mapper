@@ -27,8 +27,9 @@ class ReportAdmin(admin.ModelAdmin):
     """
     form = ReportAdminForm  # Link the custom form to the admin
     # Fields to be displayed in the admin dashboard
-    list_display = ('id', 'county', 'condition', 'get_reasons_display',
-                    'photo', 'user', 'created_at')
+    list_display = ('id', 'place_name', 'county', 'condition', 
+                    'get_reasons_display', 'comments', 'photo', 
+                    'user', 'created_at')
     # Which fields to search using the search bar
     search_fields = ['reasons', 'comments']
     # Filter options to be displayed on the right side of the dashboard

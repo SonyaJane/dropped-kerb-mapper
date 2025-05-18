@@ -324,7 +324,6 @@ class Report(models.Model):
             address = location.raw.get('address', {})
             values_until_county = []
             for key, value in address.items():
-                print(key, value)
                 if key in ['county', 'state', 'country',
                            'postcode', 'country_code',
                            'province'] or key.startswith('ISO'):
