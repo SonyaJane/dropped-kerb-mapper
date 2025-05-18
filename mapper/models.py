@@ -320,10 +320,11 @@ class Report(models.Model):
         try:
             geolocator = Nominatim(user_agent="Dropped-Kerb-Mapper")
             location = geolocator.reverse(f"{lat},{lon}", zoom=17,
-                                          addressdetails=True)
+                                          addressdetails=True, language="en")
             address = location.raw.get('address', {})
             values_until_county = []
             for key, value in address.items():
+                print(key, value)
                 if key in ['county', 'state', 'country',
                            'postcode', 'country_code',
                            'province'] or key.startswith('ISO'):
