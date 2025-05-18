@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% load render_table from django_tables2 %}
 {% load comma_wrap %}
 
@@ -22,7 +23,12 @@
         </div>
     {% endif %}
     </div>
-
 </div>
 
+{% include "mapper/delete_modal.html" %}
+
+{% endblock %}
+
+{% block extras %}
+<script src="{% static 'js/delete-report-from-table.js' %}"></script>
 {% endblock %}

@@ -120,8 +120,16 @@ class ReportTable(tables.Table):
     # delete
     delete = tables.TemplateColumn(
         verbose_name="Delete",
-        template_code='''<a href="{% url 'delete-report' record.id %}" aria-label="Delete report">
-                         <i class="bi bi-trash-fill"></i></a>''',
+        template_code='''
+            <button type="button"
+                    class="btn btn-link p-0 delete-report-btn"
+                    data-bs-toggle="modal"
+                    data-bs-target="#delete-modal"
+                    data-report-id="{{ record.id }}"
+                    aria-label="Delete report">
+                <i class="bi bi-trash-fill"></i>
+            </button>
+        ''',
         orderable=False,
         attrs={"td": {"class": "text-center align-middle"}}    
     )
