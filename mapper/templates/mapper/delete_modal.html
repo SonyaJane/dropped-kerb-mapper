@@ -12,7 +12,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         {% if report %}
-          <a href="{% url 'delete-report' report.id %}" class="btn btn-red">Delete</a>
+          <a href="{% url 'delete-report' report.id %}" id="confirm-delete-btn" class="btn btn-red">Delete</a>
         {% else %}
           <a id="confirm-delete-btn" href="#" class="btn btn-red">Delete</a>
         {% endif %}      
