@@ -95,7 +95,9 @@ def get_google_session_token():
     payload = {
         "mapType": "satellite",
         "language": "en-GB",
-        "region": "UK"
+        "region": "UK",
+        "layerTypes": "layerRoadmap",
+        "overlay": "false"
     }
     headers = {
         "Content-Type": "application/json"
