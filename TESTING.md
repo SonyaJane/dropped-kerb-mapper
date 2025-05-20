@@ -220,10 +220,29 @@ Feature | Outcome | Pass/Fail
 | Photo display | Photo is shown if present, otherwise "No photo available" message | Pass |
 | Created by (superuser) | "Created by" row is visible for superusers | Pass |
 | Edit button | Edit button is visible for owner or superuser and links to edit page | Pass |
-| Delete button | Delete button is visible for owner or superuser and opens confirmation modal. | Pass |
 | Go to reports list button | Button links to the reports list page | Pass |
 | Create new report button | Button links to the create report page | Pass |
+| Delete button | Delete button is visible for owner or superuser and opens confirmation modal. | Pass |
 | Delete confirmation modal | Modal appears and allows user to confirm or cancel deletion, Report is successfuly deleted on confirm. | Pass |
+
+**Edit Report Page**
+
+Feature | Outcome | Pass/Fail
+--- | --- | ---
+Edit form loads with existing data | All fields are pre-populated with the original report data | Pass
+Form validation | Invalid submissions show error messages and do not submit | Pass
+Condition dropdown works | Dropdown displays all condition options, a single value can be selected | Pass
+Reasons field visibility | Reasons field appears only when Red or Orange condition is selected | Pass
+Reasons multi-select | User can select multiple reasons, 'Click to add' text is visible when empty | Pass
+Photo upload | User can upload a new photo, replaces existing photo if present | Pass
+Current photo display | Existing photo is shown with option to delete | Pass
+Delete photo option | User can delete the current photo using the radio button | Pass
+Comments field | Comments field is pre-filled and editable | Pass
+Latitude/Longitude hidden | Lat/lng fields are hidden but included in form submission | Pass
+Submit button | Submits the form and updates the report if valid | Pass
+Cancel button | Returns user to the report details page without saving changes | Pass
+Success message | Success message is shown after a valid update | Pass
+Responsive layout | Form and controls display correctly on all screen sizes | Pass
 
 **Sign Out**
 
