@@ -27,7 +27,7 @@ class ReportAdmin(ImportExportModelAdmin):
     """
     form = ReportAdminForm  # Link the custom form to the admin
     # Fields to be displayed in the admin dashboard
-    list_display = ('id', 'place_name', 'county', 'condition', 
+    list_display = ('id', 'user_report_number', 'place_name', 'county', 'condition', 
                     'get_reasons_display', 'comments', 'photo', 
                     'user', 'created_at')
     # Which fields to search using the search bar
