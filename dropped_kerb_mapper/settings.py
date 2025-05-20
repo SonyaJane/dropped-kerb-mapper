@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'cloudinary',
     'django_tables2',
+    'import_export',
     'mapper',
 ]
 

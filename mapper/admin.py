@@ -7,6 +7,7 @@ Registers and configures the Django admin interfaces for:
   • CustomUser (extends UserAdmin with extra profile fields).
 """
 from django.contrib import admin
+from import_export.admin import ImportExportModelAdmin
 from .models import Report, County, LocalAuthority
 from .filters import ReasonsFilter
 from .admin_forms import ReportAdminForm  # custom admin form
@@ -14,9 +15,8 @@ from django.contrib.gis import admin as geo_admin
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser
 
-
 @admin.register(Report)
-class ReportAdmin(admin.ModelAdmin):
+class ReportAdmin(ImportExportModelAdmin):
     """
     Admin interface for the Report model.
 
