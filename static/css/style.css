@@ -186,18 +186,31 @@ a {
     color: black;
 }
 
-.btn-green:hover {
-    background-color: var(--color-green-3);
-    color: black;
+/* Only apply :hover styles on desktop/laptop */
+@media (hover: hover) and (pointer: fine) {
+    .btn-green:hover {
+        background-color: var(--color-green-3);
+        color: black;
+    }
+
+    .btn-red:hover {
+        background-color: rgb(236, 121, 121);
+        color: black;
+    }
+
+    .btn-mango:hover {
+        background-color: var(--color-mango-3);
+        color: black;
+    }
+
+    .btn-orange:hover {
+        background-color: var(--color-orange-3);
+        color: black;
+    }
 }
 
 .btn-red {
     background-color: rgb(230, 129, 129);
-    color: black;
-}
-
-.btn-red:hover {
-    background-color: rgb(236, 121, 121);
     color: black;
 }
 
@@ -206,18 +219,8 @@ a {
     color: black;
 }
 
-.btn-mango:hover {
-    background-color: var(--color-mango-3);
-    color: black;
-}
-
 .btn-orange {
     background-color: var(--color-orange-2);
-    color: black;
-}
-
-.btn-orange:hover {
-    background-color: var(--color-orange-3);
     color: black;
 }
 
@@ -479,10 +482,13 @@ header.container {
     color: black;
 }
 
-#text-search-submit:hover,
-.hover-orange:hover,
-.maplibregl-ctrl-geolocate:hover {
-    background: var(--color-orange-2) !important;
+/* Only apply :hover styles on desktop/laptop */
+@media (hover: hover) and (pointer: fine) {
+    #text-search-submit:hover,
+    .hover-orange:hover,
+    .maplibregl-ctrl-geolocate:hover {
+        background: var(--color-orange-2) !important;
+    }
 }
 
 /* Location search results */
@@ -496,9 +502,12 @@ header.container {
     border-bottom: 1px solid var(--color-mango-3);
 }
 
-.mango-hover:hover {
-    background-color: var(--color-mango-2);
-    color: black;
+/* Only apply :hover styles on desktop/laptop */
+@media (hover: hover) and (pointer: fine) {
+    .mango-hover:hover {
+        background-color: var(--color-mango-2);
+        color: black;
+    }   
 }
 
 /* User location button */
