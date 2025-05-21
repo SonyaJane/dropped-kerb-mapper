@@ -63,11 +63,8 @@ export default function initialiseMap() {
         positionOptions: {
             enableHighAccuracy: true
         },
+        trackUserLocation: true,
         showAccuracyCircle: false,
-        fitBoundsOptions: {
-            animate: true
-        }
-        
     });
     DKM.map.addControl(geolocateControl);
 
