@@ -646,7 +646,7 @@ class CustomLoginForm(LoginForm):
         super().__init__(*args, **kwargs)
         # Remove the "Remember Me" field
         self.fields['remember'].widget = forms.HiddenInput()
-        self.fields['remember'].initial = False
+        self.fields['remember'].initial = True
         self.helper = FormHelper()
         # disable Crispy’s <form> wrapper so we can use our own submit button
         self.helper.form_tag = False
