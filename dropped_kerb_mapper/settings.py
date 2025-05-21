@@ -164,6 +164,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Custom user model to include mobility device fields
 AUTH_USER_MODEL = 'mapper.CustomUser'
 
+# Stay logged in for 2 weeks
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_COOKIE_AGE = 1209600  # 2 weeks, in seconds (set longer if you want)
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
