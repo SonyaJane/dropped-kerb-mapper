@@ -16,7 +16,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['www.droppedkerbmapper.com','.herokuapp.com','127.0.0.1']
+ALLOWED_HOSTS = ['www.droppedkerbmapper.com','.herokuapp.com','127.0.0.1', 'dropped-kerb-mapper.azurewebsites.net']
 
 # Application definition
 
