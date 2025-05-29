@@ -115,7 +115,9 @@ class MapReportsView(LoginRequiredMixin, View):
             reports = Report.objects.filter(user=request.user)
         data = [serialise_report(report) for report in reports]
         return render(request, 'mapper/map_reports.html',
-                      {'form': form, 'reports': data,
+                      {'form': form, 
+                       'reports': data,
+                       'GOOGLE_MAPS_API_KEY': settings.GOOGLE_MAPS_API_KEY,
                        # Indicate to the ReportForm that it is on the
                        # map_reports page
                        'is_map_reports': True, 'is_edit': False})
@@ -448,7 +450,7 @@ def get_os_map_tiles(request, z, x, y):
     api_key = os.environ.get("OS_MAPS_API_KEY")
 
     # Construct the Ordnance Survey tile URL
-    tile_url = f"https://api.os.uk/maps/raster/v1/zxy/Light_3857/{z}/{x}/{y}.png?key={api_key}"
+    tile_url = f"https://api.os.uk/maps/raster/v1/zxy/Road_3857/{z}/{x}/{y}.png?key={api_key}"
 
     # Make a GET request to fetch the tile image
     response = requests.get(tile_url)
@@ -507,7 +509,6 @@ def get_google_satellite_tiles(request, z, x, y):
 
     # Make a GET request to fetch the tile image
     response = requests.get(tile_url)
-
     if response.status_code == 200:
         # Return the image content with appropriate content-type
         return HttpResponse(response.content, content_type="image/png")

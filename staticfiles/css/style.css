@@ -56,6 +56,11 @@ main {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* change navbar colour on add report page */
+.map-reports-body .navbar {
+    background-color: #fafaf3;
+}
+
 .navbar-toggler {
     width: 60px; /* match width of map action buttons */
 }
@@ -262,7 +267,7 @@ header.container {
 }
 
 #hero-home {
-	background-image: url("../images/dropped_kerb_medium.jpg");
+	background-image: url("../images/dropped_kerb_medium.webp");
 	background-position: 50% 50%;
 }
 
@@ -447,40 +452,7 @@ header.container {
     height: calc(100vh - 56px); /* Full height minus navbar height */
 }
 
-/* Location search bar */
-#search-location {
-    z-index: 3; /* Ensure the results are above the map controls */
-    margin-left: 10px;
-    margin-top: 10px;
-    margin-right: 10px;
-}
 
-#text-search {
-    display: flex;
-    align-items: center;
-    position: relative;
-    z-index: 3; /* Ensure the results are above the map controls */
-}
-
-#text-search-input {
-    font-size: 1.25rem;
-    height: 60px;
-    border: 2px solid var(--color-orange-4);
-    border-right: none;
-    background: rgb(246, 245, 241) !important;
-}
-
-#text-search-submit {
-    width: 60px;
-    border: 2px solid var(--color-orange-4);
-    background: rgb(246, 245, 241) !important;
-}
-
-/* search submit icon */
-.bi-search, 
-.bi-x {
-    color: black;
-}
 
 /* Only apply :hover styles on desktop/laptop */
 @media (hover: hover) and (pointer: fine) {
@@ -510,28 +482,16 @@ header.container {
     }   
 }
 
-/* User location button */
-.maplibregl-ctrl-top-right {
-    margin-top: 4px !important;
-}
-
-.maplibregl-ctrl-group {
-    box-shadow: none !important;
-}
-
-.maplibregl-ctrl-geolocate {
-    width: 60px !important;
-    height: 60px !important;
-    border: 2px solid var(--color-orange-4) !important;
-    border-radius: 4px !important;
-    background: none !important;
-    background-color: rgb(246, 245, 241) !important;
+/* Map markers */
+/* remove the marker’s box‐shadow by hiding the shadow-ellipse group in every default marker SVG */
+.maplibregl-marker svg > g > g:first-child {
+    display: none !important;
 }
 
 /* User location indicator */
 .maplibregl-user-location-dot {
     transition: none !important;
-  }
+}
 
 /* Disable the pulse animation on the location dot */
 .maplibregl-user-location-dot::after,
@@ -539,18 +499,61 @@ header.container {
     display: none !important;
 }
 
-/* remove the marker’s box‐shadow by hiding the shadow-ellipse group in every default marker SVG */
-.maplibregl-marker svg > g > g:first-child {
-    display: none !important;
-  }
+#map-controls-container-and-search {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    width: 360px;
+    background: #fafaf3;
+    position: relative;
+    padding: 10px 10px;
+    z-index: 2;
+}
+
+/* Location search bar */
+/* Make sure the search bar doesn't get too wide */
+#search-location {
+    width: 100%;
+}
+
+#text-search {
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 3; /* Ensure the results are above the map controls */
+}
+
+#text-search-input {
+    font-size: 1.25rem;
+    height: 60px;
+    border: 2px solid var(--color-orange-4);
+    border-right: none;
+    background: rgb(246, 245, 241) !important;
+}
+
+#text-search-submit {
+    width: 60px;
+    border: 2px solid var(--color-orange-4);
+    background: rgb(246, 245, 241) !important;
+}
 
 /* Map controls */
+#map-controls-container {
+    position: static;
+    width: 100%;
+    top: 15px; 
+    left: 10px; 
+    z-index: 2;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    gap: 10px; /* Space between buttons */
+}
 
-/* Toggle map style button */
-#toggle-satellite {
-    position: absolute; /* Set the container to relative positioning */
-    right: 10px; 
-    top: 85px; 
+.map-control {
+    position: relative;
     width: 60px;
     height: 60px;
     padding: 0;
@@ -562,32 +565,136 @@ header.container {
     background: rgb(246, 245, 241);
 }
 
+/* User location button */
+#map-controls-container .maplibregl-ctrl-geolocate .maplibregl-ctrl-icon {
+    z-index: 3;
+}
+
+/* Override maplibre styles */
+#map-controls-container .maplibregl-ctrl-top-right {
+    position: relative;
+    right: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+}
+#map-controls-container .maplibregl-ctrl-group.maplibregl-ctrl {
+    box-shadow: none !important;
+    float: none !important;
+    margin: none !important;
+}
+#map-controls-container .maplibregl-ctrl-top-right .maplibregl-ctrl {
+    float: none;
+    margin: 0;
+}
+#map-controls-container .maplibregl-ctrl button .maplibregl-ctrl-icon {
+    background-size: contain !important; /* or 100% 100% */
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+}
+
+#map-controls-container-and-search .maplibregl-ctrl-group button {
+    background-color: rgb(246, 245, 241) !important;
+}
+
+/* Add new report mode button icon */
+#add-report-icon {
+    height: 30px; 
+    vertical-align: middle;
+}
+
+/* Satellite icon in button */
 #satellite-icon {
     width: 35px;
     height: 35px; 
 }
 
-/* Add report button */
-#add-report {
-    position: absolute;
-    top: 156px;
-    right: 10px;
-    background: rgb(246, 245, 241);
-    border-radius: 4px;
-    border: 2px solid var(--color-orange-4);
-    cursor: pointer;
-    z-index: 2;
-    width: 60px;
-    height: 60px; 
+/* search submit icon */
+.bi-search,
+.bi-arrow-right,
+.bi-x {
+    font-size: 1.5rem;
+    color: black;
 }
 
-#add-report img {
-    height: 30px; 
-    vertical-align: middle;
+/* toggle streetview */
+.icon-stack {
+  position: relative;
+  width: 3rem;    /* Wider to fit both icons */
+  height: 1.7rem;
+  display: inline-block;
+}
+
+.icon-stack i {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-35%);
+  font-size: 1.6rem;
+  left: 1px;
+}
+
+.icon-stack i:last-child {
+  left: 1.4rem;   /* Slightly to the right, so they overlap a bit */
 }
 
 .button-active {
     background: #F7CE9D !important;
+}
+
+#map-container {
+    width: 100vw;
+    height: calc(100vh - 56px); /* Full height minus navbar height */
+    position: relative;
+    overflow: hidden;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+    transition: height 0.3s;
+}
+
+#streetview-container {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    z-index: 999;
+    background: var(--color-mango-1);
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.1);
+}
+
+#streetview {
+    width: 100vw;
+    height: 100%;
+}
+
+#streetview-message {
+    border: 1px solid var(--color-green-5);
+    border-radius: 5px;
+    background-color: var(--color-green-1);
+    width: 90%;
+    max-width: 500px;
+}
+
+/* Streetview arrow marker */
+#arrow-marker {
+    width: 32px; 
+    height: 32px;
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+#arrow-marker svg {
+    width: 32px; 
+    height: 32px; 
+    display: block;
 }
 
 /* New reports map page messages container div */
@@ -802,17 +909,6 @@ html:has(#map) footer {
     color: var(--color-orange-4);
 }
 
-/* Pagination nav */
-/* #report-table .page-link  {
-    color: var(--color-orange-4);
-    font-size: 1.25rem;
-}
-#report-table .active>.page-link {
-    background-color: var(--color-orange-4);
-    color: white;
-    border: 1px solid var(--color-orange-4);
-} */
-
 /* Override Boostrap pagination colours */
 .pagination {
     --bs-pagination-font-size: 1.25rem;
@@ -971,6 +1067,9 @@ html:has(#map) footer {
     }
 
     /* Map controls */
+    #map-controls-container-and-search {
+        width: 320px;
+    }
 
     /* Location search bar */
     #text-search {
@@ -985,71 +1084,19 @@ html:has(#map) footer {
         width: 50px;
     }
 
-    .maplibregl-ctrl-top-right {
-        margin-top: 64px !important;
-    }
-    
-    /* User location button */
-    .maplibregl-ctrl-geolocate {
-        width: 50px !important;
-        height: 50px !important;
-    }
-
-    /* Toggle map style button */
-    
-    #toggle-satellite { 
-        top: 75px; 
-        width: 50px;
-        height: 50px;
-        top: 135px;
-    }
-
-    #satellite-icon {
-        width: 25px;
-        height: 25px; 
-    }
-
-    /* Add report button */
-    #add-report {
-        top: 195px;
-        width: 50px;
-        height: 50px; 
-    }
-
-    #add-report img {
-        height: 30px; 
-        vertical-align: middle;
-    }
-
     .maplibregl-popup p {
         margin-bottom: 0.6rem;
     }
 }
 
-@media (min-width: 361px) and (max-width: 422px) {
-
-    /* Map controls */
-
-    /* Location search bar */
-    #text-search {
-        width: 100%;
-    }
-
-    .maplibregl-ctrl-top-right {
-        margin-top: 75px !important;
-    }
-
-    /* Toggle map style button */
-    
-    #toggle-satellite { 
-        top: 155px; 
-    }
-
-    /* Add report button */
-    #add-report {
-        top: 225px;
+@media (max-width: 360px) {
+    /* Reduce the size of the map controls */
+    .map-control {
+        width: 53px;
+        height: 53px;
     }
 }
+
 
 /* Allow wrapping for small screens */
 @media (max-width: 549px) {
@@ -1058,7 +1105,6 @@ html:has(#map) footer {
         word-wrap: break-word; /* Break long words if necessary */
     }
 }
-
 
 @media (min-width: 360px) {
     /* Move message container down */
@@ -1082,10 +1128,6 @@ html:has(#map) footer {
         max-width: 350px;
     }
 
-    #search-location {
-        max-width: 330px;
-    }
-
     .para-422 {
         display: none;
     }
@@ -1105,12 +1147,7 @@ html:has(#map) footer {
     }
 }
 
-/* Add a left margin to the main content for medium screens and larger */
 @media (min-width: 768px) {
-    main,
-    footer {
-        margin-right: 210px; /* width of the menu panel */
-    }
 
     #map-marker {
         width: 60px;
@@ -1129,10 +1166,19 @@ html:has(#map) footer {
     .display-768 {
         display: block;
     }
-
 }
 
 @media (min-width: 992px) {
+    /* Add a left margin to the main content for medium screens and larger */
+    main,
+    footer {
+        margin-right: 210px; /* width of the menu panel */
+    }
+
+    #map-container {
+        width: calc(100vw - 210px); /* Full width minus the menu panel */
+    }
+
     .hide-sm {
         display: block;
     }

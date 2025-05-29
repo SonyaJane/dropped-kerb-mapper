@@ -13,10 +13,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
+GOOGLE_MAPS_API_KEY = os.environ.get("GOOGLE_MAPS_API_KEY")
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['www.droppedkerbmapper.com','.herokuapp.com','127.0.0.1', 'dropped-kerb-mapper.azurewebsites.net']
+ALLOWED_HOSTS = ['www.droppedkerbmapper.com','.herokuapp.com','127.0.0.1','.northeurope.azurecontainerapps.io']
 
 # Application definition
 
@@ -93,6 +94,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://*.droppedkerbmapper.com",
     "http://*.droppedkerbmapper.com",
     "https://*.azurewebsites.net",
+    "https://*.northeurope.azurecontainerapps.io",
     "https://*.herokuapp.com",
     "http://127.0.0.1:8000"
 ]
@@ -149,10 +151,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 

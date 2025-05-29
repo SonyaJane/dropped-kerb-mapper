@@ -3,7 +3,7 @@
  * If it is, it adds a new marker at the clicked location and shows the report form.
  * Populates the latitude and longitude fields in the form.
  * If a new marker already exists, it removes it before adding the new one, allowing the user to select a new location.
- * Adds an event listener to the form cancel button to close and reset the form when clicked.
+ * Adds an event listener to the form cancel button to exit add report mode when clicked.
  */
 import closeForm from "./close-form.js";
 
@@ -49,9 +49,4 @@ export default function selectNewReportLocation(e) {
     document.getElementById('id_latitude').value = lat.toFixed(6);
     document.getElementById('id_longitude').value = lng.toFixed(6);
 
-    // Add event listener to the form cancel button
-    const cancelButton = document.querySelector('.report-cancel-btn');
-    cancelButton.addEventListener('click', () => {
-        closeForm();
-    });
 }

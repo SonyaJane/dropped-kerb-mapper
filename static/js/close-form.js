@@ -1,4 +1,5 @@
 import resetForm from './reset-form.js';
+
 /**
  * Remove the marker and hide the form container when the close button is clicked. 
  * Also resets the form.

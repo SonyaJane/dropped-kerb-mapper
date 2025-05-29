@@ -46,11 +46,11 @@ export default function initialiseMap() {
     // Create map
     DKM.map = new maplibregl.Map({
         container: 'map', // ID of the div where the map will be rendered
-        minZoom: 6,
+        minZoom: 7,
         maxZoom: 20,
         style: style,
         center: [-3.2, 55],  // Rough center of the UK
-        zoom: 6,
+        zoom: 7,
         maxBounds: [
             [ -10.76418, 49.528423 ],
             [ 1.9134116, 61.331151 ]
@@ -68,21 +68,14 @@ export default function initialiseMap() {
     });
     DKM.map.addControl(geolocateControl);
 
-    // Trigger geolocation
-    // Add a flag to ensure geolocation is only triggered once
-    let geolocationTriggered = false;
-
-    DKM.map.on('styledata', () => {
-        if (!geolocationTriggered) {
-            // Defer to next tick to ensure control is attached   
-            setTimeout(() => {
-                if (geolocateControl._map) {
-                    geolocateControl.trigger();
-                    geolocationTriggered = true;
-                }
-            }, 0); 
-        }
-    });
+    // Move the control to the map controls container
+    const geolocateEl = document.querySelector('.maplibregl-ctrl-top-right');
+    const mapControlsContainer = document.getElementById('map-controls-container');
+    if (geolocateEl && mapControlsContainer) {
+        mapControlsContainer.insertBefore(geolocateEl, mapControlsContainer.firstChild);
+        //  add class to the geolocate control for styling
+        geolocateEl.classList.add('map-control');
+    }
 
     // Add a custom AttributionControl with compact mode enabled.
     const attributionControl = new maplibregl.AttributionControl({
@@ -90,4 +83,6 @@ export default function initialiseMap() {
     });
     DKM.map.addControl(attributionControl, 'bottom-right');
 
+    // Track if satellite view is on or off
+    DKM.isSatelliteViewOn = false; 
 }

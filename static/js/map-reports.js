@@ -1,10 +1,12 @@
 import initialiseMap from './initialise-map.js';
+import initialiseGoogleStreetView from './initialise-google-streetview.js';
 import recreateCopyrightAttribution from './recreate-copyright-attribution.js';
 import initialiseReasonsChoices from './initialise-reasons-choices.js';
 import loadUKBoundary from './load-uk-boundary.js';
 import updateAttributionControl from './update-attribution-control.js';
 import toggleMapType from './toggle-map-type.js';
 import toggleNewReportMode from './toggle-new-report-mode.js';
+import toggleSearchBar from './toggle-search-bar.js';
 import handleConditionSelectionChange from "./handle-condition-selection-change.js";
 import addExistingReportsToMap from './add-existing-reports-to-map.js';
 import removeCrispyClassesFromForm from "./remove-crispy-classes-from-form.js";
@@ -23,7 +25,10 @@ document.addEventListener('DOMContentLoaded', () => {
     DKM.markers = []; // Initialise markers array to store all markers on the map
     
     // create the map with OS tiles and set the view to the UK
-    initialiseMap(); 
+    initialiseMap();
+
+    // Google streetview
+    initialiseGoogleStreetView();
 
     // Disable double-click zoom on the map
     DKM.map.doubleClickZoom.disable();
@@ -52,7 +57,11 @@ document.addEventListener('DOMContentLoaded', () => {
     addReportButton.addEventListener('click', () => {
         toggleNewReportMode(addReportButton);
     });
-   
+    
+    // Toggle the visibility of the search bar when the reveal button is clicked
+    const revealBtn = document.getElementById('text-search-reveal');
+    revealBtn.addEventListener('click', toggleSearchBar);
+
     // New report form
     
     // Attach event listener to condition field dropdown

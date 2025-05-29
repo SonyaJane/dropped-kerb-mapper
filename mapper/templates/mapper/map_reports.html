@@ -14,37 +14,75 @@
 {% comment %} Add a unique class to the <body> so we can target the message-container div{% endcomment %}
 {% block body_class %}map-reports-body{% endblock %}
 {% block content %}
-<div>    
-    <div id="map">
+<div>
+    <div id="map-container">
 
-        <div id="search-location">
-            <!-- Search location input -->
-            <div id="text-search" class="pt-1">
-                <div class="input-group">
-                    <input type="text" id="text-search-input" placeholder="Search for location" class="form-control">
-                    <!-- Search button -->
-                    <button class="btn btn-outline-secondary hover-orange" type="button" id="text-search-submit" aria-label="Search location">
+        <div id="map">
+
+            <div id="map-controls-container-and-search">
+                <!-- Map controls -->
+                <div id="map-controls-container">
+                    
+                    <!--Geolocate button will be moved to here-->
+
+                    <!-- Toggle map style button -->
+                    <button id="toggle-satellite" class="hover-orange map-control" aria-label="Toggle satellite map view">
+                        <img id="satellite-icon" src="{% static 'images/satellite.png' %}" alt="Satellite Icon">
+                    </button>
+
+                    <!-- Add new report button -->
+                    <button id="add-report" class="hover-orange map-control" aria-label="Add new report">
+                        <img src="{% static 'images/marker-bw.png' %}" alt="Add Report Icon" id="add-report-icon">
+                    </button>
+
+                    <!-- Toggle Google StreetView button -->
+                    <button id="toggle-streetview" class="hover-orange map-control" aria-label="Toggle Google StreetView">
+                        <div class="icon-stack">
+                            <i class="bi bi-building"></i>
+                            <i class="bi bi-tree"></i>
+                        </div>
+                    </button>
+
+                    <!-- Location search button - expands search bar -->
+                    <button id="text-search-reveal" class="hover-orange map-control" type="button" aria-label="Expand search location bar">
                         <i class="bi bi-search"></i>
                     </button>
+
                 </div>
+
+                <div id="search-location" class="hidden"> <!-- Initially hidden -->
+                    <!-- Search location input -->
+                    <div id="text-search">
+                        <div class="input-group">
+                            <input type="text" id="text-search-input" placeholder="Search for location" class="form-control">
+                            <!-- Search button -->
+                            <button class="btn btn-outline-secondary hover-orange" type="button" id="text-search-submit" aria-label="Search location">
+                                <i class="bi bi-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>   
             </div>
-        </div>        
 
-        <!-- Toggle map style button -->
-        <button id="toggle-satellite" class="hover-orange" aria-label="Toggle satellite map view">
-            <img id="satellite-icon" src="{% static 'images/satellite.png' %}" alt="Satellite Icon">
-        </button>
+            <!-- Google Logo -->
+            <div id="google-logo">
+                <img src={% static 'images/google_on_non_white_hdpi.png' %} alt="Google Logo" style="height:20px;">
+            </div>
 
-        <!-- Add new report button -->
-        <button id="add-report" class="hover-orange" aria-label="Add new report">
-            <img src="{% static 'images/marker-bw.png' %}" alt="Add Report Icon">
-        </button>
-
-        <!-- Google Logo -->
-        <div id="google-logo">
-            <img src={% static 'images/google_on_non_white_hdpi.png' %} alt="Google Logo" style="height:20px;">
         </div>
 
+        <!-- Google StreetView -->
+        <div id="streetview-container" class="position-relative">
+            <div id="streetview-message" class="d-flex justify-content-center align-items-center text-center position-absolute top-50 start-50 translate-middle">
+                <p class="m-2">Click on a road on the map above to get the streetview.
+                    If you click on a road that doesn't have streetview, it will either
+                    jump to the nearest road with streetview, or the current streetview 
+                    will remain unchanged.
+                </p>
+            </div>
+            <div id="streetview"></div>
+        </div>
+    
     </div>
 
     <div id="map-report-form-container" class="hidden">  <!-- Initially hidden -->
@@ -67,8 +105,7 @@
     {{ reports|json_script:"reports-data" }}
 
     <!-- Container for new report data -->
-    <div id="new-report-container">
-    </div>
+    <div id="new-report-container"></div>
     <!-- Container for updated report data -->
     <div id="updated-report-container"></div>
 </div>
@@ -77,6 +114,8 @@
 <script src="https://unpkg.com/maplibre-gl@5.3.0/dist/maplibre-gl.js"></script>
 <!-- Ordnance Survey -->
 <script src="https://cdn.jsdelivr.net/gh/OrdnanceSurvey/os-api-branding@0.3.1/os-api-branding.js"></script>
+<!-- Google Maps JS API (Street View) -->
+<script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}" async defer></script>
 <!-- turf.js for checking clicked locations are inside UK boundary -->
 <script src="https://cdn.jsdelivr.net/npm/@turf/turf@7/turf.min.js"></script>
  <!-- Define JS variables with the static URLs -->

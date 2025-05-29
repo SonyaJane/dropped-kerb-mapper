@@ -23,8 +23,6 @@ export default function resetForm() {
     // and hide the reasons field
     toggleReasonsFieldVisibility();
     
-
-
     // clear any inline error next to condition
     const existingError = document.querySelector('.text-danger.inline-error');
     if (existingError) existingError.remove();

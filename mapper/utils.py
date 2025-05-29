@@ -86,10 +86,8 @@ def get_google_session_token():
 
     # If no token is cached, request a new one
     api_key = os.environ.get('GOOGLE_MAPS_API_KEY')
-
     # Set up the createSession endpoint URL
-    create_session_url = \
-        f"https://tile.googleapis.com/v1/createSession?key={api_key}"
+    create_session_url = f"https://tile.googleapis.com/v1/createSession?key={api_key}"
 
     # Define the required payload
     payload = {
@@ -115,11 +113,9 @@ def get_google_session_token():
         # Calculate the remaining time until expiry (expiry is seconds since
         # the epoch)
         now = int(time.time())
-        remaining = int(expiry) - now if expiry and int(expiry) > \
-            now else 14 * 24 * 3600
+        remaining = int(expiry) - now if expiry and int(expiry) > now else 14 * 24 * 3600
         # Cache the full token data (you might want to cache the expiry
         # as well)
         cache.set('google_tile_session_token', data, timeout=remaining)
         return session_token
-    raise SessionTokenError(f"Failed to obtain session token: \
-        {response.text}")
+    raise SessionTokenError(f"Failed to obtain session token: {response.text}")
