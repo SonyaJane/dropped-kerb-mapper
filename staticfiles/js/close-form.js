@@ -6,7 +6,9 @@ import resetForm from './reset-form.js';
  */
 export default function closeForm() {
     const formContainer = document.getElementById('map-report-form-container');
-    DKM.newMarker.remove();                // Remove the marker
+    if (DKM.newMarker) {
+        DKM.newMarker.remove(); // Remove the marker if it exists
+    }
     formContainer.classList.add('hidden'); // Hide the form container
     resetForm();                           // Reset the form
 }

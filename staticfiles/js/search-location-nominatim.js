@@ -4,8 +4,7 @@
 export default async function searchLocationNominatim(locationText) {
     // Query the Nominatim API for the location input by the user
     try {
-        // Define the api url
-        const api_url = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=gb&polygon_geojson=1&limit=10&q=${encodeURIComponent(locationText)}`;
+        const api_url = `/nominatim-proxy/?q=${encodeURIComponent(locationText)}`;
 
         // Fetch the data
         const response = await fetch(api_url);

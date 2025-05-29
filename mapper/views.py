@@ -33,7 +33,7 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect, reverse
@@ -656,3 +656,22 @@ def contact(request):
 
     return render(request, 'mapper/contact.html',
                   {'form': form, 'message_sent': message_sent})
+
+
+@require_GET
+def nominatim_proxy(request):
+    q = request.GET.get('q')
+    if not q:
+        return HttpResponseBadRequest('Missing query parameter: q')
+
+    url = (
+        "https://nominatim.openstreetmap.org/search"
+        "?format=json&countrycodes=gb&polygon_geojson=1&limit=10&q={}"
+    ).format(q)
+
+    headers = {
+        'User-Agent': 'Dropped Kerb Mapper/1.0 (hello@mobilitymapper.co.uk)'
+    }
+
+    r = requests.get(url, headers=headers)
+    return JsonResponse(r.json(), safe=False, status=r.status_code)

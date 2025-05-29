@@ -27,7 +27,6 @@ let addReportButtonRef = null;
 }
 
 export default function toggleNewReportMode(addReportButton) {
-    console.log("Toggling new report mode");
     // Build an encoded SVG string to create a blue cross cursor for add report mode
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32">
     <line x1="16" y1="0" x2="16" y2="32" stroke="blue" stroke-width="2"/>
@@ -42,7 +41,6 @@ export default function toggleNewReportMode(addReportButton) {
    
     // If the button is active, disable "add report" mode
     if (addReportButton.classList.contains('button-active')) {
-        console.log("Disabling new report mode");
         // Add click event listener for the street view map
         DKM.map.on('click', handleStreetViewMapClick);
 
@@ -65,7 +63,6 @@ export default function toggleNewReportMode(addReportButton) {
         }
 
     } else {
-        console.log("Enabling new report mode");
         // Prevent add report mode if satellite view is active
         if (DKM.isSatelliteViewOn) {
             // Optionally show a message to the user here

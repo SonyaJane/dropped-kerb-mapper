@@ -20,4 +20,5 @@ urlpatterns = [
          name='update-location'),
     path('email-confirmation-success/', views.email_confirmation_success,
          name='email-confirmation-success'),
+    path('nominatim-proxy/', views.nominatim_proxy, name='nominatim-proxy'),
 ]

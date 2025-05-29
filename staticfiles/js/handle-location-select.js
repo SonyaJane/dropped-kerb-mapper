@@ -63,7 +63,7 @@ export default function handleLocationSelect(e) {
             'layout': {},
             "paint": {
                 "line-color": "#bd582c",
-                "line-width": 2
+                "line-width": 4
             }
         });
 
@@ -84,7 +84,12 @@ export default function handleLocationSelect(e) {
             });
         }
         window.DKM.map.fitBounds(bounds, {
-            padding: 50,      // padding around the polygon
+            padding: {
+                top: 90,
+                bottom: 20,
+                left: 50,
+                right: 50
+            },
             animate: true     
         });
     }   else { // geometry is a point
