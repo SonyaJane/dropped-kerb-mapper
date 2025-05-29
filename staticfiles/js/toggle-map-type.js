@@ -38,7 +38,6 @@ export default function toggleMapType() {
         if (document.getElementById('add-report').classList.contains('button-active')) {
             DKM.map.on('click', selectNewReportLocation);
         }
-        DKM.map.on('click', selectNewReportLocation); 
         // Show all markers
         if (Array.isArray(DKM.markers)) {
             DKM.markers.forEach(marker => {

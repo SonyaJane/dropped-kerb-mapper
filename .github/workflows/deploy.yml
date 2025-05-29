@@ -39,7 +39,7 @@ jobs:
         with:
           resourceGroup: mobility-mapper-rg
           containerAppName: droppedkerbmapper-app
-          imageToDeploy: droppedkerbmapper-f6cse9c6dzebewhj.azurecr.io/droppedkerbmapper:lates
+          imageToDeploy: droppedkerbmapper-f6cse9c6dzebewhj.azurecr.io/droppedkerbmapper:latest
           registryUrl: droppedkerbmapper-f6cse9c6dzebewhj.azurecr.io
           registryUsername: ${{ secrets.ACR_USERNAME }}
           registryPassword: ${{ secrets.ACR_PASSWORD }}
