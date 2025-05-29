@@ -5,7 +5,6 @@ export default function handleStreetViewMapClick(e) {
     // Get clicked location
     const lngLat = {lng: e.lngLat.lng, lat: e.lngLat.lat};
     const latLng = {lat: e.lngLat.lat, lng: e.lngLat.lng};
-    console.log('Map clicked at:', lngLat);
     const svMsg = document.getElementById('streetview-message'); // Message to show when waiting for Street View click
 
 
@@ -37,8 +36,6 @@ export default function handleStreetViewMapClick(e) {
             DKM.streetView.setPosition(latLng);
             // Update arrow marker position
             updateArrowMarker();
-        } else {
-            console.warn('Street View not active, cannot update position');
         }
     }
 }
