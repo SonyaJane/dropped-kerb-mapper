@@ -24,10 +24,10 @@ jobs:
           password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t droppedkerbmapper.azurecr.io/droppedkerbmapper:latest .
+        run: docker build -t droppedkerbmapper-f6cse9c6dzebewhj.azurecr.io/droppedkerbmapper:latest .
 
       - name: Push Docker image
-        run: docker push droppedkerbmapper.azurecr.io/droppedkerbmapper:latest
+        run: docker push droppedkerbmapper-f6cse9c6dzebewhj.azurecr.io/droppedkerbmapper:latest
 
       - name: Install Azure Container Apps CLI extension
         run: az extension add --name containerapp --upgrade
