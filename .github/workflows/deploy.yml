@@ -34,14 +34,12 @@ jobs:
       - name: Install Azure Container Apps CLI extension
         run: az extension add --name containerapp --upgrade
 
-      - name: Deploy to Azure Container App
-        uses: 'azure/aci-deploy@v1'
+      - name: Deploy Azure Container App
+        uses: azure/container-apps-deploy-action@v2
         with:
-            resource-group: mobility-mapper-rg
-            dns-name-label: droppedkerbmapper
-            image: droppedkerbmapper-f6cse9c6dzebewhj.azurecr.io/droppedkerbmapper:latest
-            registry-login-server: droppedkerbmapper-f6cse9c6dzebewhj.azurecr.io
-            registry-username: ${{ secrets.ACR_USERNAME }}
-            registry-password: ${{ secrets.ACR_PASSWORD }}
-            name: droppedkerbmapper-app
-            location: 'north europe'
+          resourceGroup: mobility-mapper-rg
+          containerAppName: droppedkerbmapper-app
+          imageToDeploy: droppedkerbmapper-f6cse9c6dzebewhj.azurecr.io/droppedkerbmapper:lates
+          registryUrl: droppedkerbmapper-f6cse9c6dzebewhj.azurecr.io
+          registryUsername: ${{ secrets.ACR_USERNAME }}
+          registryPassword: ${{ secrets.ACR_PASSWORD }}
