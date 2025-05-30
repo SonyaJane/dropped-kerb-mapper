@@ -17,7 +17,9 @@ export default function handleStreetViewMapClick(e) {
             document.getElementById('streetview'), {
                 position: latLng,
                 pov: {heading: 0, pitch: 0},
-                zoom: 1
+                zoom: 1,
+                motionTracking: false, // disables device orientation following
+                motionTrackingControl: false,
             });
 
             // Add event listener for position or heading change in streetview 
