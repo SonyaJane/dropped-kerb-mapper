@@ -20,8 +20,10 @@ export default function handleStreetViewMapClick(e) {
                 zoom: 1,
                 motionTracking: false, // disables device orientation following
                 motionTrackingControl: false,
+                disableDefaultUI: true, // Hide default UI
             });
 
+            DKM.streetView.setMotionTracking(false);
             // Add event listener for position or heading change in streetview 
             // to rotate or move arrow
             DKM.streetView.addListener('position_changed', updateArrowMarker);
