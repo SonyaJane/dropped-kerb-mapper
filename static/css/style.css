@@ -653,6 +653,7 @@ header.container {
     width: 100%;
     height: 100%;
     transition: height 0.3s;
+    touch-action: manipulation;
 }
 
 #streetview-container {
@@ -662,7 +663,6 @@ header.container {
     left: 0;
     width: 100%;
     height: 50%;
-    z-index: 999;
     background: var(--color-mango-1);
     box-shadow: 0 -4px 16px rgba(0,0,0,0.1);
 }

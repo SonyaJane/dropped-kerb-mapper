@@ -27,11 +27,13 @@ export default function initialiseGoogleStreetView() {
         DKM.isStreetViewVisible = !DKM.isStreetViewVisible;
         if (DKM.isStreetViewVisible) {
             svContainer.style.display = 'block';
+            svContainer.style.pointerEvents = 'auto';
             svBtn.classList.add('button-active');
             mapDiv.style.height = '50%';
             DKM.awaitingStreetViewClick = true;
         } else {
             svContainer.style.display = 'none';
+            svContainer.style.pointerEvents = 'none';
             svBtn.classList.remove('button-active');
             mapDiv.style.height = '100%';
             DKM.awaitingStreetViewClick = false;
