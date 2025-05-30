@@ -20,16 +20,16 @@ export default function handleStreetViewMapClick(e) {
                 zoom: 1,
                 motionTracking: false, // disables device orientation following
                 motionTrackingControl: false,
-                disableDefaultUI: true, // Hide default UI
+                panControl: false,
+                enableCloseButton: false,
+                fullscreenControl: false,
+                zoomControl: false,
+                addressControl: true,
+                linksControl: true, // Arrow links to navigate
+                clickToGo: true,
             });
 
             DKM.streetView.setMotionTracking(false);
-            DKM.streetView.addListener('pano_changed', () => DKM.streetView.setMotionTracking(false));
-            DKM.streetView.addListener('visible_changed', () => DKM.streetView.setMotionTracking(false));
-            DKM.streetView.addListener('pov_changed', () => DKM.streetView.setMotionTracking(false));
-            google.maps.event.addListenerOnce(DKM.streetView, 'status_changed', () => DKM.streetView.setMotionTracking(false));
-            setTimeout(() => DKM.streetView.setMotionTracking(false), 1000);
-
             // Add event listener for position or heading change in streetview 
             // to rotate or move arrow
             DKM.streetView.addListener('position_changed', updateArrowMarker);
