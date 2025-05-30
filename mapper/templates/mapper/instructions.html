@@ -38,20 +38,21 @@
             <div id="collapse-report-location" class="accordion-collapse collapse" aria-labelledby="heading-report-location" data-bs-parent="#instructionsAccordion">
                 <div class="accordion-body">
                     <p>To create a new dropped kerb report, go to the menu and click <a href="{% url 'map-reports' %}">Add Report</a>. 
-                        A map will load, as shown below. The first time it loads, you will need to allow the app to access your location.
-                        If you do not allow this, the map will be centred on the UK. You can zoom to your current location at any time by clicking 
-                        the crosshair button 
-                        <img src="{% static 'images/crosshair.png' %}" alt="crosshair icon" class="map-button-inline">.
+                        A map will load, as shown below. 
+                        
                     </p>
-
-                    <p></p>
-                    
-                    <div class="mt-2 para-422">
+        
+                    <div class="mt-2">
                         <img src="{% static 'images/instructions_1.webp' %}" alt="Map loads" class="instructions-img map-view-img">
                     </div>
-                    <div class="mt-2 para-423">
-                        <img src="{% static 'images/instructions_1_wide.webp' %}" alt="Map loads" class="instructions-img map-view-img">
-                    </div>
+
+                    <p>When the map loads, it zooms in on the centre of the UK. To zoom in in your current location,
+                        click or tap the crosshair button 
+                        <img src="{% static 'images/crosshair.png' %}" alt="crosshair icon" class="map-button-inline">.
+                        You will need to allow the app to access your location to use this feature.
+                        The crosshair icon will turn blue and the button background yellow, which means the map will follow your location as you move around.
+                        To turn this feature off, click the crosshair button again, and it will turn black.
+                    </p>
 
                     <p>You can toggle between this map view and satellite view by clicking the toggle satellite view button
                         <img src="{% static 'images/toggle_satellite_button.png' %}" alt="Toggle satellite button" class="map-button-inline">

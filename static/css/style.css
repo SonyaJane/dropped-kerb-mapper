@@ -638,7 +638,8 @@ header.container {
   left: 1.4rem;   /* Slightly to the right, so they overlap a bit */
 }
 
-.button-active {
+.button-active,
+.maplibregl-ctrl-geolocate-active {
     background: #F7CE9D !important;
 }
 
