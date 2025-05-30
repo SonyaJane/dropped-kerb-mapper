@@ -75,6 +75,14 @@ export default function initialiseMap() {
         mapControlsContainer.insertBefore(geolocateEl, mapControlsContainer.firstChild);
         //  add class to the geolocate control for styling
         geolocateEl.classList.add('map-control');
+        // Add a custom crosshair icon to the geolocate control
+        // Remove the default icon and add a Bootstrap icon
+        const crosshairIcon = document.querySelector('.maplibregl-ctrl-icon');
+        if (crosshairIcon) {
+            crosshairIcon.remove();
+        }
+        const geolocateButton = document.querySelector('.maplibregl-ctrl-geolocate');
+        geolocateButton.classList.add('bi', 'bi-crosshair');
     }
 
     // Add a custom AttributionControl with compact mode enabled.

@@ -562,7 +562,7 @@ header.container {
     border-radius: 4px;
     border: 2px solid var(--color-orange-4);
     z-index: 2;
-    background: rgb(246, 245, 241);
+    background: transparent;
 }
 
 /* User location button */
@@ -578,24 +578,21 @@ header.container {
     display: flex;
     align-items: center;
     justify-content: center; 
+    background: transparent;
 }
 #map-controls-container .maplibregl-ctrl-group.maplibregl-ctrl {
     box-shadow: none !important;
     float: none !important;
     margin: none !important;
+    background: transparent !important;
 }
 #map-controls-container .maplibregl-ctrl-top-right .maplibregl-ctrl {
     float: none;
     margin: 0;
 }
-#map-controls-container .maplibregl-ctrl button .maplibregl-ctrl-icon {
-    background-size: contain !important; /* or 100% 100% */
-    background-repeat: no-repeat !important;
-    background-position: center !important;
-}
 
 #map-controls-container-and-search .maplibregl-ctrl-group button {
-    background-color: rgb(246, 245, 241) !important;
+    background-color: transparent;
 }
 
 /* Add new report mode button icon */
@@ -613,7 +610,8 @@ header.container {
 /* search submit icon */
 .bi-search,
 .bi-arrow-right,
-.bi-x {
+.bi-x,
+.bi-crosshair {
     font-size: 1.5rem;
     color: black;
 }
@@ -639,7 +637,7 @@ header.container {
 }
 
 .button-active,
-.maplibregl-ctrl-geolocate-active {
+.maplibregl-ctrl-top-right.map-control:has(.maplibregl-ctrl-geolocate-active) {
     background: #F7CE9D !important;
 }
 
