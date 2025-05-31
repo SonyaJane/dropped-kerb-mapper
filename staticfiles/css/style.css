@@ -1126,15 +1126,6 @@ html:has(#map) footer {
         font-size: 1.25rem;
         max-width: 350px;
     }
-
-    .para-422 {
-        display: none;
-    }
-    
-    .para-423 {
-        display: inline;
-    }
-    
 }
 
 @media (min-width: 576px) {

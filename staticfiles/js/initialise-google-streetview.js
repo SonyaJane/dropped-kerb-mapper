@@ -1,10 +1,12 @@
 import handleStreetViewMapClick from "./handle-streetview-map-click.js";
 
 export default function initialiseGoogleStreetView() {
+    // Adds click event listener to the toggle Street View button
+
     // set up variables
     DKM.streetView = null;           // Google Street View instance
     DKM.isStreetViewVisible = false; // Flag to track if Street View is currently visible
-    DKM.awaitingStreetViewClick = false; // Flag to track if we are waiting for a click to set Street View
+    DKM.awaitingFirstMapClick = false; // Flag to track if we are waiting for a click to set Street View
 
     // arrow marker variables
     DKM.arrowMarker = null; // MapLibre marker for the arrow
@@ -12,7 +14,8 @@ export default function initialiseGoogleStreetView() {
 
     const svBtn = document.getElementById('toggle-streetview');  // Button to toggle Street View
     const svContainer = document.getElementById('streetview-container'); // Container for Street View
-    const mapDiv = document.getElementById('map');               // Map container
+    const mapDiv = document.getElementById('map'); // Map container
+    const svMsg = document.getElementById('streetview-message'); // Message to show when waiting for Street View click
 
     function removeArrowMarker() {
         if (DKM.arrowMarker) {
@@ -24,27 +27,33 @@ export default function initialiseGoogleStreetView() {
 
     // Show/hide Street View panel and manage state
     svBtn.addEventListener('click', function() {
+        // Toggle Street View visibility
         DKM.isStreetViewVisible = !DKM.isStreetViewVisible;
         if (DKM.isStreetViewVisible) {
-            svContainer.style.display = 'block';
-            svContainer.style.pointerEvents = 'auto';
-            svBtn.classList.add('button-active');
-            mapDiv.style.height = '50%';
-            DKM.awaitingStreetViewClick = true;
+            // Turn on Street View
+            svBtn.classList.add('button-active'); // Add active class to button
+            svContainer.style.display = 'block'; // Show Street View container
+            svContainer.style.pointerEvents = 'auto'; // Enable pointer events on the container
+            mapDiv.style.height = '50%'; // Reduce map height to make space for Street View
+            DKM.awaitingFirstMapClick = true; // Set flag to indicate we are waiting for a click to set Street View
+            // add click event listener to the map to handle Street View clicks
+            DKM.map.on('click', handleStreetViewMapClick);
         } else {
-            svContainer.style.display = 'none';
-            svContainer.style.pointerEvents = 'none';
-            svBtn.classList.remove('button-active');
-            mapDiv.style.height = '100%';
-            DKM.awaitingStreetViewClick = false;
-            removeArrowMarker();
+            // Turn off Street View
+            svBtn.classList.remove('button-active'); // Remove active class from button
+            DKM.streetView = null; // Clear Street View instance
+            svContainer.style.display = 'none'; // Hide Street View container
+            svContainer.style.pointerEvents = 'none'; // Disable pointer events on the container
+            mapDiv.style.height = '100%'; // Restore full height to the map
+            DKM.awaitingFirstMapClick = false; // Clear waiting flag
+            removeArrowMarker(); // Remove arrow marker if it exists
+            svMsg.classList.remove('hidden'); // Restore waiting message
+            // Remove click event listener from the map
+            DKM.map.off('click', handleStreetViewMapClick);
         }
         DKM.map.resize();
     });
-
-    // On map click, create or move marker and Street View (if active and waiting)
-    DKM.map.on('click', handleStreetViewMapClick);
-
+    
     // Resize map on window resize or when Street View is toggled
     window.addEventListener('resize', () => DKM.map.resize());
 }

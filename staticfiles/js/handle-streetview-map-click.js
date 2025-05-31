@@ -7,9 +7,8 @@ export default function handleStreetViewMapClick(e) {
     const latLng = {lat: e.lngLat.lat, lng: e.lngLat.lng};
     const svMsg = document.getElementById('streetview-message'); // Message to show when waiting for Street View click
 
-
-    // Very first click after toggling Street View
-    if (DKM.isStreetViewVisible && DKM.awaitingStreetViewClick) {
+    // First click after toggling Street View
+    if (DKM.isStreetViewVisible && DKM.awaitingFirstMapClick) {
         // If it doesnt already exist, Create streetview and show at clicked location
         if (!DKM.streetView) {
             // Create new Street View panorama
@@ -29,16 +28,19 @@ export default function handleStreetViewMapClick(e) {
                 clickToGo: true,
             });
 
-            DKM.streetView.setMotionTracking(false);
-            // Add event listener for position or heading change in streetview 
-            // to rotate or move arrow
+            //DKM.streetView.setMotionTracking(false);
+
+            // Create arrow marker at the clicked location
+            updateArrowMarker();
+            
+            // Add event listener for position or heading change in streetview to rotate or move arrow
             DKM.streetView.addListener('position_changed', updateArrowMarker);
             DKM.streetView.addListener('pov_changed', updateArrowMarker);
             
             // Remove waiting message
-            svMsg.remove();
+            svMsg.classList.add('hidden');
             // No longer waiting for first click    
-            DKM.awaitingStreetViewClick = false; 
+            DKM.awaitingFirstMapClick = false; 
         } 
     } else {
         // If Street View already exists, just update its position

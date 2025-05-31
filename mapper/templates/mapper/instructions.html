@@ -46,39 +46,39 @@
                         <img src="{% static 'images/instructions_1.webp' %}" alt="Map loads" class="instructions-img map-view-img">
                     </div>
 
-                    <p>When the map loads, it zooms in on the centre of the UK. To zoom in in your current location,
-                        click or tap the crosshair button 
+                    <p>When the map loads, it zooms in on the centre of the UK. To zoom in on your current location,
+                        click or tap the geolocate button 
                         <img src="{% static 'images/crosshair.png' %}" alt="crosshair icon" class="map-button-inline">.
                         You will need to allow the app to access your location to use this feature.
-                        The crosshair icon will turn blue and the button background yellow, which means the map will follow your location as you move around.
-                        To turn this feature off, click the crosshair button again, and it will turn black.
+                    </p>
+                    
+                    <p>when you tap the geolocate button it will turn orange,
+                        <img src="{% static 'images/crosshair-on.png' %}" alt="crosshair icon" class="map-button-inline">
+                        which means the map will follow your location as you move around.
+                        To turn this feature off, click the button again.
                     </p>
 
-                    <p>You can toggle between this map view and satellite view by clicking the toggle satellite view button
-                        <img src="{% static 'images/toggle_satellite_button.png' %}" alt="Toggle satellite button" class="map-button-inline">
-                    </p>
-                    <p>When in satellite view, the button turns orange.
-                        <img src="{% static 'images/toggle_satellite_button_orange.png' %}" alt="Toggle satellite button turned orange" class="map-button-inline">
+                    <p class="bold-font mb-1 mt-4">Search for a location</p>
+
+                    <p>To search for a specific place or location, click the search button
+                       <img src="{% static 'images/search_button.png' %}" alt="Search button" class="map-button-inline">.
+                        to reveal a search bar
                     </p>
 
-                    <div class="mt-2 para-422">
-                        <img src="{% static 'images/instructions_2.webp' %}" alt="Satellite view" class="instructions-img map-view-img">
+                    <div class="mt-2">
+                        <img src="{% static 'images/search_bar.png' %}" alt="Search Bar" class="instructions-img map-view-img">
                     </div>
-                    <div class="mt-2 para-423">
-                        <img src="{% static 'images/instructions_2_wide.webp' %}" alt="Satellite view" class="instructions-img map-view-img">
-                    </div>
-
-                    <p class="bold-font mb-1 mt-3">Find your dropped kerb on the map</p>
-                    <p>To search for a location, you can use the search bar in the top left of the map.
-                        Type a place or location in the search bar, and then click the search button 
-                        <img src="{% static 'images/search_button.png' %}" alt="Search button" class="map-button-inline">.
-                        A list of search results will appear below the search bar, and you can select one of them to centre the map on that location.</p>
                         
-                    <div class="mt-2 para-422">
-                        <img src="{% static 'images/search_results.webp' %}" alt="Search results" class="instructions-img map-view-img">
+                    <p>Click on the search bar to type your location, and then click the arrow button.</p>
+                    
+                    <div class="mt-2">
+                        <img src="{% static 'images/search_bar_entered.png' %}" alt="Search bar with arrow" class="instructions-img map-view-img">
                     </div>
-                    <div class="mt-2 para-423">
-                        <img src="{% static 'images/search_results_wide.webp' %}" alt="Search results" class="instructions-img map-view-img">
+
+                    <p>A list of search results will appear below the search bar, and you can select one of them to centre the map on that location.</p>
+                        
+                    <div class="mt-2">
+                        <img src="{% static 'images/search_results.webp' %}" alt="Search results" class="instructions-img map-view-img">
                     </div>
 
                     <p>You can also navigate to a location by moving the map around as follows:</p>
@@ -92,37 +92,58 @@
                     <p>On desktop computers and laptops:</p>
                     <ul>
                         <li>Click on the map and drag it to move it around (pan).</li>
-                        <li>To zoom in and out, you can either:
-                            <ul>
+                        <li>To zoom in and out, you can:
+                            <ul class="mt-3">
                                 <li>Use the scroll wheel on your mouse.</li>
                                 <li>If you have a touchpad, use two fingers to pinch to zoom in and out.</li>
-                                <li>Press Ctrl and + to zoom in, and Ctrl and - to zoom out.</li>
+                                <li>Press Ctrl and + at the same time to zoom in, and Ctrl and - to zoom out.</li>
                             </ul>
                         </li>
                     </ul>
 
+                    <p class="bold-font mb-1 mt-4">Finding a dropped kerb</p>
+
+                    <p>
+                        If you are outside and can see the dropped kerb you want to report,
+                        you can use the geolocate button to centre the map on your current location,
+                        and then zoom in to find the dropped kerb.
+                    </p>
+                    <p>
+                        Notice that if you zoom in as far as possible, you can see the pavements 
+                        (AKA sidewalks) alongside the road. Pavements are shown in grey, 
+                        with a dotted line indicating where they meet the road.
+                    </p>
+
+                    <div class="mt-2">
+                        <img src="{% static 'images/pavements.png' %}" alt="Pavements in grey" class="instructions-img map-view-img">
+                    </div>                    
+
+                    <p>
+                        The best way to find the precise location of the dropped kerb on the map
+                        is to activate Google streetview. To do this, click the streetview button
+                        <img src="{% static 'images/streetview_button.png' %}" alt="Streetview button" class="map-button-inline">.  
+                        This will split the screen in two, with the streetview below the map.
+                    </p>
                     <p>Toggle between the map-view and satellite view to help you locate the dropped kerb.</p>
-                    <p>Notice that if you zoom right in in map-view you can see the outlines of paths. 
-                        Paths are shown in grey, with a dotted line where they meet the road (see the map-view image below for an example).</p>
-                    <p>Toggle to satellite view to zone in on the location of the dropped kerb. 
+
+                        <p>Toggle to satellite view to zone in on the location of the dropped kerb. 
                         Even if the dropped kerb is blurry, or hidden by a tree, the satellite view 
                         can provide additional visual information to help you find it (see the satellite-view image below for an example, a dropped kerb is circled in blue).</p>
                     </p>
 
-                    <div class="row">
-                        <div class="mt-2 para-422 col-12 col-xl-6">
-                            <img src="{% static 'images/map_view_zoom.webp' %}" alt="Map view zoomed in" class="instructions-img map-view-img">
-                        </div>
-                        <div class="mt-2 para-423 col-12 col-xl-6">
-                            <img src="{% static 'images/map_view_zoom_wide.webp' %}" alt="Map view zoomed in" class="instructions-img map-view-img">
-                        </div>
+                    <div class="mt-2 para-422 col-12 col-xl-6">
+                        <img src="{% static 'images/satellite_view_zoom.webp' %}" alt="Satellite view zoomed in" class="instructions-img map-view-img">
+                    </div>
 
-                        <div class="mt-2 para-422 col-12 col-xl-6">
-                            <img src="{% static 'images/satellite_view_zoom.webp' %}" alt="Satellite view zoomed in" class="instructions-img map-view-img">
-                        </div>
-                        <div class="mt-2 para-423 col-12 col-xl-6">
-                            <img src="{% static 'images/satellite_view_zoom_wide.webp' %}" alt="Satellite view zoomed in" class="instructions-img map-view-img">
-                        </div>
+
+                    <p>You can toggle between the Ordnance Survey (OS) map view and Google satellite view by clicking the toggle satellite view button
+                        <img src="{% static 'images/toggle_satellite_button.png' %}" alt="Toggle satellite button" class="map-button-inline">.
+                        When in satellite view, the button turns orange.
+                        <img src="{% static 'images/toggle_satellite_button_orange.png' %}" alt="Toggle satellite button turned orange" class="map-button-inline">
+                    </p>
+
+                    <div class="mt-2">
+                        <img src="{% static 'images/instructions_2.webp' %}" alt="Satellite view" class="instructions-img map-view-img">
                     </div>
 
                     <p class="bold-font mb-1 mt-3">Activate new report mode</p>
