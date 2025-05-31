@@ -103,15 +103,20 @@
 
                     <p class="bold-font mb-1 mt-4">Satellite View</p>
 
-                    <p>Google satellite view can be useful for comparing the map with the real world.
-                        We don't recommend using it to find dropped kerbs, as it doesn't quite line up with the 
-                        Ordnance Survey map, which is the map we use to create the reports.
+                    <p>Google satellite view can be useful for comparing the map with the real world,
+                        and understanding the layout of the area you are looking at.
+                        Do not use satellite view to find the precise location of dropped kerbs,
+                        because it doesn't quite line up with the Ordnance Survey map - there is a slight offset
+                        between the two.
+                        Please use the Ordnance Survey map to report dropped kerbs (we show you how to do this below).
+                        A great way to find dropped kerbs and their precise location is to activate Google
+                        streetview, as shown in the next section.
                     </p>
 
                     <p>
                         To activate satellite view, click the toggle satellite view button
                         <img src="{% static 'images/toggle_satellite_button.png' %}" alt="Toggle satellite button" class="map-button-inline">.
-                        When in satellite view, the button turns orange.
+                        When in satellite view mode, the button turns orange.
                         <img src="{% static 'images/toggle_satellite_button_orange.png' %}" alt="Toggle satellite button turned orange" class="map-button-inline">
                     </p>
 
@@ -165,9 +170,9 @@
                         Now you are ready to create a new report for the dropped kerb.
                     </p>
 
-                    
-
-                    
+                    <div class="mt-2">
+                        <img src="{% static 'images/point_at_dropped_kerb.png' %}" alt="Looking at the dropped kerb in streetview" class="instructions-img map-view-img">
+                    </div>
 
                     <p class="bold-font mb-1 mt-3">Activate new report mode</p>
 
@@ -185,9 +190,12 @@
                     <p>
                         Click on the location of the dropped kerb on the map. 
                         A yellow marker will appear where you clicked, and an orange form will open on bottom left of the screen.
-                        If you click on the map again while the form is open, the marker will move to the new location, and 
-                        the form will update to show the new location, as given by the longitude and latitude.
+                        If you click on the map again while the form is open, the marker will move to the new location.
                     </p>
+
+                    <div class="mt-2">
+                        <img src="{% static 'images/creating_report.png' %}" alt="Creating a report" class="instructions-img map-view-img">
+                    </div>
 
                     <p>If you would like to record the condition of the dropped kerb, you can select from three options:</p>    
                     
@@ -197,19 +205,26 @@
                         <li class="bullet-red">Red: The dropped kerb is dangerous or not usable.</li>
                     </ul>
                     
-                    <p>
-                        If you select either Orange or Red, please select at least one reason why.
-                        You many also leave a comment to further clarify your reason for selecting the condition.</li>
+                    <p>If you select either Orange or Red, please select at least one reason why by clicking
+                        the reasons field below the condition dropdown, and then selecting one or more reasons from the list.
+                        You can scroll down the list to see all the available reasons.
                     </p>
 
-                    <p>You can also report locations where there is no dropped kerb, but one is needed to provide access.</p>
-                    <p>To do this, select the condition 'White' in the form, and add a brief comment below to explain why
-                        you think there should be a dropped kerb there.</p>
+                    <div class="mt-2">
+                        <img src="{% static 'images/select_reason.png' %}" alt="Select a reason" class="instructions-img map-view-img">
+                    </div>
 
+                    <p>You many also leave a comment to further clarify your reason for selecting the condition.</p>
+
+                    <p>You can also report locations where there is no dropped kerb, but one is needed to provide access. 
+                        To do this, select the condition 'White', and add a brief comment below to explain why
+                        you think there should be a dropped kerb there.</p>
 
                     <p>If you would like to add a photo of the dropped kerb, you can do so by clicking the 'Choose File' button. 
                         This will open a file browser, where you can select a photo from your device. 
                         The photo will be uploaded when you submit the report.</p>
+
+                    <img src="{% static 'images/choose_photo.png' %}" alt="Choose a photo" class="instructions-img map-view-img">
 
                     <p>When you are happy with the report, click the 'Submit' button. 
                         The report will be submitted and the marker will turn the same colour as the condition you selected.
@@ -222,9 +237,9 @@
                         contains a link to the view report page, where you can see the full details of the report, and a link to
                         the edit report page, where you can change any details of the report.</p>
 
-                    <img src="{% static 'images/marker_popup.png' %}" alt="Marker Popup" class="instructions-img popup-img">
+                    <img src="{% static 'images/report_popup.png' %}" alt="Marker Popup" class="instructions-img map-view-img">
 
-                    <p>To close the popup, click anywhere on the map.</p>
+                    <p>To close the popup, click anywhere else on the map.</p>
 
                     <p>You can see all your reports on the map, and you can also see them in a list, as descibed in the next section.</p>
                 </div>
@@ -291,6 +306,6 @@
         </div>
     </div>
 
-    <p class="mt-3">If you have any questions, please message us using the <a href="{% url 'contact' %}">Contact</a> page.</p>
+    <p class="mt-2">If you have any questions, please message us using the <a href="{% url 'contact' %}" class="custom-link">Contact</a> page.</p>
 </div>
 {% endblock %}

@@ -837,8 +837,6 @@ header.container {
     min-width: 0 !important;
     max-width: 100% !important;
     box-sizing: border-box;
-    margin-right: 12px;
-	margin-left: 12px;
 }
 
 /*  Edit report page only */
