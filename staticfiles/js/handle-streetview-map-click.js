@@ -34,8 +34,8 @@ export default function handleStreetViewMapClick(e) {
             updateArrowMarker();
             
             // Add event listener for position or heading change in streetview to rotate or move arrow
-            DKM.streetView.addListener('position_changed', updateArrowMarker);
-            DKM.streetView.addListener('pov_changed', updateArrowMarker);
+            DKM._positionListener = DKM.streetView.addListener('position_changed', updateArrowMarker);
+            DKM._povListener = DKM.streetView.addListener('pov_changed', updateArrowMarker);
             
             // Remove waiting message
             svMsg.classList.add('hidden');

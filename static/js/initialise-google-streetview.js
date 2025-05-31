@@ -1,4 +1,5 @@
 import handleStreetViewMapClick from "./handle-streetview-map-click.js";
+import updateArrowMarker from "./update-arrow-marker.js";
 
 export default function initialiseGoogleStreetView() {
     // Adds click event listener to the toggle Street View button
@@ -40,12 +41,23 @@ export default function initialiseGoogleStreetView() {
             DKM.map.on('click', handleStreetViewMapClick);
         } else {
             // Turn off Street View
+            console.log('Turning off Street View');
+            // Remove event listeners for position and POV changes
+            if (DKM._positionListener) {
+                DKM._positionListener.remove();
+                DKM._positionListener = null;
+            }
+            if (DKM._povListener) {
+                DKM._povListener.remove();
+                DKM._povListener = null;
+            }
             svBtn.classList.remove('button-active'); // Remove active class from button
             DKM.streetView = null; // Clear Street View instance
+            DKM.isStreetViewVisible = false; // Clear visibility flag
+            DKM.awaitingFirstMapClick = false;  // Clear waiting flag
             svContainer.style.display = 'none'; // Hide Street View container
             svContainer.style.pointerEvents = 'none'; // Disable pointer events on the container
             mapDiv.style.height = '100%'; // Restore full height to the map
-            DKM.awaitingFirstMapClick = false; // Clear waiting flag
             removeArrowMarker(); // Remove arrow marker if it exists
             svMsg.classList.remove('hidden'); // Restore waiting message
             // Remove click event listener from the map

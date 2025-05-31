@@ -38,7 +38,7 @@
             <div id="collapse-report-location" class="accordion-collapse collapse" aria-labelledby="heading-report-location" data-bs-parent="#instructionsAccordion">
                 <div class="accordion-body">
                     <p>To create a new dropped kerb report, go to the menu and click <a href="{% url 'map-reports' %}">Add Report</a>. 
-                        A map will load, as shown below. 
+                        An Ordnance Survey (OS) map will load, as shown below. 
                         
                     </p>
         
@@ -101,6 +101,24 @@
                         </li>
                     </ul>
 
+                    <p class="bold-font mb-1 mt-4">Satellite View</p>
+
+                    <p>Google satellite view can be useful for comparing the map with the real world.
+                        We don't recommend using it to find dropped kerbs, as it doesn't quite line up with the 
+                        Ordnance Survey map, which is the map we use to create the reports.
+                    </p>
+
+                    <p>
+                        To activate satellite view, click the toggle satellite view button
+                        <img src="{% static 'images/toggle_satellite_button.png' %}" alt="Toggle satellite button" class="map-button-inline">.
+                        When in satellite view, the button turns orange.
+                        <img src="{% static 'images/toggle_satellite_button_orange.png' %}" alt="Toggle satellite button turned orange" class="map-button-inline">
+                    </p>
+
+                    <div class="mt-2">
+                        <img src="{% static 'images/instructions_2.webp' %}" alt="Satellite view" class="instructions-img map-view-img">
+                    </div>
+
                     <p class="bold-font mb-1 mt-4">Finding a dropped kerb</p>
 
                     <p>
@@ -124,27 +142,32 @@
                         <img src="{% static 'images/streetview_button.png' %}" alt="Streetview button" class="map-button-inline">.  
                         This will split the screen in two, with the streetview below the map.
                     </p>
-                    <p>Toggle between the map-view and satellite view to help you locate the dropped kerb.</p>
 
-                        <p>Toggle to satellite view to zone in on the location of the dropped kerb. 
-                        Even if the dropped kerb is blurry, or hidden by a tree, the satellite view 
-                        can provide additional visual information to help you find it (see the satellite-view image below for an example, a dropped kerb is circled in blue).</p>
-                    </p>
-
-                    <div class="mt-2 para-422 col-12 col-xl-6">
-                        <img src="{% static 'images/satellite_view_zoom.webp' %}" alt="Satellite view zoomed in" class="instructions-img map-view-img">
+                    <div class="mt-2">
+                        <img src="{% static 'images/streetview_split.png' %}" alt="Activate streetview" class="instructions-img map-view-img">
                     </div>
 
-
-                    <p>You can toggle between the Ordnance Survey (OS) map view and Google satellite view by clicking the toggle satellite view button
-                        <img src="{% static 'images/toggle_satellite_button.png' %}" alt="Toggle satellite button" class="map-button-inline">.
-                        When in satellite view, the button turns orange.
-                        <img src="{% static 'images/toggle_satellite_button_orange.png' %}" alt="Toggle satellite button turned orange" class="map-button-inline">
+                    <p>
+                        As per the instructions, click on a road on the map to get the corresponding streetview image.
+                        A blue arrow will appear on the map, indicating the direction you are looking at.
+                        You can move around the streetview image by clicking and dragging it.
+                        You can also click on the map to move the blue arrow to a different location,
+                        and the streetview image will update to show the view from that location.
                     </p>
 
                     <div class="mt-2">
-                        <img src="{% static 'images/instructions_2.webp' %}" alt="Satellite view" class="instructions-img map-view-img">
+                        <img src="{% static 'images/streetview_click_on_road.png' %}" alt="Blue arrow on map corresponding to streetview location and direction" class="instructions-img map-view-img">
                     </div>
+
+                    <p>
+                        Use the streetview image to find the dropped kerb you want to report.
+                        When it is in view, the blue arrow will point towards it on the map.
+                        Now you are ready to create a new report for the dropped kerb.
+                    </p>
+
+                    
+
+                    
 
                     <p class="bold-font mb-1 mt-3">Activate new report mode</p>
 

@@ -1,4 +1,6 @@
 export default function updateArrowMarker() {
+    console.log('Updating arrow marker');
+    if (!DKM.isStreetViewVisible || !DKM.streetView) return;
     // Get the actual Street View position
     const position = DKM.streetView.getPosition();
     if (!position) return;
