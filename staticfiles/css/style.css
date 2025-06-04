@@ -630,6 +630,7 @@ header.container {
   transform: translateY(-35%);
   font-size: 1.6rem;
   left: 1px;
+  color: black;
 }
 
 .icon-stack i:last-child {

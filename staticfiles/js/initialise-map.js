@@ -93,4 +93,7 @@ export default function initialiseMap() {
 
     // Track if satellite view is on or off
     DKM.isSatelliteViewOn = false; 
+
+    // Disable Double-Click Zoom on the Map (So our double tap to select a marker handler isn't blocked)
+    DKM.map.doubleClickZoom.disable();
 }
