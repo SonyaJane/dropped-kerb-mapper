@@ -88,6 +88,23 @@ export default function addMarkerForReport(report) {
         setMarkerColour(marker.getElement(), 'purple');
     });
 
+    // Add custom double-tap (touch) handler for iOS/iPad/tablets
+    let lastTap = 0;
+    markerElement.addEventListener('touchend', function(e) {
+        const currentTime = new Date().getTime();
+        const tapLength = currentTime - lastTap;
+        if (tapLength < 400 && tapLength > 0) { // 400ms threshold
+            // Double-tap detected: enable dragging, turn marker purple, close popup
+            e.stopPropagation();
+            e.preventDefault();
+
+            if (marker.getPopup()) marker.getPopup().remove();
+            marker.setDraggable(true);
+            setMarkerColour(marker.getElement(), 'purple');
+        }
+        lastTap = currentTime;
+    });
+
     // Add an event listener to capture the new position when the marker is dragged
     marker.on('dragend', () => {
         // Close the popup if it is open
