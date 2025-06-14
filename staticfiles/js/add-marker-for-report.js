@@ -75,80 +75,83 @@ export default function addMarkerForReport(report) {
         }, 300); // 300ms is typical dblclick threshold
     }, { capture: true });
 
-    // Add a double-click event listener to make marker draggable
-    marker.getElement().addEventListener('dblclick', (e) => {
-        e.stopPropagation(); // Prevent the map click event from firing
-        e.preventDefault(); // Prevent the popup from toggling
-        // Close the popup if it is open
-        if (marker.getPopup()) {
-            marker.getPopup().remove();
-        }
-        // Enable dragging
-        marker.setDraggable(true); 
-        // Change the marker colour to purple when in dragging mode
-        setMarkerColour(marker.getElement(), 'purple');
-    });
-
-    // Add custom double-tap (touch) handler for iOS/iPad/tablets
-    let lastTap = 0;
-    markerElement.addEventListener('touchend', function(e) {
-        const currentTime = new Date().getTime();
-        const tapLength = currentTime - lastTap;
-        if (tapLength < 400 && tapLength > 0) { // 400ms threshold
-            // Double-tap detected: enable dragging, turn marker purple, close popup
-            e.stopPropagation();
-            e.preventDefault();
-
-            if (marker.getPopup()) marker.getPopup().remove();
-            marker.setDraggable(true);
-            setMarkerColour(marker.getElement(), 'purple');
-        }
-        lastTap = currentTime;
-    });
-
-
-    // Add an event listener to capture the new position when the marker is dragged
-    marker.on('dragend', () => {
-        // Close the popup if it is open
-        if (marker.getPopup()) {
-            marker.getPopup().remove();
-        }
-
-        let { lat, lng } = marker.getLngLat();
-        // round the coordinates to 6 decimal places
-        lat = parseFloat(lat.toFixed(6));
-        lng = parseFloat(lng.toFixed(6));
-
-        // Check if the clicked location is within the boundary of the UK
-        const point = turf.point([lng, lat]);
-
-        // Check if the point is within any of the 4 UK polygons
-        let isWithinUK = false;
-        for (const feature of DKM.ukBoundary.features) {
-            if (turf.booleanPointInPolygon(point, feature)) {
-                isWithinUK = true;
-                break; // Exit the loop as soon as the point is within a polygon
+    // If the user is a superuser or the report was created by the user{
+    
+    if (window.CURRENT_USER_IS_SUPERUSER || (report.user_id === window.CURRENT_USER_ID)) {
+        // Add a double-click event listener to make marker draggable
+        marker.getElement().addEventListener('dblclick', (e) => {
+            e.stopPropagation(); // Prevent the map click event from firing
+            e.preventDefault(); // Prevent the popup from toggling
+            // Close the popup if it is open
+            if (marker.getPopup()) {
+                marker.getPopup().remove();
             }
-        }
+            // Enable dragging
+            marker.setDraggable(true); 
+            // Change the marker colour to purple when in dragging mode
+            setMarkerColour(marker.getElement(), 'purple');
+        });
 
-        if (!isWithinUK) {
-            // return the marker to its original position
-            marker.setLngLat([report.longitude, report.latitude]); // Set marker position
-            return; // Exit the function if the location is outside the UK
-        }
+        // Add custom double-tap (touch) handler for iOS/iPad/tablets
+        let lastTap = 0;
+        markerElement.addEventListener('touchend', function(e) {
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
+            if (tapLength < 400 && tapLength > 0) { // 400ms threshold
+                // Double-tap detected: enable dragging, turn marker purple, close popup
+                e.stopPropagation();
+                e.preventDefault();
 
-        updateReportLocation(report.id, lat, lng); // Send the updated location to the server
-        
-    });
+                if (marker.getPopup()) marker.getPopup().remove();
+                marker.setDraggable(true);
+                setMarkerColour(marker.getElement(), 'purple');
+            }
+            lastTap = currentTime;
+        });
 
-    // Add a click event listener to the map to disable marker dragging
-    DKM.map.on('click', () => {
-        if (marker.isDraggable()) {
-            marker.setDraggable(false); // Disable dragging
-            setMarkerColour(marker.getElement(), report.condition); // Reset the marker colour to its original condition colour
-        }
-    });
 
+        // Add an event listener to capture the new position when the marker is dragged
+        marker.on('dragend', () => {
+            // Close the popup if it is open
+            if (marker.getPopup()) {
+                marker.getPopup().remove();
+            }
+
+            let { lat, lng } = marker.getLngLat();
+            // round the coordinates to 6 decimal places
+            lat = parseFloat(lat.toFixed(6));
+            lng = parseFloat(lng.toFixed(6));
+
+            // Check if the clicked location is within the boundary of the UK
+            const point = turf.point([lng, lat]);
+
+            // Check if the point is within any of the 4 UK polygons
+            let isWithinUK = false;
+            for (const feature of DKM.ukBoundary.features) {
+                if (turf.booleanPointInPolygon(point, feature)) {
+                    isWithinUK = true;
+                    break; // Exit the loop as soon as the point is within a polygon
+                }
+            }
+
+            if (!isWithinUK) {
+                // return the marker to its original position
+                marker.setLngLat([report.longitude, report.latitude]); // Set marker position
+                return; // Exit the function if the location is outside the UK
+            }
+
+            updateReportLocation(report.id, lat, lng); // Send the updated location to the server
+            
+        });
+
+        // Add a click event listener to the map to disable marker dragging
+        DKM.map.on('click', () => {
+            if (marker.isDraggable()) {
+                marker.setDraggable(false); // Disable dragging
+                setMarkerColour(marker.getElement(), report.condition); // Reset the marker colour to its original condition colour
+            }
+        });
+    }
     // stash the report id on the marker instance so we can update it later
     marker._reportId = report.id;
     // add the marker to the markers array
