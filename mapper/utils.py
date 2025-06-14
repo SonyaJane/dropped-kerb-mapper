@@ -37,6 +37,7 @@ def serialise_report(report):
 
     return {
         'user': report.user.username if report.user else None,
+        'user_id': report.user.id if report.user else None,
         'user_report_number': report.user_report_number,
         'user_is_superuser': report.user.is_superuser if report.user
         else False,

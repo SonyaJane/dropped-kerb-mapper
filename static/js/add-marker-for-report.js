@@ -4,6 +4,7 @@ import updateReportLocation from "./update-report-location.js";
 /**
  * Creates and adds a MapLibre GL marker for the given report object,
  * configures its popup content, and sets up all related interactions:
+ *   - Only the original user or superuser can edit a report
  *   - Single‐click toggles the popup (debounced to avoid double-clicks)
  *   - Double‐click enables dragging, with the marker turning purple
  *   - Drag end validates the new position against the UK boundary,

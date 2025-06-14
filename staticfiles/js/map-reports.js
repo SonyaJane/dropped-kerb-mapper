@@ -37,7 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadUKBoundary(); 
 
     // Add existing reports to the map. 
-    // If not superuser, only add users reports, otherwise add all reports
     addExistingReportsToMap();
 
     // Map controls: Add event listeners

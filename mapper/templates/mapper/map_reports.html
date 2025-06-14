@@ -124,6 +124,7 @@
     const mapIconUrl = "{% static 'images/map_icon.png' %}";
     const markerUrl = "{% static 'images/marker_32_48.png' %}";
     window.CURRENT_USER_IS_SUPERUSER = {{ user.is_superuser|yesno:"true,false" }};
+    window.CURRENT_USER_ID = {{ user.id }};
 </script>
 <script type="module" src="{% static 'js/map-reports.js' %}"></script>
 {% endblock %}

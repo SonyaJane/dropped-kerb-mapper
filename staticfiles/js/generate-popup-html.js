@@ -1,7 +1,7 @@
 /**
  * Constructs an HTML snippet for a MapLibre marker popup based on a report object.
  * - Shows report number (uses `id` or `user_report_number` for non-superusers).
- * - Includes view/edit links for the report.
+ * - Includes view/edit links for the report only for the original user or superuser.
  * - Displays latitude, longitude, place name, and county.
  * - Conditionally includes reasons and comments for red/orange conditions.
  * - Conditionally embeds the report photo if `photoUrl` is provided.
@@ -9,8 +9,9 @@
  *   Returns an HTML string suitable for use in a MapLibre GL Popup.
  */
 export default function generatePopupHTML(report) {
-    // If the user who created the report is a superuser, show the report id.
-    // Otherwise, show the user_report_number.
+    // If the user is a superuser, show the report id.
+    // If the user reported created the report show the user_report_number.
+    // Otherwise, do not show the report number.
     const reportNumber = window.CURRENT_USER_IS_SUPERUSER ? report.id : report.user_report_number;
     // Only include the reasons line if condition is red or orange.
     let reasons = '';
@@ -22,14 +23,15 @@ export default function generatePopupHTML(report) {
     if (report.comments) {
         comments = `<p><span class="orange-font">${report.comments}</span></p>`;
     }
-    return `
+    const report_id_content = `
         <p>
             <span>Report ${reportNumber}</span>
             <span>&nbsp;</span>
             <a href="/reports/${report.id}/" class="custom-link">view</a>
             <span>&nbsp;</span>
             <a href="/reports/${report.id}/edit/" class="custom-link">edit</a>
-        </p>
+        </p>`
+    const report_details_content = `
         <p>
             <span id="latitude-${report.id}"> ${report.latitude}, </span>
             <span id="longitude-${report.id}"> ${report.longitude}</span>
@@ -40,4 +42,14 @@ export default function generatePopupHTML(report) {
         <p>${report.comments}</p>
         ${report.photoUrl ? `<img src="${report.photoUrl}" alt="Photo of dropped kerb" class="popup-photo">` : ''}
     `;
+    
+    // if user create the report, show the report id and view/edit links
+    let content = '';
+    if (window.CURRENT_USER_IS_SUPERUSER || (report.user_id === window.CURRENT_USER_ID)) {
+        content = report_id_content + report_details_content;
+    } else {
+        content = report_details_content;
+    }
+
+    return content;
 }

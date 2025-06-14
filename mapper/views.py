@@ -70,8 +70,7 @@ class MapReportsView(LoginRequiredMixin, View):
 
     GET:
       - Instantiates an empty ReportForm
-      - Fetches existing reports: all for superusers, or only the
-        current user's reports
+      - Fetches existing reports
       - Serialises reports into JSON-safe dictionaries
       - Renders 'mapper/map_reports.html' passing:
           • form: ReportForm instance
@@ -93,8 +92,7 @@ class MapReportsView(LoginRequiredMixin, View):
         Handle GET requests for the interactive map-reports page.
 
         - Instantiates an empty ReportForm for new report submissions.
-        - Retrieves existing reports: all reports for superusers, or only the
-          current user's reports otherwise.
+        - Retrieves existing reports
         - Serialises each report into a JSON-safe dictionary.
         - Renders 'mapper/map_reports.html' with context:
             • form: ReportForm instance
@@ -108,18 +106,14 @@ class MapReportsView(LoginRequiredMixin, View):
             HttpResponse: The rendered map reports page.
         """
         form = ReportForm()
-        # Only show this user's reports (unless they're superuser)
-        if request.user.is_superuser:
-            reports = Report.objects.all()
-        else:
-            reports = Report.objects.filter(user=request.user)
+        # show all reports
+        reports = Report.objects.all()
         data = [serialise_report(report) for report in reports]
         return render(request, 'mapper/map_reports.html',
                       {'form': form, 
                        'reports': data,
                        'GOOGLE_MAPS_API_KEY': settings.GOOGLE_MAPS_API_KEY,
-                       # Indicate to the ReportForm that it is on the
-                       # map_reports page
+                       # Indicate to the ReportForm that it is on the map_reports page
                        'is_map_reports': True, 'is_edit': False})
 
     def post(self, request):
