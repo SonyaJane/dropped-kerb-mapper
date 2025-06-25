@@ -15,6 +15,7 @@ import searchLocation from "./search-location.js";
 import processSuccessfulReportSubmission from "./process-successful-report-submission.js";
 import processSuccessfulReportUpdate from "./process-successful-report-update.js";
 import removeAllMessages from "./remove-all-messages.js";
+import showTooltip from "./tooltips.js";
 
 document.addEventListener('DOMContentLoaded', () => { 
     
@@ -102,4 +103,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         removeAllMessages();
     });
+
+    // Add tooltip functionality to:
+    //  Geolocate button
+    // Remove the default title attribute from the geolocate button
+    let geoBtn = document.querySelector('.maplibregl-ctrl-geolocate')
+    geoBtn.removeAttribute('title'); 
+    DKM.map.on('load', () => {
+        // remove the title attribute from the geolocate button
+        geoBtn = document.querySelector('.maplibregl-ctrl-geolocate');
+        if (geoBtn) {
+            geoBtn.removeAttribute('title');
+        }
+    });
+    showTooltip('geolocate-btn', 'geolocate-tooltip');
+    // satellite toggle button
+    showTooltip('toggle-satellite', 'toggle-satellite-tooltip');
+    // add report button
+    showTooltip('add-report', 'add-report-tooltip');
+    // show streetview button
+    showTooltip('toggle-streetview', 'show-streetview-tooltip');
+    // search bar reveal button
+    showTooltip('text-search-reveal', 'show-searchbar-tooltip');
 });

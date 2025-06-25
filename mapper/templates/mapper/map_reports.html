@@ -24,29 +24,82 @@
                 <div id="map-controls-container">
                     
                     <!--Geolocate button will be moved to here-->
+                    <span class="custom-tooltip" 
+                        id="geolocate-tooltip">
+                        Find your location.   
+                        Your location will continue to be tracked on the map until you click the button again.
+                        This is useful if you are moving around and want the map to follow you.    
+                    </span>
 
                     <!-- Toggle map style button -->
-                    <button id="toggle-satellite" class="hover-orange map-control" aria-label="Toggle satellite map view">
+                    <button id="toggle-satellite" 
+                            class="hover-orange map-control" 
+                            aria-label="Toggle satellite map view" 
+                            data-tooltip="Switch between map and satellite view" 
+                            tabindex="0">
                         <img id="satellite-icon" src="{% static 'images/satellite.png' %}" alt="Satellite Icon">
                     </button>
+                    <span class="custom-tooltip" 
+                        id="toggle-satellite-tooltip">
+                        Switch between map and satellite view.
+                        Only use satellite view to compare the map with the real world.
+                        Do not use satellite view to find the precise location of dropped kerbs,
+                        because it doesn't quite line up with the Ordnance Survey map - there is a slight offset
+                        between the two.
+                    </span>
 
                     <!-- Add new report button -->
-                    <button id="add-report" class="hover-orange map-control" aria-label="Add new report">
+                    <button id="add-report" 
+                            class="hover-orange map-control" 
+                            aria-label="Add a new report"
+                            data-tooltip="Add a new report" 
+                            tabindex="0">
                         <img src="{% static 'images/marker-bw.png' %}" alt="Add Report Icon" id="add-report-icon">
                     </button>
+                    <span class="custom-tooltip" 
+                        id="add-report-tooltip">
+                        Activates 'add new report' mode. The cursor will turn into a blue cross
+                        which means you can then click on the location of the dropped kerb on the map.
+                        If you click on the wrong location, you can click on the map again to change the location.
+                        A form will appear at the bottom of the map where you can fill in the details of the dropped kerb.
+                    </span>
 
                     <!-- Toggle Google StreetView button -->
-                    <button id="toggle-streetview" class="hover-orange map-control" aria-label="Toggle Google StreetView">
+                    <button id="toggle-streetview" 
+                            class="hover-orange map-control" 
+                            aria-label="Toggle Google StreetView"
+                            data-tooltip="Show streetview below the map" 
+                            tabindex="0">
                         <div class="icon-stack">
                             <i class="bi bi-building"></i>
                             <i class="bi bi-tree"></i>
                         </div>
                     </button>
+                    <span class="custom-tooltip" 
+                        id="show-streetview-tooltip">
+                        Show Google Street View below the map. 
+                        Useful for finding the precise location of dropped kerbs. 
+                        A blue arrow will appear on the map, indicating the direction you are looking at on Street View.
+                    </span>
+
 
                     <!-- Location search button - expands search bar -->
-                    <button id="text-search-reveal" class="hover-orange map-control" type="button" aria-label="Expand search location bar">
+                    <button id="text-search-reveal" 
+                            class="hover-orange map-control" 
+                            type="button"   
+                            aria-label="Expand search location bar"
+                            data-tooltip="Search for a location" 
+                            tabindex="0">
                         <i class="bi bi-search"></i>
                     </button>
+                    <span class="custom-tooltip" 
+                        id="show-searchbar-tooltip">
+                        Show location search bar to search for a specific place or location.
+                        Click in the search bar and type in a location, 
+                        then click the arrow to submit your search.
+                        A list of results will appear below the search bar.
+                        Click on a result to jump to that location on the map.
+                    </span>
 
                 </div>
 

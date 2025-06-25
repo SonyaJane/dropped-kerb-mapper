@@ -457,8 +457,7 @@ header.container {
 /* Only apply :hover styles on desktop/laptop */
 @media (hover: hover) and (pointer: fine) {
     #text-search-submit:hover,
-    .hover-orange:hover,
-    .maplibregl-ctrl-geolocate:hover {
+    .hover-orange:hover {
         background: var(--color-orange-2) !important;
     }
 }
@@ -605,6 +604,32 @@ header.container {
 #satellite-icon {
     width: 35px;
     height: 35px; 
+}
+
+.map-control {
+    position: relative;
+}
+
+.custom-tooltip {
+    display: none;
+    position: absolute;
+    left: 50%;
+    top: 110%;
+    transform: translateX(-50%);
+    width: 300px;
+    background: var(--color-orange-1);
+    color: var(--color-coffee-6);
+    font-family: --primary-font, sans-serif;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 1.25rem;
+    white-space: normal;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.map-control.show-tooltip + .custom-tooltip {
+    display: block;
 }
 
 /* search submit icon */
@@ -1178,6 +1203,10 @@ html:has(#map) footer {
     
     .para-lg {
         display: inline;
+    }
+
+    .sidepanel {
+        width: 230px; 
     }
 
 }

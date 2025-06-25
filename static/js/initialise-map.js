@@ -75,6 +75,7 @@ export default function initialiseMap() {
         mapControlsContainer.insertBefore(geolocateEl, mapControlsContainer.firstChild);
         //  add class to the geolocate control for styling
         geolocateEl.classList.add('map-control');
+        geolocateEl.classList.add('hover-orange');
         // Add a custom crosshair icon to the geolocate control
         // Remove the default icon and add a Bootstrap icon
         const crosshairIcon = document.querySelector('.maplibregl-ctrl-icon');
@@ -83,6 +84,13 @@ export default function initialiseMap() {
         }
         const geolocateButton = document.querySelector('.maplibregl-ctrl-geolocate');
         geolocateButton.classList.add('bi', 'bi-crosshair');
+        // Add a custom tooltip to the geolocate button
+        const geolocateBtn = document.querySelector('.maplibregl-ctrl-top-right');
+        if (geolocateBtn) {
+            geolocateBtn.setAttribute('data-tooltip', 'Find your location. Your location will then be tracked on the map until you click the button again.');
+            // Add an id to the button for tooltip handling
+            geolocateBtn.id = 'geolocate-btn';
+    }
     }
 
     // Add a custom AttributionControl with compact mode enabled.
