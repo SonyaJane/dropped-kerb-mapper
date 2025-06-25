@@ -31,7 +31,13 @@ export default function showTooltip(btnId, tooltipId) {
     btn.addEventListener('touchstart', () => {
         tooltipActive = true;
         touchTimer = setTimeout(showTooltipClass, 1000);
+        // Prevent the default browser popup
+        e.preventDefault();
     });
-    btn.addEventListener('touchend', clearAll);
+    btn.addEventListener('touchend', () => {
+        setTimeout(() => {
+            btn.classList.remove('show-tooltip');
+        }, 1000);
+    });
     btn.addEventListener('touchcancel', clearAll);
 };
