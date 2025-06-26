@@ -620,7 +620,7 @@ header.container {
     background: var(--color-orange-1);
     color: var(--color-coffee-6);
     font-family: --primary-font, sans-serif;
-    padding: 4px 10px;
+    padding: 10px 10px;
     border-radius: 4px;
     font-size: 1.25rem;
     white-space: normal;
@@ -639,6 +639,22 @@ header.container {
 .bi-crosshair {
     font-size: 1.5rem;
     color: black;
+}
+
+.bi-geo-alt {
+    font-size: 1.8rem;
+    color: black;
+    margin-top: 3px;   
+    display: inline-block; /* Needed for margin to work reliably */
+}
+
+.custom-satellite-icon {
+    display: inline-block;
+    width: 33px;         /* Match your other icon sizes */
+    height: 33px;
+    background: url("../images/satellite.png") no-repeat center center;
+    background-size: contain;
+    vertical-align: middle;
 }
 
 /* toggle streetview */
@@ -1048,7 +1064,7 @@ html:has(#map) footer {
 	background-color: var(--color-orange-1);
 }
 
-/* Blusky icon */
+/* Bluesky icon */
 .bi-bluesky::before {
     content: "";
     background-color: currentColor;

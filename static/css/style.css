@@ -641,6 +641,22 @@ header.container {
     color: black;
 }
 
+.bi-geo-alt {
+    font-size: 1.8rem;
+    color: black;
+    margin-top: 3px;   
+    display: inline-block; /* Needed for margin to work reliably */
+}
+
+.custom-satellite-icon {
+    display: inline-block;
+    width: 33px;         /* Match your other icon sizes */
+    height: 33px;
+    background: url("../images/satellite.png") no-repeat center center;
+    background-size: contain;
+    vertical-align: middle;
+}
+
 /* toggle streetview */
 .icon-stack {
   position: relative;
@@ -1048,7 +1064,7 @@ html:has(#map) footer {
 	background-color: var(--color-orange-1);
 }
 
-/* Blusky icon */
+/* Bluesky icon */
 .bi-bluesky::before {
     content: "";
     background-color: currentColor;
