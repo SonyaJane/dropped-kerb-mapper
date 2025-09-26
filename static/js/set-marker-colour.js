@@ -14,7 +14,7 @@ export default function setMarkerColour(marker, colour) {
             colour = "#637052";
             break;
         case "white":
-            colour = "#F8F8FF";
+            colour = "#FFFFFF";
             break;
     }
 
@@ -23,10 +23,12 @@ export default function setMarkerColour(marker, colour) {
     let path = svg.getElementsByTagName("path")[0];
     path.setAttribute("fill", colour);
 
-    if (colour === "#F8F8FF") {
+    if (colour === "#FFFFFF") {
+        // make the outline black
+        path.setAttribute("stroke", "#000000"); // Set stroke to black for white marker
         // add a stroke to the 2nd circle
         path = svg.getElementsByTagName("circle")[1];
         path.setAttribute("stroke-width", "1px"); // Set stroke width for white marker
-        path.setAttribute("stroke", "#AAAAAA"); // Set stroke to grey for white marker
+        path.setAttribute("stroke", "#000000"); // Set stroke to black for white marker
     }
 }
