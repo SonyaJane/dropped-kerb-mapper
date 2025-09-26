@@ -10,9 +10,10 @@ if os.path.isfile('env.py'):
     import env
    
 BASE_DIR = Path(__file__).resolve().parent.parent
+SECRET_KEY = os.environ.get("SECRET_KEY")
+
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
 GOOGLE_MAPS_API_KEY = os.environ.get("GOOGLE_MAPS_API_KEY")
 
 DEBUG = False

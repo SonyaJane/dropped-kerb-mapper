@@ -33,6 +33,8 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
+from django.core.cache import cache
+from django.views.decorators.cache import cache_page
 from django.views.decorators.http import require_POST, require_GET
 from django.views import View
 from django.contrib.auth.decorators import login_required
@@ -43,6 +45,13 @@ from .forms import ReportForm, ContactForm
 from .models import Report
 from .tables import ReportTable
 from .utils import serialise_report, get_google_session_token
+
+# Create a shared requests session for better performance
+# This reuses connections and improves tile loading speed
+tile_session = requests.Session()
+tile_session.headers.update({
+    'User-Agent': 'Dropped-Kerb-Mapper/1.0'
+})
 
 
 # HOME PAGE
@@ -92,7 +101,7 @@ class MapReportsView(LoginRequiredMixin, View):
         Handle GET requests for the interactive map-reports page.
 
         - Instantiates an empty ReportForm for new report submissions.
-        - Retrieves existing reports
+        - Retrieves existing reports using an optimized query.
         - Serialises each report into a JSON-safe dictionary.
         - Renders 'mapper/map_reports.html' with context:
             • form: ReportForm instance
@@ -105,15 +114,46 @@ class MapReportsView(LoginRequiredMixin, View):
         Returns:
             HttpResponse: The rendered map reports page.
         """
+        # Instantiate form
         form = ReportForm()
-        # show all reports
-        reports = Report.objects.all()
-        data = [serialise_report(report) for report in reports]
+        
+        # Optimized database query using values() to avoid expensive JOINs
+        reports_data = list(Report.objects.values(
+            'id', 'latitude', 'longitude', 'place_name', 'condition',
+            'reasons', 'comments', 'photo', 'user_report_number',
+            'user__username', 'user__id', 'user__is_superuser',
+            'county__county'
+        ))
+        
+        # Convert the values() data to the format expected by the template
+        data = []
+        for report_data in reports_data:
+            # Handle photo URL
+            photo_url = None
+            if report_data.get('photo'):
+                photo_url = str(report_data['photo'])
+            
+            serialized_report = {
+                'user': report_data.get('user__username'),
+                'user_id': report_data.get('user__id'),
+                'user_report_number': report_data.get('user_report_number'),
+                'user_is_superuser': report_data.get('user__is_superuser', False),
+                'id': report_data['id'],
+                'latitude': float(report_data['latitude']),
+                'longitude': float(report_data['longitude']),
+                'place_name': report_data.get('place_name') or f"Lat: {float(report_data['latitude']):.4f}, Lon: {float(report_data['longitude']):.4f}",
+                'county': report_data.get('county__county'),
+                'condition': report_data.get('condition'),
+                'reasons': ', '.join(report_data.get('reasons', [])) if report_data.get('reasons') else '',
+                'comments': report_data.get('comments', ''),
+                'photoUrl': photo_url,
+            }
+            data.append(serialized_report)
+        
         return render(request, 'mapper/map_reports.html',
                       {'form': form, 
                        'reports': data,
                        'GOOGLE_MAPS_API_KEY': settings.GOOGLE_MAPS_API_KEY,
-                       # Indicate to the ReportForm that it is on the map_reports page
                        'is_map_reports': True, 'is_edit': False})
 
     def post(self, request):
@@ -144,16 +184,18 @@ class MapReportsView(LoginRequiredMixin, View):
             report = form.save(commit=False)
             report.user = request.user
             report.save()
+            
             messages.add_message(request, messages.SUCCESS,
                                  'Report created successfully!')
             return render(request,
                           'mapper/partials/success.html',
                           {'report': serialise_report(report)})
-        # Unsuccessful form submission
-        messages.add_message(request,
-                             messages.ERROR,
-                             'Error creating report. Please try again later.')
-        return render(request, 'mapper/partials/fail.html')
+        else:
+            # Unsuccessful form submission
+            messages.add_message(request,
+                                 messages.ERROR,
+                                 'Error creating report. Please try again later.')
+            return render(request, 'mapper/partials/fail.html')
 
 
 @require_POST
@@ -417,15 +459,12 @@ def report_detail(request, pk):
 
 def get_os_map_tiles(request, z, x, y):
     """
-    Proxy view to fetch Ordnance Survey raster map tiles.
+    Optimized proxy view to fetch Ordnance Survey raster map tiles.
 
     - Caps `z` (zoom level) at a configured maximum (20).
-    - Builds the OS Maps API URL using `z`, `x`, `y` and the
-      `OS_MAPS_API_KEY` environment variable.
-    - Performs an HTTP GET to retrieve the PNG tile.
-    - On success (HTTP 200), returns the tile bytes as an `image/png` response
-    - On failure, returns a 404 response with caching headers
-      (`Cache-Control: public, max-age=3600`).
+    - Uses server-side caching to avoid repeated API calls.
+    - Uses optimized requests with timeout and connection reuse.
+    - Returns tiles with proper caching headers for browser caching.
 
     Args:
         request (HttpRequest): The incoming HTTP request.
@@ -441,40 +480,71 @@ def get_os_map_tiles(request, z, x, y):
     if z > max_zoom:
         z = min(z, max_zoom)
 
+    # Check server-side cache first
+    cache_key = f"os_tile_{z}_{x}_{y}"
+    cached_tile = cache.get(cache_key)
+    if cached_tile:
+        return HttpResponse(
+            cached_tile, 
+            content_type="image/png",
+            headers={
+                "Cache-Control": "public, max-age=86400",  # Cache for 24 hours
+                "X-Cache": "HIT",  # Indicate cache hit
+                "ETag": f'"{z}-{x}-{y}"',  # ETag for conditional requests
+            }
+        )
+
     api_key = os.environ.get("OS_MAPS_API_KEY")
 
     # Construct the Ordnance Survey tile URL
     tile_url = f"https://api.os.uk/maps/raster/v1/zxy/Road_3857/{z}/{x}/{y}.png?key={api_key}"
 
-    # Make a GET request to fetch the tile image
-    response = requests.get(tile_url)
-
-    if response.status_code == 200:
-        # Return the image content with appropriate content-type
-        return HttpResponse(response.content, content_type="image/png")
+    try:
+        # Optimized request with shared session, timeout, and streaming
+        response = tile_session.get(
+            tile_url,
+            timeout=10,  # 10 second timeout
+            stream=True  # Stream for large images
+        )
+        
+        if response.status_code == 200:
+            tile_content = response.content
+            
+            # Cache the tile for 24 hours (86400 seconds)
+            cache.set(cache_key, tile_content, timeout=86400)
+            
+            # Return with aggressive caching headers for performance
+            return HttpResponse(
+                tile_content, 
+                content_type="image/png",
+                headers={
+                    "Cache-Control": "public, max-age=86400",  # Cache for 24 hours
+                    "Expires": "Thu, 31 Dec 2025 23:59:59 GMT",  # Far future expires
+                    "X-Cache": "MISS",  # Indicate cache miss
+                    "ETag": f'"{z}-{x}-{y}"',  # ETag for conditional requests
+                }
+            )
+    except requests.exceptions.RequestException:
+        # Handle network errors gracefully
+        pass
 
     # Return a 404 response with caching headers
     return HttpResponse(
         status=404,
         headers={
-            "Cache-Control": "public, max-age=3600",  # Cache for 1 hour
+            "Cache-Control": "public, max-age=3600",  # Cache 404s for 1 hour
         }
     )
 
 
 def get_google_satellite_tiles(request, z, x, y):
     """
-    Proxy view to fetch Google Maps satellite tiles with session management.
+    Optimized proxy view to fetch Google Maps satellite tiles with session management.
 
-    - Retrieves or creates a Google Maps session token via
-      get_google_session_token().
-    - Constructs the tile URL using `z`, `x`, `y`, the session token, and
-      `GOOGLE_MAPS_API_KEY`.
-    - Sends an HTTP GET to the Google Maps 2D tiles endpoint.
-    - On HTTP 200, returns the tile bytes with content-type `image/png`.
-    - On HTTP 404, returns a 404 response with caching headers
-      (`Cache-Control: public, max-age=3600`).
-    - On other error statuses or token failures, raises Http404.
+    - Uses server-side caching to avoid repeated API calls.
+    - Retrieves or creates a Google Maps session token.
+    - Uses optimized requests with timeout and connection reuse.
+    - Returns tiles with proper caching headers for browser caching.
 
     Args:
         request (HttpRequest): The incoming HTTP request.
@@ -491,6 +561,20 @@ def get_google_satellite_tiles(request, z, x, y):
         Http404: If the session token cannot be obtained or other non-404
         errors occur.
     """
+    # Check server-side cache first
+    cache_key = f"google_tile_{z}_{x}_{y}"
+    cached_tile = cache.get(cache_key)
+    if cached_tile:
+        return HttpResponse(
+            cached_tile, 
+            content_type="image/png",
+            headers={
+                "Cache-Control": "public, max-age=86400",  # Cache for 24 hours
+                "X-Cache": "HIT",  # Indicate cache hit
+                "ETag": f'"{z}-{x}-{y}-sat"',  # ETag for conditional requests
+            }
+        )
+
     # Check if the session token is cached, if not, create a new one
     try:
         session_token = get_google_session_token()
@@ -501,21 +585,44 @@ def get_google_satellite_tiles(request, z, x, y):
     # Construct the Google Maps tile URL
     tile_url = f"https://tile.googleapis.com/v1/2dtiles/{z}/{x}/{y}?session={session_token}&key={api_key}"
 
-    # Make a GET request to fetch the tile image
-    response = requests.get(tile_url)
-    if response.status_code == 200:
-        # Return the image content with appropriate content-type
-        return HttpResponse(response.content, content_type="image/png")
-    if response.status_code == 404:  # Tile not found at requested zoom level
-        # Return a 404 response with caching headers
-        return HttpResponse(
-            status=404,
-            headers={
-                "Cache-Control": "public, max-age=3600",  # Cache for 1 hour
-            }
+    try:
+        # Optimized request with shared session, timeout, and streaming
+        response = tile_session.get(
+            tile_url,
+            timeout=10,  # 10 second timeout
+            stream=True  # Stream for large images
         )
-    else:
-        raise Http404("Tile not found.")
+        
+        if response.status_code == 200:
+            tile_content = response.content
+            
+            # Cache the tile for 24 hours (86400 seconds)
+            cache.set(cache_key, tile_content, timeout=86400)
+            
+            # Return with aggressive caching headers for performance
+            return HttpResponse(
+                tile_content, 
+                content_type="image/png",
+                headers={
+                    "Cache-Control": "public, max-age=86400",  # Cache for 24 hours
+                    "Expires": "Thu, 31 Dec 2025 23:59:59 GMT",  # Far future expires
+                    "X-Cache": "MISS",  # Indicate cache miss
+                    "ETag": f'"{z}-{x}-{y}-sat"',  # ETag for conditional requests
+                }
+            )
+        elif response.status_code == 404:  # Tile not found at requested zoom level
+            return HttpResponse(
+                status=404,
+                headers={
+                    "Cache-Control": "public, max-age=3600",  # Cache 404s for 1 hour
+                }
+            )
+    except requests.exceptions.RequestException:
+        # Handle network errors gracefully
+        pass
+    
+    # Fallback for other errors
+    raise Http404("Tile not found.")
 
 
 # EMAIL CONFIRMATION FOR SIGNUP VIEW

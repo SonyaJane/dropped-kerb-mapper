@@ -50,7 +50,7 @@ def serialise_report(report):
         'reasons': report.get_reasons_display(),
         'comments': report.comments,
         'photoUrl': report.photo.url if report.photo else None,
-        }
+    }
 
 
 class SessionTokenError(Exception):
