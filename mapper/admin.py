@@ -31,9 +31,9 @@ class ReportAdmin(ImportExportModelAdmin):
                     'get_reasons_display', 'comments', 'photo', 
                     'user', 'created_at')
     # Which fields to search using the search bar
-    search_fields = ['reasons', 'comments']
+    search_fields = ['reasons', 'comments', 'created_at', 'county', 'local_authority']
     # Filter options to be displayed on the right side of the dashboard
-    list_filter = ('condition', ReasonsFilter, 'user', 'created_at')
+    list_filter = ('condition', ReasonsFilter, 'user', 'created_at', 'county', 'local_authority', 'condition')
 
 
 # register the area models with the admin site
