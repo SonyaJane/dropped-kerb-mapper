@@ -728,7 +728,7 @@ def contact(request):
             # Send the message to Mobility Mapper admin
             send_mail(subject=f"Contact Form Submission from {first_name} {last_name}",
                       message=f"Message from {first_name} {last_name} ({email}):\
-                      \n\n{message}", from_email=settings.EMAIL_HOST_USER,
+                      \n\n{message}", from_email=settings.DEFAULT_FROM_EMAIL,
                       recipient_list=[settings.EMAIL_HOST_USER],
                       )
 
@@ -745,7 +745,7 @@ def contact(request):
             send_mail(
                 subject="Thank you for contacting Mobility Mapper",
                 message=confirmation_message,
-                from_email=settings.EMAIL_HOST_USER,
+                from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[email],
             )
 
