@@ -121,14 +121,13 @@ ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']  # Required field
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Require email verification
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True # Log in the user when they click the confirmation link.
 
-# Gmail API with OAuth 2.0
-EMAIL_BACKEND = 'dropped_kerb_mapper.gmail_backend.GmailBackend'
-# Legacy SMTP settings (kept for reference, not used with Gmail API backend)
-# EMAIL_HOST = os.environ.get("EMAIL_HOST")
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-# EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+# Gmail SMTP
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")  # Use App Password
 
 DEFAULT_FROM_EMAIL = os.environ.get("EMAIL_HOST_USER")
 ACCOUNT_DEFAULT_FROM_EMAIL = DEFAULT_FROM_EMAIL
