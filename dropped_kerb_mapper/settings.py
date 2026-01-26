@@ -16,7 +16,7 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
 GOOGLE_MAPS_API_KEY = os.environ.get("GOOGLE_MAPS_API_KEY")
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['www.droppedkerbmapper.com','.herokuapp.com','127.0.0.1','.northeurope.azurecontainerapps.io']
 
