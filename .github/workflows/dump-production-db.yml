@@ -9,6 +9,10 @@ name: Dump Production DB
 on:
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   dump:
     runs-on: ubuntu-latest
@@ -18,10 +22,12 @@ jobs:
       HOST: dropped-kerb-mapper-server.postgres.database.azure.com
       DB_USER: dkm_admin
     steps:
-      - name: Log in to Azure (service principal)
-        uses: azure/login@v1
+      - name: Log in to Azure (OIDC federated credential)
+        uses: azure/login@v2
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_DA49A7D1762648B593ECA399C2CC295F }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_A284DB056A284F0C89CF6D9B33FC0776 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_77D85EE4B9444CB7AFD683A1B193ACE2 }}
 
       - name: Get runner public IP
         id: ip
