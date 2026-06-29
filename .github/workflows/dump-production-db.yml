@@ -16,6 +16,7 @@ permissions:
 jobs:
   dump:
     runs-on: ubuntu-latest
+    environment: Production
     env:
       RG: mobility-mapper-rg
       SERVER: dropped-kerb-mapper-server
