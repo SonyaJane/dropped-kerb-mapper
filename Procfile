@@ -1,1 +1,0 @@
-web: gunicorn dropped_kerb_mapper.wsgi --log-file - --log-level debug
