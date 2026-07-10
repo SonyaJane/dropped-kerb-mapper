@@ -29,6 +29,7 @@ import requests
 from django.http import HttpResponseRedirect, HttpResponse, Http404, \
     JsonResponse, HttpResponseBadRequest
 from django.conf import settings
+import cloudinary
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -128,10 +129,19 @@ class MapReportsView(LoginRequiredMixin, View):
         # Convert the values() data to the format expected by the template
         data = []
         for report_data in reports_data:
-            # Handle photo URL
+            # Handle photo URL. Report.objects.values() returns the raw stored
+            # value (e.g. "image/upload/v123/abc.webp"), which is only a path —
+            # without the Cloudinary host the browser treats it as relative and
+            # the image 404s on the map. Build the absolute Cloudinary URL
+            # (the report detail page works because it uses CloudinaryField.url).
             photo_url = None
             if report_data.get('photo'):
-                photo_url = str(report_data['photo'])
+                raw = str(report_data['photo'])
+                if raw.startswith('http'):
+                    photo_url = raw
+                else:
+                    cloud_name = cloudinary.config().cloud_name
+                    photo_url = f"https://res.cloudinary.com/{cloud_name}/{raw.lstrip('/')}"
             
             serialized_report = {
                 'user': report_data.get('user__username'),
