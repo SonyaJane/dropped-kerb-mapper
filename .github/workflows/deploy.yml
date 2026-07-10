@@ -34,10 +34,18 @@ jobs:
           password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t droppedkerbmapper-f6cse9c6dzebewhj.azurecr.io/droppedkerbmapper:latest .
+        # Tag with the commit SHA (and latest). The unique per-commit tag is what
+        # forces Container Apps to create a new revision on deploy; reusing the
+        # mutable :latest tag alone leaves the running revision unchanged.
+        run: |
+          docker build \
+            -t droppedkerbmapper-f6cse9c6dzebewhj.azurecr.io/droppedkerbmapper:${{ github.sha }} \
+            -t droppedkerbmapper-f6cse9c6dzebewhj.azurecr.io/droppedkerbmapper:latest .
 
       - name: Push Docker image
-        run: docker push droppedkerbmapper-f6cse9c6dzebewhj.azurecr.io/droppedkerbmapper:latest
+        run: |
+          docker push droppedkerbmapper-f6cse9c6dzebewhj.azurecr.io/droppedkerbmapper:${{ github.sha }}
+          docker push droppedkerbmapper-f6cse9c6dzebewhj.azurecr.io/droppedkerbmapper:latest
 
       - name: Install Azure Container Apps CLI extension
         run: az extension add --name containerapp --upgrade
@@ -47,7 +55,7 @@ jobs:
         with:
           resourceGroup: mobility-mapper-rg
           containerAppName: droppedkerbmapper-app
-          imageToDeploy: droppedkerbmapper-f6cse9c6dzebewhj.azurecr.io/droppedkerbmapper:latest
+          imageToDeploy: droppedkerbmapper-f6cse9c6dzebewhj.azurecr.io/droppedkerbmapper:${{ github.sha }}
           registryUrl: droppedkerbmapper-f6cse9c6dzebewhj.azurecr.io
           registryUsername: ${{ secrets.ACR_USERNAME }}
           registryPassword: ${{ secrets.ACR_PASSWORD }}
