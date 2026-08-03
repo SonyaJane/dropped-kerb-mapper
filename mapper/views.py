@@ -22,6 +22,7 @@ Each view either returns an HttpResponse (rendered template, JSON, or image
 bytes) or redirects as appropriate, and enforces authentication/permissions
 where required.
 """
+import logging
 import os
 import json
 import requests
@@ -46,6 +47,8 @@ from .forms import ReportForm, ContactForm
 from .models import Report
 from .tables import ReportTable
 from .utils import serialise_report, get_google_session_token
+
+logger = logging.getLogger(__name__)
 
 # Create a shared requests session for better performance
 # This reuses connections and improves tile loading speed
@@ -708,6 +711,8 @@ def contact(request):
 
     POST:
     - Binds ContactForm to request.POST and current user.
+    - If valid but flagged as spam (honeypot filled or submitted too
+      quickly): logs and silently pretends success, sending no email.
     - If valid:
         • Sends an email to the site admin with the visitor's message.
         • Sends a confirmation email back to the visitor.
@@ -729,7 +734,14 @@ def contact(request):
         form = ContactForm(request.POST,
                            user=request.user if request.user.is_authenticated
                            else None)
-        if form.is_valid():
+        if form.is_valid() and form.is_spam():
+            # Pretend success so bots can't tell they were blocked,
+            # but send no email
+            logger.info("Contact form submission dropped as spam "
+                        "(email=%s)", form.cleaned_data.get('email'))
+            messages.success(request, 'Message submitted successfully!')
+            message_sent = True
+        elif form.is_valid():
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
             email = form.cleaned_data['email']
@@ -742,12 +754,14 @@ def contact(request):
                       recipient_list=[settings.EMAIL_HOST_USER],
                       )
 
-            # Send a confirmation email to the user
+            # Send a confirmation email to the user. Deliberately does
+            # NOT echo the message body: reflecting attacker-supplied
+            # text to an attacker-supplied address would let the form be
+            # abused as a spam relay.
             confirmation_message = (
                 f"Hi {first_name} {last_name},\n\n"
-                "Thank you for your message, we will get back to you as soon as possible.\n\n"
-                "Here is a copy of your message:\n"
-                f"{message}\n\n"
+                "Thank you for your message, we will get back to you "
+                "as soon as possible.\n\n"
                 "Kind regards,\n"
                 "Mobility Mapper"
             )

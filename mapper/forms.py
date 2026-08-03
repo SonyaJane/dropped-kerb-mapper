@@ -22,8 +22,10 @@ Form definitions
 """
 from io import BytesIO
 import logging
+import time
 from django import forms
 from django.contrib.auth import get_user_model
+from django.core import signing
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image
 from allauth.account.forms import SignupForm, LoginForm
@@ -563,7 +565,19 @@ class ContactForm(forms.Form):
     - If a `user` is passed in and is authenticated, the first_name,
       last_name and email fields are pre-populated and locked to prevent
       editing.
+
+    Anti-spam:
+    - 'website' is a honeypot: hidden from humans via CSS, but bots
+      auto-fill it. Any value marks the submission as spam.
+    - 'form_token' is a signed timestamp set when the form is rendered.
+      Submissions arriving faster than MIN_FILL_SECONDS (or with a
+      missing/tampered/stale token) are marked as spam.
+    - Call is_spam() after is_valid(); the view silently drops spam.
     """
+    MIN_FILL_SECONDS = 5
+    TOKEN_MAX_AGE_SECONDS = 60 * 60 * 24
+    TOKEN_SALT = 'mapper.contact-form'
+
     first_name = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control',
                                       'placeholder': 'First Name'}),
@@ -588,6 +602,18 @@ class ContactForm(forms.Form):
                                      'rows': 5}),
         label="Your Message"
     )
+    # Honeypot: must stay a visible-type text input (bots skip
+    # type="hidden") hidden from humans by the d-none wrapper below.
+    website = forms.CharField(
+        widget=forms.TextInput(attrs={'tabindex': '-1',
+                                      'autocomplete': 'off'}),
+        label="Website",
+        required=False
+    )
+    form_token = forms.CharField(
+        widget=forms.HiddenInput(),
+        required=False
+    )
 
     def __init__(self, *args, **kwargs):
         """
@@ -608,6 +634,19 @@ class ContactForm(forms.Form):
         self.helper.form_class = 'form-horizontal'
         self.helper.label_class = 'col-12 col-sm-4'
         self.helper.field_class = 'col-12 col-sm-8'
+        self.helper.layout = Layout(
+            Field('first_name'),
+            Field('last_name'),
+            Field('email'),
+            Field('website', wrapper_class='d-none'),
+            Field('message'),
+            Field('form_token'),
+        )
+
+        # Stamp the render time into the signed token (ignored when the
+        # form is bound, as the POSTed value is rendered instead)
+        self.fields['form_token'].initial = signing.dumps(
+            time.time(), salt=self.TOKEN_SALT)
 
         if user and user.is_authenticated:
             # Pre-fill fields with user data and make them read-only
@@ -619,7 +658,6 @@ class ContactForm(forms.Form):
             self.fields['email'].widget.attrs['readonly'] = True
 
         # Add a submit button to the form
-        from crispy_forms.layout import Submit
         self.helper.add_input(
             Submit(
                 name='submit',
@@ -628,6 +666,27 @@ class ContactForm(forms.Form):
                 css_id='contact-submit-btn'
             )
         )
+
+    def is_spam(self):
+        """
+        Return True if this submission looks automated. Call only after
+        is_valid() has succeeded.
+
+        A submission is treated as spam when the honeypot field was
+        filled in, when the signed form_token is missing, tampered with
+        or older than TOKEN_MAX_AGE_SECONDS, or when the form was
+        submitted less than MIN_FILL_SECONDS after being rendered.
+        """
+        if self.cleaned_data.get('website'):
+            return True
+        try:
+            rendered_at = signing.loads(
+                self.cleaned_data.get('form_token', ''),
+                salt=self.TOKEN_SALT,
+                max_age=self.TOKEN_MAX_AGE_SECONDS)
+        except signing.BadSignature:
+            return True
+        return time.time() - rendered_at < self.MIN_FILL_SECONDS
 
 
 class CustomLoginForm(LoginForm):
