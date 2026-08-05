@@ -711,8 +711,9 @@ def contact(request):
 
     POST:
     - Binds ContactForm to request.POST and current user.
-    - If valid but flagged as spam (honeypot filled or submitted too
-      quickly): logs and silently pretends success, sending no email.
+    - If valid but flagged as spam (honeypot filled, submitted too
+      quickly, JavaScript never ran, or token replayed): logs and
+      silently pretends success, sending no email.
     - If valid:
         • Sends an email to the site admin with the visitor's message.
         • Sends a confirmation email back to the visitor.

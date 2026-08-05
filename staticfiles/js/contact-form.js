@@ -7,6 +7,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // Add an event listener to the form submission
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
+        // Anti-spam: fill the js_guard field with the reversed form
+        // token so the server knows this page ran JavaScript
+        const tokenInput = contactForm.querySelector('input[name="form_token"]');
+        const guardInput = contactForm.querySelector('input[name="js_guard"]');
+        if (tokenInput && guardInput) {
+            guardInput.value = [...tokenInput.value].reverse().join('');
+        }
+
         contactForm.addEventListener('submit', function () {
             // Disable the submit button
             const submitButton = document.getElementById('submit-button');

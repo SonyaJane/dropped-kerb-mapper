@@ -21,11 +21,13 @@ Form definitions
     apply Crispy Forms styling without its default <form> wrapper.
 """
 from io import BytesIO
+import hashlib
 import logging
 import time
 from django import forms
 from django.contrib.auth import get_user_model
 from django.core import signing
+from django.core.cache import cache
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image
 from allauth.account.forms import SignupForm, LoginForm
@@ -572,6 +574,11 @@ class ContactForm(forms.Form):
     - 'form_token' is a signed timestamp set when the form is rendered.
       Submissions arriving faster than MIN_FILL_SECONDS (or with a
       missing/tampered/stale token) are marked as spam.
+    - 'js_guard' starts empty and is filled by contact-form.js with the
+      reversed form_token, so submissions from clients that never ran
+      the page's JavaScript (HTTP-only bots) are marked as spam.
+    - Each form_token is single-use (tracked in the cache), so a bot
+      cannot fetch the page once and replay the same token repeatedly.
     - Call is_spam() after is_valid(); the view silently drops spam.
     """
     MIN_FILL_SECONDS = 5
@@ -614,6 +621,12 @@ class ContactForm(forms.Form):
         widget=forms.HiddenInput(),
         required=False
     )
+    # Filled by contact-form.js on page load; bots that don't execute
+    # JavaScript submit it empty
+    js_guard = forms.CharField(
+        widget=forms.HiddenInput(),
+        required=False
+    )
 
     def __init__(self, *args, **kwargs):
         """
@@ -641,6 +654,7 @@ class ContactForm(forms.Form):
             Field('website', wrapper_class='d-none'),
             Field('message'),
             Field('form_token'),
+            Field('js_guard'),
         )
 
         # Stamp the render time into the signed token (ignored when the
@@ -674,19 +688,30 @@ class ContactForm(forms.Form):
 
         A submission is treated as spam when the honeypot field was
         filled in, when the signed form_token is missing, tampered with
-        or older than TOKEN_MAX_AGE_SECONDS, or when the form was
-        submitted less than MIN_FILL_SECONDS after being rendered.
+        or older than TOKEN_MAX_AGE_SECONDS, when the form was submitted
+        less than MIN_FILL_SECONDS after being rendered, when js_guard
+        does not hold the reversed form_token (JavaScript never ran), or
+        when the form_token has already been used once.
         """
         if self.cleaned_data.get('website'):
             return True
+        token = self.cleaned_data.get('form_token', '')
         try:
             rendered_at = signing.loads(
-                self.cleaned_data.get('form_token', ''),
+                token,
                 salt=self.TOKEN_SALT,
                 max_age=self.TOKEN_MAX_AGE_SECONDS)
         except signing.BadSignature:
             return True
-        return time.time() - rendered_at < self.MIN_FILL_SECONDS
+        if time.time() - rendered_at < self.MIN_FILL_SECONDS:
+            return True
+        if self.cleaned_data.get('js_guard', '') != token[::-1]:
+            return True
+        # Mark the token as used; cache.add() returns False if it
+        # already was, i.e. the token is being replayed
+        used_key = ('contact-form-token-used:'
+                    + hashlib.sha256(token.encode()).hexdigest())
+        return not cache.add(used_key, True, self.TOKEN_MAX_AGE_SECONDS)
 
 
 class CustomLoginForm(LoginForm):
