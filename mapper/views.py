@@ -699,6 +699,34 @@ def instructions(request):
     return render(request, 'mapper/instructions.html')
 
 
+def _turnstile_ok(request):
+    """
+    Verify the Cloudflare Turnstile response for a contact-form POST.
+
+    Returns True when Turnstile is not configured (no secret key), so
+    the form's other anti-spam checks remain the only gate. Fails open
+    with a warning if Cloudflare itself is unreachable, since blocking
+    real users on a Cloudflare outage is worse than letting the other
+    checks stand alone temporarily.
+    """
+    secret = settings.TURNSTILE_SECRET_KEY
+    if not secret:
+        return True
+    token = request.POST.get('cf-turnstile-response', '')
+    if not token:
+        return False
+    try:
+        response = requests.post(
+            'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+            data={'secret': secret, 'response': token},
+            timeout=5)
+        return response.json().get('success', False)
+    except (requests.RequestException, ValueError):
+        logger.warning("Turnstile verification unavailable; failing open",
+                       exc_info=True)
+        return True
+
+
 # CONTACT PAGE
 def contact(request):
     """
@@ -712,8 +740,9 @@ def contact(request):
     POST:
     - Binds ContactForm to request.POST and current user.
     - If valid but flagged as spam (honeypot filled, submitted too
-      quickly, JavaScript never ran, or token replayed): logs and
-      silently pretends success, sending no email.
+      quickly, JavaScript never ran, token replayed, or Turnstile
+      verification failed): logs and silently pretends success,
+      sending no email.
     - If valid:
         • Sends an email to the site admin with the visitor's message.
         • Sends a confirmation email back to the visitor.
@@ -735,7 +764,7 @@ def contact(request):
         form = ContactForm(request.POST,
                            user=request.user if request.user.is_authenticated
                            else None)
-        if form.is_valid() and form.is_spam():
+        if form.is_valid() and (form.is_spam() or not _turnstile_ok(request)):
             # Pretend success so bots can't tell they were blocked,
             # but send no email
             logger.info("Contact form submission dropped as spam "
@@ -781,7 +810,8 @@ def contact(request):
                            else None)
 
     return render(request, 'mapper/contact.html',
-                  {'form': form, 'message_sent': message_sent})
+                  {'form': form, 'message_sent': message_sent,
+                   'turnstile_enabled': bool(settings.TURNSTILE_SITE_KEY)})
 
 
 @require_GET

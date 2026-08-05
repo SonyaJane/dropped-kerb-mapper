@@ -16,6 +16,11 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
 GOOGLE_MAPS_API_KEY = os.environ.get("GOOGLE_MAPS_API_KEY")
 
+# Cloudflare Turnstile bot protection for the contact form.
+# Leave unset to disable; the form's other anti-spam checks still apply.
+TURNSTILE_SITE_KEY = os.environ.get("TURNSTILE_SITE_KEY", "")
+TURNSTILE_SECRET_KEY = os.environ.get("TURNSTILE_SECRET_KEY", "")
+
 DEBUG = False
 
 ALLOWED_HOSTS = ['www.droppedkerbmapper.com','.herokuapp.com','127.0.0.1','.northeurope.azurecontainerapps.io']

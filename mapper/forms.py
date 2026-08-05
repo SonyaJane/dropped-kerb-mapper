@@ -25,6 +25,7 @@ import hashlib
 import logging
 import time
 from django import forms
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core import signing
 from django.core.cache import cache
@@ -647,7 +648,7 @@ class ContactForm(forms.Form):
         self.helper.form_class = 'form-horizontal'
         self.helper.label_class = 'col-12 col-sm-4'
         self.helper.field_class = 'col-12 col-sm-8'
-        self.helper.layout = Layout(
+        layout_fields = [
             Field('first_name'),
             Field('last_name'),
             Field('email'),
@@ -655,7 +656,15 @@ class ContactForm(forms.Form):
             Field('message'),
             Field('form_token'),
             Field('js_guard'),
-        )
+        ]
+        if settings.TURNSTILE_SITE_KEY:
+            # Widget rendered by Cloudflare's api.js (loaded in
+            # contact.html); adds a cf-turnstile-response field the view
+            # verifies server-side
+            layout_fields.append(HTML(
+                '<div class="cf-turnstile mb-3" data-sitekey="'
+                f'{settings.TURNSTILE_SITE_KEY}"></div>'))
+        self.helper.layout = Layout(*layout_fields)
 
         # Stamp the render time into the signed token (ignored when the
         # form is bound, as the POSTed value is rendered instead)
