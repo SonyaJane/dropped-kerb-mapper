@@ -21,6 +21,9 @@
 </div>
 
 <script src="{% static 'js/sign-up-form.js' %}"></script>
+{% if form.turnstile_enabled %}
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+{% endif %}
 
 {% endblock %}
 

@@ -46,7 +46,8 @@ from allauth.account.views import ConfirmEmailView
 from .forms import ReportForm, ContactForm
 from .models import Report
 from .tables import ReportTable
-from .utils import serialise_report, get_google_session_token
+from .utils import (serialise_report, get_google_session_token,
+                    turnstile_verified)
 
 logger = logging.getLogger(__name__)
 
@@ -699,34 +700,6 @@ def instructions(request):
     return render(request, 'mapper/instructions.html')
 
 
-def _turnstile_ok(request):
-    """
-    Verify the Cloudflare Turnstile response for a contact-form POST.
-
-    Returns True when Turnstile is not configured (no secret key), so
-    the form's other anti-spam checks remain the only gate. Fails open
-    with a warning if Cloudflare itself is unreachable, since blocking
-    real users on a Cloudflare outage is worse than letting the other
-    checks stand alone temporarily.
-    """
-    secret = settings.TURNSTILE_SECRET_KEY
-    if not secret:
-        return True
-    token = request.POST.get('cf-turnstile-response', '')
-    if not token:
-        return False
-    try:
-        response = requests.post(
-            'https://challenges.cloudflare.com/turnstile/v0/siteverify',
-            data={'secret': secret, 'response': token},
-            timeout=5)
-        return response.json().get('success', False)
-    except (requests.RequestException, ValueError):
-        logger.warning("Turnstile verification unavailable; failing open",
-                       exc_info=True)
-        return True
-
-
 # CONTACT PAGE
 def contact(request):
     """
@@ -764,7 +737,8 @@ def contact(request):
         form = ContactForm(request.POST,
                            user=request.user if request.user.is_authenticated
                            else None)
-        if form.is_valid() and (form.is_spam() or not _turnstile_ok(request)):
+        if form.is_valid() and (form.is_spam() or not turnstile_verified(
+                request.POST.get('cf-turnstile-response', ''))):
             # Pretend success so bots can't tell they were blocked,
             # but send no email
             logger.info("Contact form submission dropped as spam "

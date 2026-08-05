@@ -37,9 +37,21 @@ from crispy_forms.layout import Layout, Submit, HTML, Field, Div
 from cloudinary import uploader
 from cloudinary.exceptions import Error as CloudinaryError
 from .models import Report, CustomUser
+from .utils import turnstile_verified
 
 # Set up logging for this module
 logger = logging.getLogger(__name__)
+
+
+def turnstile_widget():
+    """
+    Crispy layout element for the Cloudflare Turnstile widget, rendered
+    by Cloudflare's api.js (loaded by the page template). Adds a
+    cf-turnstile-response field to the POST that is verified
+    server-side with utils.turnstile_verified().
+    """
+    return HTML('<div class="cf-turnstile mb-3" data-sitekey="'
+                f'{settings.TURNSTILE_SITE_KEY}"></div>')
 
 
 class ReportForm(forms.ModelForm):
@@ -476,8 +488,15 @@ class CustomSignupForm(SignupForm):
         self.helper.label_class = 'col-12 col-sm-4'
         self.helper.field_class = 'col-12 col-sm-8'
 
+        # Anti-spam: append the Turnstile widget after the form fields
+        # (explicit layout preserves the default field order)
+        self.turnstile_enabled = bool(settings.TURNSTILE_SITE_KEY)
+        if self.turnstile_enabled:
+            self.helper.layout = Layout(
+                *[Field(name) for name in self.fields],
+                turnstile_widget())
+
         # Add a submit button to the form
-        from crispy_forms.layout import Submit
         self.helper.add_input(
             Submit(
                 name='submit',
@@ -495,6 +514,8 @@ class CustomSignupForm(SignupForm):
         - If 'uses_mobility_device' is True, ensures 'mobility_device_type' is
           provided.
         - Adds a field-specific error if the device type is missing.
+        - Verifies the Cloudflare Turnstile response to block automated
+          registrations.
 
         Returns:
             dict: The cleaned_data dictionary.
@@ -506,6 +527,10 @@ class CustomSignupForm(SignupForm):
         if uses and not device:
             self.add_error('mobility_device_type',
                            "Please select your mobility device type.")
+
+        if not turnstile_verified(self.data.get('cf-turnstile-response', '')):
+            self.add_error(None, "We could not verify that you are human. "
+                                 "Please try again.")
         return cleaned_data
 
     def save(self, request):
@@ -658,12 +683,7 @@ class ContactForm(forms.Form):
             Field('js_guard'),
         ]
         if settings.TURNSTILE_SITE_KEY:
-            # Widget rendered by Cloudflare's api.js (loaded in
-            # contact.html); adds a cf-turnstile-response field the view
-            # verifies server-side
-            layout_fields.append(HTML(
-                '<div class="cf-turnstile mb-3" data-sitekey="'
-                f'{settings.TURNSTILE_SITE_KEY}"></div>'))
+            layout_fields.append(turnstile_widget())
         self.helper.layout = Layout(*layout_fields)
 
         # Stamp the render time into the signed token (ignored when the

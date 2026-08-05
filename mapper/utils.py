@@ -1,10 +1,44 @@
 """
 Utilities for the mapper app
 """
+import logging
 import os
 import requests
 import time
+from django.conf import settings
 from django.core.cache import cache
+
+logger = logging.getLogger(__name__)
+
+
+def turnstile_verified(token):
+    """
+    Verify a Cloudflare Turnstile response token server-side.
+
+    Returns True when Turnstile is not configured (no secret key), so
+    callers' other anti-spam checks remain the only gate. Fails open
+    with a warning if Cloudflare itself is unreachable, since blocking
+    real users on a Cloudflare outage is worse than temporarily relying
+    on the other checks.
+
+    Args:
+        token (str): The 'cf-turnstile-response' value from the POST.
+    """
+    secret = settings.TURNSTILE_SECRET_KEY
+    if not secret:
+        return True
+    if not token:
+        return False
+    try:
+        response = requests.post(
+            'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+            data={'secret': secret, 'response': token},
+            timeout=5)
+        return response.json().get('success', False)
+    except (requests.RequestException, ValueError):
+        logger.warning("Turnstile verification unavailable; failing open",
+                       exc_info=True)
+        return True
 
 
 def serialise_report(report):
